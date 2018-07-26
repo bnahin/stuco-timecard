@@ -8,14 +8,22 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 /**
  * App\User
  *
- * @property int $id
- * @property string $name
- * @property string $email
- * @property string $password
- * @property string|null $remember_token
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property int
+ *               $id
+ * @property string
+ *               $name
+ * @property string
+ *               $email
+ * @property string
+ *               $password
+ * @property string|null
+ *               $remember_token
+ * @property \Carbon\Carbon|null
+ *               $created_at
+ * @property \Carbon\Carbon|null
+ *               $updated_at
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[]
+ *                $notifications
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereId($value)
@@ -24,6 +32,17 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $google_id
+ * @property int|null $student_id
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $domain
+ * @property-read mixed $full_name
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereDomain($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereFirstName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereGoogleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereLastName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereStudentId($value)
  */
 class User extends Authenticatable
 {
@@ -34,9 +53,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -44,6 +61,22 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+    public function setFirstNameAttribute($val)
+    {
+        $this->attributes['first_name'] = ucfirst($val);
+    }
+
+    public function setLastNameAttribute($val)
+    {
+        $this->attributes['last_name'] = ucfirst($val);
+    }
 }

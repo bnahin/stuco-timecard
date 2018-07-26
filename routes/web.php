@@ -14,3 +14,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+Route::get('/oauth-callback','GoogleAuthController@handle')->name('oauth-callback');
+Route::get('/login-google','GoogleAuthController@redirect')->name('oauth-redirect');
+
+Route::get('/home', 'HomeController@index')->name('home');
