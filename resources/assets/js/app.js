@@ -58,5 +58,9 @@ $('#new-activity-submit').click(function (e) {
     }, function (result) {
       activityBtnEnable(btn)
       console.log(result)
+      if(result === true) {
+        swal('Success!','You have successfully clocked out.','success');
+        //TODO make this self-destruct and redirect
+      }
     })
 })
