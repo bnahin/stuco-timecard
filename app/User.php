@@ -43,6 +43,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereGoogleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereLastName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereStudentId($value)
+ * @property int $is_admin
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Hour[] $hours
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereIsAdmin($value)
  */
 class User extends Authenticatable
 {
@@ -65,6 +68,9 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    /**
+     * Eloquent Mutators
+     */
     public function getFullNameAttribute()
     {
         return "{$this->first_name} {$this->last_name}";
@@ -78,5 +84,19 @@ class User extends Authenticatable
     public function setLastNameAttribute($val)
     {
         $this->attributes['last_name'] = ucfirst($val);
+    }
+
+    /**
+     * Eloquent Relationships
+     */
+    public function hours() {
+        return $this->hasMany(Hour::class);
+    }
+
+    /**
+     * Functions
+     */
+    public function isAdmin() {
+        return $this->is_admin == 1;
     }
 }

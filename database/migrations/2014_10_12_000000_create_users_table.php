@@ -19,8 +19,10 @@ class CreateUsersTable extends Migration
             $table->integer('student_id')->nullable();
             $table->string('first_name');
             $table->string('last_name');
+            $table->enum('grade', [9, 10, 11, 12]);
             $table->string('email')->unique();
             $table->string('domain');
+            $table->boolean('is_admin');
             $table->rememberToken();
             $table->timestamps();
         });

@@ -1,22 +1,62 @@
+require('./bootstrap')
+
+/* * * * * * * * * * * * * * * *
+*                              *
+*     StuCo App JS             *
+*     @author Blake Nahin      *
+*                              *
+* * * * * * * * * * * * * * * * */
 
 /**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
+ * Current Time Display (New Activity)
  */
+if ($('#current-time').length) {
+  (function () {
+    function checkTime (i) {
+      return (i < 10) ? '0' + i : i
+    }
 
-require('./bootstrap');
+    function startTime () {
+      var today = new Date(),
+          h     = checkTime(today.getHours()),
+          m     = checkTime(today.getMinutes()),
+          s     = checkTime(today.getSeconds())
+      $('#current-time').html(h + ':' + m + ':' + s)
+      t = setTimeout(function () {
+        startTime()
+      }, 500)
+    }
 
-window.Vue = require('vue');
+    startTime()
+  })()
+}
 
 /**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
+ * New Activity Submission
  */
+function activityBtnDisable (btn) {
+  btn.button('disabled')
+  btn.html('<i class="fas fa-spinner fa-pulse"></i>')
+}
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+function activityBtnEnable (btn) {
+  btn.button('enabled')
+  btn.html('<i class="fas fa-sign-out-alt"></i> Clock Out')
+}
 
-const app = new Vue({
-    el: '#app'
-});
+$('#new-activity-submit').click(function (e) {
+  let btn  = $(this),
+      form = $('#new-activity')
+  activityBtnDisable(btn)
+
+  e.preventDefault()
+  $.post(form.attr('action'),
+    {
+      id      : $('#student-id').val(),
+      event   : $('#event-name').val(),
+      comments: $('#comments').html()
+    }, function (result) {
+      activityBtnEnable(btn)
+      console.log(result)
+    })
+})

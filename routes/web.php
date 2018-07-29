@@ -11,12 +11,19 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+/** Home */
+Route::get('/', 'HomeController@index')
+    ->name('home');
 
+/** Admin */
+Route::get('/admin', function () {
+    return 'Admin Here';
+})->name('admin');
+
+/** Login */
 Auth::routes();
-Route::get('/oauth-callback','GoogleAuthController@handle')->name('oauth-callback');
-Route::get('/login-google','GoogleAuthController@redirect')->name('oauth-redirect');
+Route::get('/oauth-callback', 'GoogleAuthController@handle')->name('oauth-callback');
+Route::get('/login-google', 'GoogleAuthController@redirect')->name('oauth-redirect');
 
-Route::get('/home', 'HomeController@index')->name('home');
+/** Hours */
+Route::post('/hours/new','HoursController@store');
