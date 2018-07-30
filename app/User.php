@@ -32,20 +32,22 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUpdatedAt($value)
  * @mixin \Eloquent
- * @property string $google_id
- * @property int|null $student_id
- * @property string $first_name
- * @property string $last_name
- * @property string $domain
- * @property-read mixed $full_name
+ * @property string                                                    $google_id
+ * @property int|null                                                  $student_id
+ * @property string                                                    $first_name
+ * @property string                                                    $last_name
+ * @property string                                                    $domain
+ * @property-read mixed                                                $full_name
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereDomain($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereFirstName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereGoogleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereLastName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereStudentId($value)
- * @property int $is_admin
+ * @property int                                                       $is_admin
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Hour[] $hours
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereIsAdmin($value)
+ * @property string                                                    $grade
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereGrade($value)
  */
 class User extends Authenticatable
 {
@@ -89,14 +91,24 @@ class User extends Authenticatable
     /**
      * Eloquent Relationships
      */
-    public function hours() {
+    public function hours()
+    {
         return $this->hasMany(Hour::class);
     }
 
     /**
      * Functions
      */
-    public function isAdmin() {
+    public function isAdmin()
+    {
         return $this->is_admin == 1;
+    }
+
+    public static function isClockedOut($id)
+    {
+        return Hour::where('user_id', $id)
+            ->whereNotNull('start_time')
+            ->whereNull('end_time')
+            ->count();
     }
 }

@@ -25,7 +25,7 @@
                             <div class="form-group">
                                 <label for="event-name">Event Name</label>
                                 <select id="event-name" class="form-control">
-                                    <option value="">Out of Classroom</option>
+                                    <option value="0">Out of Classroom</option>
                                     @foreach ($events as $event)
                                         <option value="{{ $event->id }}">{{ $event->event_name }}</option>
                                     @endforeach

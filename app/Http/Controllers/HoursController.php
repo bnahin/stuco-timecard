@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreHoursRequest;
 use Illuminate\Http\Request;
 
 class HoursController extends Controller
@@ -10,10 +11,12 @@ class HoursController extends Controller
      * Store new hour submission
      * "Add New Activity"
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\StoreHoursRequest $request
+     *
+     * @return void
      */
-    public function store(Request $request)
+    public function store(StoreHoursRequest $request)
     {
-        return dd($request->id);
+        return $request->validated();
     }
 }

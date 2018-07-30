@@ -55,12 +55,18 @@ $('#new-activity-submit').click(function (e) {
       id      : $('#student-id').val(),
       event   : $('#event-name').val(),
       comments: $('#comments').html()
-    }, function (result) {
+    })
+    .done(function (result) {
       activityBtnEnable(btn)
       console.log(result)
-      if(result === true) {
-        swal('Success!','You have successfully clocked out.','success');
+      if (result === true) {
+        swal('Success!', 'You have successfully clocked out.', 'success')
         //TODO make this self-destruct and redirect
       }
+    })
+    .fail(function (xhr, status, error) {
+      activityBtnEnable(btn)
+      //Validation error
+      console.log(xhr.responseJSON)
     })
 })
