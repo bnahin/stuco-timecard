@@ -41,27 +41,27 @@
 
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
-                    <!-- Authentication Links -->
+                    <!-- Nav Links -->
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home </a>
+                    </li>
                     @guest
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                            <a class="nav-link" href="{{ route('login') }}">Login</a>
                         </li>
                     @else
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Features</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Pricing</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">About</a>
-                            </li>
-                        </ul>
+                        <li class="nav-item">
+                            <a class="nav-link" href=" {{ route('my-hours') }}"><i class="fas fa-clock"></i> My
+                                Hours</a>
+                        </li>
                     @endguest
+                    @admin
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin') }}"><strong style="color:red"><i
+                                    class="fas fa-cogs"></i> Admin</strong>
+                            </a>
+                    </li>
+                    @endadmin
                 </ul>
             </div>
         </div>

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -51,7 +52,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  */
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -59,6 +60,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $guarded = [];
+
+    protected $dates = ['deleted_at', 'created_at', 'updated_at'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -94,6 +97,9 @@ class User extends Authenticatable
     public function hours()
     {
         return $this->hasMany(Hour::class);
+    }
+    public function student() {
+        // return $this->hasOne(StudentInfo::class);
     }
 
     /**

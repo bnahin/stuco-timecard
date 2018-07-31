@@ -23,8 +23,10 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('domain');
             $table->boolean('is_admin');
+
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

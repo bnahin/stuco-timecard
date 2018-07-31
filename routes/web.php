@@ -21,9 +21,15 @@ Route::get('/admin', function () {
 })->name('admin');
 
 /** Login */
-Auth::routes();
+//Auth::routes();
 Route::get('/oauth-callback', 'GoogleAuthController@handle')->name('oauth-callback');
-Route::get('/login-google', 'GoogleAuthController@redirect')->name('oauth-redirect');
+Route::get('/login-google', 'GoogleAuthController@redirect')->name('login');
 
 /** Hours */
 Route::post('/hours/new','HoursController@store');
+Route::get('/hours', function() {
+    return 'My Hours';
+})->name('my-hours');
+
+/** Import Test */
+Route::get('/import', 'StudentInfoController@handleImport');

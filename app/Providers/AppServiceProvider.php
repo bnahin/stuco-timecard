@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -18,8 +19,12 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
+        /** Custom Blade Directives */
         Blade::if('admin' ,function () {
             return Auth::check() && Auth::user()->isAdmin();
+        });
+        Blade::if('route' ,function ($route) {
+            return Route::currentRouteName() === $route;
         });
     }
 
