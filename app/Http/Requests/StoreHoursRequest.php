@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Hour;
+use App\StudentInfo;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreHoursRequest extends FormRequest
@@ -14,8 +17,23 @@ class StoreHoursRequest extends FormRequest
      */
     public function authorize()
     {
-        //Anyone can submit hours/clock out
-        return true;
+        //Is user logged in?
+        if (Auth::check()) {
+            if (Auth::user()->isAdmin()) {
+                // Admins can clock out anybody
+                return true;
+            }
+            if ($this->input('id') !== Auth::user()->student_id) {
+                //Somehow not their own ID
+                return false;
+            }
+
+            //All good
+            return true;
+        }
+
+        //Not logged in
+        return false;
     }
 
     /**
@@ -42,13 +60,19 @@ class StoreHoursRequest extends FormRequest
         $validator->after(function ($v) {
             //Step 1: User exists
             $id = $this->input('id');
-            if (User::where('student_id', $id)->count()) {
+
+            $user = User::where('student_id', $id);
+            $hasUser = $user->count();
+            $student = StudentInfo::where('student_id', $id);
+            $hasStudent = $student->count();
+
+            if ($hasUser || $hasStudent) {
                 //Step 2: User not currently clocked out
-                if (User::isClockedOut(User::where('student_id', $id)->pluck('id'))) {
-                    $v->errors()->add('student_id', 'Student is already clocked out');
+                if (Hour::isClockedOut($id)) {
+                    $v->errors()->add('id', 'The student is already clocked out.');
                 }
             } else {
-                $v->errors()->add('student_id', 'The student does not exist.');
+                $v->errors()->add('id', 'The student does not exist.');
             }
         });
     }

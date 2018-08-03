@@ -11,25 +11,29 @@
 |
 */
 
-/** Home */
-Route::get('/', 'HomeController@index')
-    ->name('home');
-
-/** Admin */
-Route::get('/admin', function () {
-    return 'Admin Here';
-})->name('admin');
-
 /** Login */
 //Auth::routes();
 Route::get('/oauth-callback', 'GoogleAuthController@handle')->name('oauth-callback');
 Route::get('/login-google', 'GoogleAuthController@redirect')->name('login');
+Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 
-/** Hours */
-Route::post('/hours/new','HoursController@store');
-Route::get('/hours', function() {
-    return 'My Hours';
-})->name('my-hours');
+Route::group(['middleware' => 'auth'], function () {
+    /** Home */
+    Route::get('/', 'HomeController@index')
+        ->name('home');
+
+    /** Admin */
+    Route::get('/admin', function () {
+        return 'Admin Here';
+    })->name('admin');
+
+    /** Hours */
+    Route::post('/hours/new', 'HoursController@store');
+    Route::delete('/hours/delete', 'HoursController@delete');
+    Route::get('/hours', function () {
+        return 'My Hours';
+    })->name('my-hours');
+});
 
 /** Import Test */
 Route::get('/import', 'StudentInfoController@handleImport');

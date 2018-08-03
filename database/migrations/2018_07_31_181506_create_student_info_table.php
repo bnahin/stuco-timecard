@@ -14,12 +14,15 @@ class CreateStudentInfoTable extends Migration
     public function up()
     {
         Schema::create('student_info', function (Blueprint $table) {
-            $table->integer('user_id');
+            $table->increments('id');
+            $table->integer('user_id')->nullable();
             $table->integer('student_id')->unique();
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('email');
             $table->integer('grade');
 
-            $table->primary('user_id');
-
+            $table->timestamps();
             $table->softDeletes();
         });
     }

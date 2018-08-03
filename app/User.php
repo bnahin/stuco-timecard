@@ -49,6 +49,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereIsAdmin($value)
  * @property string                                                    $grade
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereGrade($value)
+ * @property \Carbon\Carbon|null $deleted_at
+ * @property-read \App\StudentInfo $student
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\App\User onlyTrashed()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\User withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\User withoutTrashed()
  */
 class User extends Authenticatable
 {
@@ -83,12 +91,12 @@ class User extends Authenticatable
 
     public function setFirstNameAttribute($val)
     {
-        $this->attributes['first_name'] = ucfirst($val);
+        $this->attributes['first_name'] = ucwords($val);
     }
 
     public function setLastNameAttribute($val)
     {
-        $this->attributes['last_name'] = ucfirst($val);
+        $this->attributes['last_name'] = ucwords($val);
     }
 
     /**
@@ -99,7 +107,7 @@ class User extends Authenticatable
         return $this->hasMany(Hour::class);
     }
     public function student() {
-        // return $this->hasOne(StudentInfo::class);
+        return $this->hasOne(StudentInfo::class);
     }
 
     /**
@@ -108,13 +116,5 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return $this->is_admin == 1;
-    }
-
-    public static function isClockedOut($id)
-    {
-        return Hour::where('user_id', $id)
-            ->whereNotNull('start_time')
-            ->whereNull('end_time')
-            ->count();
     }
 }

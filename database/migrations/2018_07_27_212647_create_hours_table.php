@@ -15,11 +15,12 @@ class CreateHoursTable extends Migration
     {
         Schema::create('hours', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
+            $table->integer('user_id')->nullable();
+            $table->integer('student_id'); // Fallback in case user has not logged on
             $table->integer('event_id'); // Refers to events table, editable by admins
             $table->timestamp('start_time')->nullable();
             $table->timestamp('end_time')->nullable();
-            $table->text('comments');
+            $table->text('comments')->nullable();
 
             $table->timestamps();
         });
