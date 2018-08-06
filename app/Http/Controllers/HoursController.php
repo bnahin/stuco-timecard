@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Event;
 use App\Hour;
 use App\Http\Requests\StoreHoursRequest;
+use App\StudentInfo;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -42,6 +44,15 @@ class HoursController extends Controller
             $hour->saveOrFail();
         }
 
+        $name = StudentInfo::where('student_id', $hour->student_id)->first()->full_name;
+        $event = $hour->getEventName();
+        if (Auth::user()->isAdmin()) {
+            log_action("Clocked out $name for $event");
+        }
+        else {
+            log_action("Clocked out for $event");
+        }
+
         return ['success' => true, 'messsage' => $user->first()->first_name . " has been clocked out."];
 
 
@@ -54,6 +65,7 @@ class HoursController extends Controller
             //Delete hour
             try {
                 Hour::getClockData($stuid)->delete();
+                log_action("Deleted time punch");
             } catch (\Exception $e) {
                 abort(500, $e->getMessage());
             }
