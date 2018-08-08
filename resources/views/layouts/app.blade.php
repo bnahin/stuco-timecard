@@ -18,6 +18,7 @@
     <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
 
     <!-- Styles -->
+    @stack('styles')
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
@@ -42,23 +43,23 @@
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
                     <!-- Nav Links -->
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Home </a>
+                    <li class="nav-item {{ (Route::currentRouteName() == "home") ? "active":"" }}">
+                        <a class="nav-link" href="/">Home </a>
                     </li>
                     @guest
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('login') }}">Login</a>
                         </li>
                     @else
-                        <li class="nav-item">
+                        <li class="nav-item {{ (Route::currentRouteName() == "my-hours") ? "active":"" }}">
                             <a class="nav-link" href=" {{ route('my-hours') }}"><i class="fas fa-clock"></i> My
                                 Hours</a>
                         </li>
                     @endguest
                     @admin
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin') }}"><strong style="color:red"><i
-                                    class="fas fa-cogs"></i> Admin</strong>
+                    <li class="nav-item {{ (Route::currentRouteName() == "admin") ? "active":"" }}">
+                        <a class="nav-link" href="{{ route('admin') }}"><i
+                                    class="fas fa-cogs"></i> Admin
                             </a>
                     </li>
                     <li class="nav-item dropdown">
@@ -85,5 +86,10 @@
 </body>
 
 <!-- Scripts -->
+<script
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+@stack('scripts')
 <script src="{{ asset('js/app.js') }}" defer></script>
 </html>

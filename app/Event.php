@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Event
@@ -22,6 +23,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Event extends Model
 {
+    use SoftDeletes;
+
+    protected $dates = ['deleted_at', 'created_at', 'updated_at'];
+
     public function hours()
     {
         $this->hasMany(Hour::class);

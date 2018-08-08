@@ -11,6 +11,14 @@ class EventsTableSeeder extends Seeder
      */
     public function run()
     {
+        App\Event::truncate();
+        //This is needed for queries for charts
+        App\Event::insert([
+                'id'         => 0,
+                'event_name' => 'Out of Classroom',
+                'is_active'  => 1
+            ]
+        );
         factory(App\Event::class, 5)->create();
     }
 }

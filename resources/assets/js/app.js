@@ -53,7 +53,7 @@ $('#new-activity-submit').click(function (e) {
     {
       id      : $('#student-id').val(),
       event   : $('#event-name').val(),
-      comments: $('#comments').html()
+      comments: $('#comments').val()
     })
     .done(function () {
       activityBtnEnable(btn, 'check', 'Success', false)
@@ -76,12 +76,56 @@ $('#new-activity-submit').click(function (e) {
 })
 
 /**
- * Clock In Submission
- *
+ * Clock In Submission]
  */
 
+//Clock in
+$('.clock-in').click(function (e) {
+  e.preventDefault()
+  let mainBtn  = $('#ci-main'),
+      dropBtn  = $('#ci-addon'),
+      returnTo = $(this).attr('data-return'),
+      action   = $('#clock-in-form').attr('action'),
+      id       = $('#hour-id').val()
+
+  //Disable Buttons
+  mainBtn.attr('disabled', true)
+  mainBtn.html('<i class="fas fa-spinner fa-pulse"></i>')
+  dropBtn.attr('disabled', true)
+
+  //Send Request
+  $.post(action, {
+    comments: $('#comments').val()
+  })
+    .done(function (r) {
+      mainBtn.html('<i class="fas fa-check"></i> Success')
+
+      return swal({
+        title  : 'Success!',
+        text   : 'You have clocked in.',
+        icon   : 'success',
+        timer  : 4000,
+        buttons: false
+        //TODO make this self-destruct and redirect
+      }).then(() => {
+        window.location = returnTo
+      })
+
+    })
+    .fail(function (xhr) {
+      mainBtn.attr('disabled', false)
+      mainBtn.html('<i class="fas fa-sign-in-alt"></i> Clock In')
+      dropBtn.attr('disabled', false)
+      swal('Error!', 'There was an error processing the time punch.', 'error')
+      console.log(xhr.responseJSON)
+    })
+
+})
+
 //Remove Timepunch
-$('#clock-remove').click(function () {
+$('#clock-remove').click(function (e) {
+  e.preventDefault()
+
   let btn    = $(this),
       action = btn.data('action')
 
@@ -110,3 +154,153 @@ $('#clock-remove').click(function () {
     }
   })
 })
+
+/**
+ Hours Page
+ */
+
+if ($('#hours-table').length && !$('#no-hours').length) {
+  /** Data Table */
+  $(document).ready(function () {
+    $('#hours-table').DataTable({
+      'order'     : [[0, 'desc']],
+      'columnDefs': [
+        {
+          'targets'   : [0],
+          'visible'   : false,
+          'searchable': false
+        }
+      ],
+      'buttons'   : [
+        {
+          extend       : 'pdf',
+          messageTop   : 'Name: Nahin, Blake\nGrade: 12\nStudent ID: 115602',
+          exportOptions: {
+            columns: ':not(.print-hide)'
+          }
+        }, {
+          extend       : 'excel',
+          messageTop   : 'Name: Nahin, Blake',
+          filename     : 'Nahin, Blake - Time Punches',
+          sheetName    : 'Nahin, Blake - Time Punches',
+          exportOptions: {
+            columns: ':not(.print-hide)'
+          }
+        },
+        {
+          extend       : 'print',
+          messageTop   : 'Name: Nahin, Blake | Grade: 12 | Student ID: 115602',
+          exportOptions: {
+            columns: ':not(.print-hide)'
+          }
+        }
+      ],
+      dom         :
+        '<\'row\'<\'col-sm-3\'l><\'col-sm-6 text-center\'B><\'col-sm-3\'f>>' +
+        '<\'row\'<\'col-sm-12\'tr>>' +
+        '<\'row\'<\'col-sm-5\'i><\'col-sm-7\'p>>',
+    })
+  })
+
+  /** Charts */
+
+  //Chart Data
+  $.get(
+    '/hours/charts'
+  ).done(function (r) {
+    loadGraphs(r)
+  })
+    .fail(function (xhr) {
+      $('canvas').remove()
+      console.log('Unable to retrieve charts :(')
+    })
+
+  function loadGraphs (data) {
+    console.log(data);
+    function dynamicColors () {
+      var r = Math.floor(Math.random() * 255)
+      var g = Math.floor(Math.random() * 255)
+      var b = Math.floor(Math.random() * 255)
+      return 'rgba(' + r + ',' + g + ',' + b + ', 0.5)'
+    }
+
+    function poolColors (a) {
+      var pool = []
+      for (i = 0; i < a; i++) {
+        pool.push(dynamicColors())
+      }
+      return pool
+    }
+
+    let chart = new Chart(document.getElementById('line-chart'), {
+      'type'   : 'line',
+      'data'   : {
+        'labels'  : data.line.labels,
+        'datasets': [{
+          'label'      : 'Average Hours',
+          'data'       : data.line.data,
+          'fill'       : false,
+          'borderColor': 'rgb(75, 192, 192)',
+          'lineTension': 0.1
+        }]
+      },
+      'options': {}
+    })
+    let chart1 = new Chart(document.getElementById('pie-chart'), {
+      'type': 'doughnut',
+      'data': {
+        'labels'  : data.pie.labels,
+        'datasets': [{
+          'label'          : 'Number of Events',
+          'data'           : data.pie.data,
+          'backgroundColor': poolColors(data.pie.data.length)
+        }]
+      }
+    })
+    let chart2 = new Chart(document.getElementById('mixed-chart'), {
+      type   : 'bar',
+      data   : {
+        labels  : data.mixed.labels,
+        datasets: [{
+          label          : 'Total Hours',
+          data           : data.mixed.totals,
+          backgroundColor: 'rgba(255,99,132,0.2)',
+          borderColor    : poolColors(1)[0]
+        },
+          {
+            label      : 'Out of Classroom',
+            data       : [65, 59, 80, 81, 56, 55, 40],
+            borderColor: poolColors(1)[0],
+            lineTension: 0.1,
+            type       : 'line',
+            fill       : false
+          },
+          {
+            label      : 'Event 1',
+            data       : [29, 19, 40, 11, 76, 5, 30],
+            borderColor: poolColors(1)[0],
+            lineTension: 0.1,
+            type       : 'line',
+            fill       : false
+          },
+          {
+            label      : 'Event 2',
+            data       : [11, 19, 20, 10, 46, 25, 10],
+            borderColor: poolColors(1)[0],
+            lineTension: 0.1,
+            type       : 'line',
+            fill       : false
+          },
+          {
+            label      : 'Event 3',
+            data       : [41, 29, 12, 33, 12, 32, 12],
+            borderColor: poolColors(1)[0],
+            lineTension: 0.1,
+            type       : 'line',
+            fill       : false
+          }]
+      },
+      options: {}
+    })
+  }
+}

@@ -62,7 +62,7 @@ class StudentInfoController extends Controller
             $count++;
         }
 
-        return ["Import complete with $count students and " . count($errors) . " errors.\n"
-            . count($found) . "had user model(s)."];
+        return response()->json(["Import complete with $count students and " . count($errors) . " errors.\n"
+            . count($found) . "had user model(s)."]);
     }
 }

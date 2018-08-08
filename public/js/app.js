@@ -14021,12 +14021,48 @@ $('#new-activity-submit').click(function (e) {
 });
 
 /**
- * Clock In Submission
- *
+ * Clock In Submission]
  */
 
+//Clock in
+$('.clock-in').click(function (e) {
+  e.preventDefault();
+  var mainBtn = $('#ci-main'),
+      dropBtn = $('#ci-addon'),
+      returnTo = $(this).attr("data-return"),
+      action = $('#clock-in-form').attr('action'),
+      id = $("#hour-id").val();
+
+  //Disable Buttons
+  mainBtn.attr('disabled', true);
+  mainBtn.html('<i class="fas fa-spinner fa-pulse"></i>');
+  dropBtn.attr('disabled', true);
+
+  //Send Request
+  $.post(action, {}).done(function (r) {
+    mainBtn.attr('disabled', false);
+    mainBtn.html('<i class="fas fa-sign-in-alt"></i> Clock In');
+    dropBtn.attr('disabled', false);
+
+    return swal({
+      title: 'Success!',
+      text: 'You have clocked in.',
+      icon: 'success',
+      timer: 4000,
+      buttons: true
+      //TODO make this self-destruct and redirect
+    }).then(function () {
+      window.location = returnTo;
+    });
+  }).fail(function (xhr) {
+    console.log(xhr.responseJSON);
+  });
+});
+
 //Remove Timepunch
-$('#clock-remove').click(function () {
+$('#clock-remove').click(function (e) {
+  e.preventDefault();
+
   var btn = $(this),
       action = btn.data('action');
 

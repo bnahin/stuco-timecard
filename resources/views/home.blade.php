@@ -7,9 +7,9 @@
                 <div class="card" id="{{ $clockedOut ? 'clock-in':'new-activity' }}-card">
                     <div class="card-body">
                         @if($clockedOut)
-                            @include('pages.clockin')
+                            @include('partials.clockin')
                         @else
-                            @include('pages.clockout')
+                            @include('partials.clockout')
                         @endif
                     </div>
                 </div>

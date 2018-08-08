@@ -26,7 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Hour whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Hour whereUserId($value)
  * @mixin \Eloquent
- * @property int $student_id
+ * @property int                 $student_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Hour whereStudentId($value)
  */
 class Hour extends Model
@@ -68,7 +68,48 @@ class Hour extends Model
                 ->whereNull('end_time')
                 ->firstOrFail() : false;
     }
-    public function getEventName() {
+
+    public function getEventName()
+    {
         return ($this->event_id) ? $this->event->event_name : 'Out of Classroom';
+    }
+
+    public function getFullName()
+    {
+        return ($this->user_id) ?
+            $this->user->full_name :
+            StudentInfo::where('student_id', $this->student_id)->first()->full_name;
+    }
+
+    public function getTimeDiff()
+    {
+        $start_time = $this->start_time;
+        $end_time = $this->end_time;
+
+        $diff = $end_time->diffInRealMinutes($start_time);
+        $hours = ceil($diff / 60);
+        $minutes = ceil($diff % 60);
+        $return = "";
+        if ($hours) {
+            $return .= "$hours hour";
+            if ($hours > 1) {
+                $return .= "s";
+            }
+            //Even hour
+        }
+        if ($hours && $minutes) {
+            $return .= ", ";
+        }
+        if ($minutes) {
+            $return .= "$minutes minute";
+            if ($minutes > 1) {
+                $return .= "s";
+            }
+        }
+        if (!$hours && !$minutes) {
+            $return = "<em>No Time Elapsed</em>";
+        }
+
+        return $return;
     }
 }

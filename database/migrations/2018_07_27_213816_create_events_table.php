@@ -19,6 +19,7 @@ class CreateEventsTable extends Migration
             $table->boolean('is_active'); //Editable by admins. Able to be selected or not
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

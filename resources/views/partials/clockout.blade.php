@@ -2,7 +2,7 @@
 <hr>
 {{-- When entering ID,
  if already clocked out, disable all fields, change border color, add elapsed time and clock in button--}}
-<form id="new-activity" action="{{ url('/hours/new') }}">
+<form id="new-activity" action="{{ route('clock-out') }}">
     @csrf
     <div class="form-row">
         <div class="form-group col-md-3">

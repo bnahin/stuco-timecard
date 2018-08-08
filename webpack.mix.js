@@ -1,4 +1,4 @@
-let mix = require('laravel-mix');
+let mix = require('laravel-mix')
 
 /*
  |--------------------------------------------------------------------------
@@ -12,5 +12,8 @@ let mix = require('laravel-mix');
  */
 
 mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css');
-mix.browserSync('stuco-timecard.test');
+  .sass('resources/assets/sass/app.scss', 'public/css')
+mix.browserSync({
+  proxy: 'stuco-timecard.test',
+  open : false
+})

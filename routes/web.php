@@ -28,11 +28,16 @@ Route::group(['middleware' => 'auth'], function () {
     })->name('admin');
 
     /** Hours */
-    Route::post('/hours/new', 'HoursController@store');
+    Route::post('/hours/new', 'HoursController@store')->name('clock-out');
+    Route::post('/hours/clockin/{hour}', 'HoursController@clockin')->name('clock-in');
     Route::delete('/hours/delete', 'HoursController@delete');
-    Route::get('/hours', function () {
-        return 'My Hours';
-    })->name('my-hours');
+
+    Route::get('/hours', 'HoursController@index')->name('my-hours');
+    Route::get('/hours/charts', 'HoursController@charts');
+
+    Route::get('/hours/mark/{hour}', function (App\Hour $hour) {
+    return 'My Hours & Mark For Review (Hour ID '.$hour->id.')';
+    })->name('hour-mark');
 });
 
 /** Import Test */
