@@ -57,8 +57,8 @@
                         </li>
                     @endguest
                     @admin
-                    <li class="nav-item {{ (Route::currentRouteName() == "admin") ? "active":"" }}">
-                        <a class="nav-link" href="{{ route('admin') }}"><i
+                    <li class="nav-item {{ (Route::currentRouteName() == "admin-home") ? "active":"" }}">
+                        <a class="nav-link" href="{{ route('admin-home') }}"><i
                                 class="fas fa-cogs"></i> Admin
                         </a>
                     </li>

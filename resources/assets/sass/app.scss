@@ -27,9 +27,11 @@ body {
 #new-activity-card {
   border-top: 3px solid #43da43;
 }
+
 #clock-in-card {
   border-top: 3px solid #7c43da;
 }
+
 #clock-in-table {
   text-align: center;
 }
@@ -37,4 +39,42 @@ body {
 /** Hours Page **/
 #stats {
   margin-bottom: 8px;
+}
+
+#hours-card {
+  border-top: 3px solid #f780ff;
+}
+
+/** Admin Page **/
+#admin-card {
+  border-top: 3px solid #ec6c6c;
+  height: 80vh;
+
+}
+
+#adm-nav-col {
+  background-color: #e6e6e6;
+  border-right: 2px solid #adadad;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  position: absolute;
+  height: 80vh;
+}
+
+#admin-nav {
+  padding: 15px;
+  line-height: 40px;
+  a {
+    color: #474851;
+    &:hover, &:focus {
+      color: black;
+    }
+    &.active {
+      color: #2780E3;
+    }
+  }
+  li {
+    border-bottom: 1px solid #ccc;
+  }
 }
