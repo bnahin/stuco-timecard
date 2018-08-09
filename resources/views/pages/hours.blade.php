@@ -19,7 +19,7 @@
             <div class="col-md-12">
                 <div class="card" id="hours-card">
                     <div class="card-body">
-                        <h3 class="card-title">My Hours</h3>
+                        <h3 class="card-title">@admin Hours for {{ $fullName }} @else My Hours @endadmin</h3>
                         <hr>
                         <!--Up here show stats -->
                         @if (count($hours))
@@ -61,6 +61,7 @@
                                 </div>
                             </div>
                         @endif
+                        <input type="hidden" id="user_id" value="{{ $uid }}">
                         <table class="table table-hover" id="hours-table">
                             <thead class="thead-dark">
                             <tr>
@@ -81,7 +82,8 @@
                                     @endphp
                                     <!-- If marked, warning (yellow) background -->
                                     <tr @if($inProgress) class="table-info" @endif>
-                                        <td style="display:none;" class="print-hide">{{ $hour->start_time->timestamp }}</td>
+                                        <td style="display:none;"
+                                            class="print-hide">{{ $hour->start_time->timestamp }}</td>
                                         <td>{{ $hour->start_time->toDateString() }}</td>
                                         <td>{{ $hour->getEventName() }}</td>
                                         <td>{{ $hour->start_time->format('g:i A') }}</td>

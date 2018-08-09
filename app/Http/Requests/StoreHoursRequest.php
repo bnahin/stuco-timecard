@@ -17,19 +17,19 @@ class StoreHoursRequest extends FormRequest
      */
     public function authorize()
     {
-        //Is user logged in?
         if (Auth::check()) {
             if (Auth::user()->isAdmin()) {
                 // Admins can clock out anybody
                 return true;
             }
-            if ($this->input('id') !== Auth::user()->student_id) {
+            if ($this->input('id') != Auth::user()->student->student_id) {
                 //Somehow not their own ID
                 return false;
             }
 
             //All good
             return true;
+
         }
 
         //Not logged in

@@ -4,7 +4,7 @@ use Faker\Generator as Faker;
 use Carbon\Carbon;
 
 $factory->define(App\Hour::class, function (Faker $faker) {
-    $start = $faker->dateTimeBetween('-10 days'); //Start time
+    $start = $faker->dateTimeBetween('-10 months'); //Start time
     $end = $faker->dateTimeBetween($start, $start->format('Y-m-d H:i:s') . " +12 hours"); //End time
 
     return [

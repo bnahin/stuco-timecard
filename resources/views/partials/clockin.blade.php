@@ -43,7 +43,8 @@
                     Review</a>
             </div>
         </div>
-        <button class="btn btn-danger" id="clock-remove" data-action="{{ url('/hours/delete') }}"><i
+        <button class="btn btn-danger" id="clock-remove" data-action="{{ route('delete-hour',['hour' => $data->id]) }}">
+            <i
                 class="fas fa-times"></i> Remove Time Punch
         </button>
     </div>

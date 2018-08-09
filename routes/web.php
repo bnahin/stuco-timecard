@@ -29,14 +29,18 @@ Route::group(['middleware' => 'auth'], function () {
 
     /** Hours */
     Route::post('/hours/new', 'HoursController@store')->name('clock-out');
-    Route::post('/hours/clockin/{hour}', 'HoursController@clockin')->name('clock-in');
-    Route::delete('/hours/delete', 'HoursController@delete');
+    Route::post('/hours/clockin/{hour}', 'HoursController@clockin')
+        ->middleware('can:update,hour')
+        ->name('clock-in');
+    Route::delete('/hours/delete/{hour}', 'HoursController@delete')
+        ->middleware('can:delete,hour')
+        ->name('delete-hour');
 
-    Route::get('/hours', 'HoursController@index')->name('my-hours');
-    Route::get('/hours/charts', 'HoursController@charts');
+    Route::get('/hours/{user?}', 'HoursController@index')->name('my-hours');
+    Route::get('/hours/charts/{user}', 'HoursController@charts');
 
     Route::get('/hours/mark/{hour}', function (App\Hour $hour) {
-    return 'My Hours & Mark For Review (Hour ID '.$hour->id.')';
+        return 'My Hours & Mark For Review (Hour ID ' . $hour->id . ')';
     })->name('hour-mark');
 });
 

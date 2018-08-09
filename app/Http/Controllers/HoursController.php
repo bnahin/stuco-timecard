@@ -13,18 +13,29 @@ use Illuminate\Support\Facades\Auth;
 
 class HoursController extends Controller
 {
-    public function index()
+    public function index(User $user = null)
     {
-        $hours = Hour::where('user_id', Auth::user()->id)->orderByDesc('start_time')->get();
+        if ($user) {
+            if (!Auth::user()->isAdmin()) {
+                return redirect(route('home'))->with('forbidden', true);
+            }
+            $uid = $user->id;
+            $fullName = $user->full_name;
+        } else {
+            $uid = Auth::user()->id;
+            $fullName = Auth::user()->full_name;
+        }
+
+        $hours = Hour::where('user_id', $uid)->orderByDesc('start_time')->get();
 
         $total = Hour::select(\DB::raw('TIME_TO_SEC(TIMEDIFF(end_time, start_time)) AS total'))->where('user_id',
-            Auth::user()->id)->get();
+            $uid)->get();
         $totalHours = round($total->sum('total') / 3600);
         $averageHours = round($total->avg('total') / 3600);
 
         $numEvents = Hour::where('user_id', Auth::id())->count();
 
-        return view('pages.hours', compact('hours', 'totalHours', 'averageHours', 'numEvents'));
+        return view('pages.hours', compact('hours', 'totalHours', 'averageHours', 'numEvents', 'fullName', 'uid'));
     }
 
     /**
@@ -71,14 +82,18 @@ class HoursController extends Controller
 
     }
 
-    public function delete(Request $request)
+    public function delete(Hour $hour, Request $request)
     {
-        $stuid = Auth::user()->student->student_id;
-        if (Hour::isClockedOut($stuid)) {
+        $stuid = $hour->student_id;
+        if (Hour::isClockedOut($stuid) || Auth::user()->isAdmin()) {
             //Delete hour
             try {
-                Hour::getClockData($stuid)->delete();
-                log_action("Deleted time punch");
+                $hour->delete();
+                if (Auth::user()->isAdmin()) {
+                    log_action("Deleted time punch for " . $hour->getFullName() . " from " . $hour->start_time->toFormattedDateString());
+                } else {
+                    log_action("Deleted own time punch");
+                }
             } catch (\Exception $e) {
                 abort(500, $e->getMessage());
             }
@@ -91,10 +106,6 @@ class HoursController extends Controller
 
     public function clockin(Hour $hour, Request $request)
     {
-        if ($hour->user_id !== Auth::user()->id) {
-            //Hmm... How is this possible?
-            abort(403);
-        }
         if ($hour->end_time) {
             //Already clocked in, possibly by admin? Whatever!
             return response()->json(['success' => true]);
@@ -110,18 +121,19 @@ class HoursController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function charts()
+    public function charts(User $user)
     {
+        $uid = $user->id;
         //Line Chart: Hours per Month
-        $lineRes = Hour::select(
-            \DB::raw(
-                "MONTH(start_time) as `month`, TRUNCATE(AVG(ROUND(TIME_TO_SEC(TIMEDIFF(end_time, start_time)) / 3600)), 2) AS hours"))
-            ->groupBy("month")->get();
+        $lineRes = Hour::select(\DB::raw(
+            "MONTH(start_time) as `month`, TRUNCATE(AVG(ROUND(TIME_TO_SEC(TIMEDIFF(end_time, start_time)) / 3600)), 2) AS hours"))
+            ->where('user_id', $uid)->groupBy("month")->get();
 
         //Pie Chart: Events by Name
         $pieRes = \DB::table('hours')
             ->join('events', 'hours.event_id', '=', 'events.id')
             ->select(\DB::raw('hours.event_id AS event_id, events.event_name AS event_name, COUNT(*) AS count'))
+            ->where('hours.user_id', $uid)
             ->groupBy('event_id', 'event_name')->get();
 
         //Mixed Chart: Total Hours, Total Hours per Month by Event
@@ -138,18 +150,17 @@ class HoursController extends Controller
 
             /** Total Hours */
             $db = Hour::select(
-                \DB::raw("CEIL(SUM(TIME_TO_SEC(TIMEDIFF(end_time, start_time)) / 3600)) AS hours"));
+                \DB::raw("CEIL(SUM(TIME_TO_SEC(TIMEDIFF(end_time, start_time)) / 3600)) AS hours"))
+                ->where('user_id', $uid);
             $totalHours = $db->whereRaw("MONTH(start_time) = ?", [$month]);
             $mixedRes[$month]['total'] = $totalHours->first()->hours ?: 0;
 
             /** Hours per Event */
-            $db = Hour::select(
-                \DB::raw("CEIL(SUM(TIME_TO_SEC(TIMEDIFF(end_time, start_time)) / 3600)) AS hours, event_id"));
-            $totalHours = $db->whereRaw("MONTH(start_time) = ?", [$month]);
             $events = Event::all(); //Inlcuding inactive events
             foreach ($events as $event) {
                 $db = Hour::select(
-                    \DB::raw("CEIL(SUM(TIME_TO_SEC(TIMEDIFF(end_time, start_time)) / 3600)) AS hours"));
+                    \DB::raw("CEIL(SUM(TIME_TO_SEC(TIMEDIFF(end_time, start_time)) / 3600)) AS hours"))
+                    ->where('user_id', $uid);
                 $totalHours = $db->whereRaw("MONTH(start_time) = ?", [$month])
                     ->where('event_id', $event->id)
                     ->first()->hours;
@@ -177,8 +188,13 @@ class HoursController extends Controller
         $lineData = $data['line'];
         foreach ($lineData as $line) {
             $month = $line->month;
-            $monthName = $labelData[$month];
             $total = $line->hours;
+
+            if (!isset($labelData[$month])) {
+                //Past 8 months ago, ignore
+                continue;
+            }
+            $monthName = $labelData[$month];
 
             $return['line']['labels'][] = $monthName;
             $return['line']['data'][] = $total;
@@ -197,6 +213,10 @@ class HoursController extends Controller
         /** Mixed Chart - "The Big One!" */
         $dataset = [];
         foreach ($mixedData as $month => $mixed) {
+            if (!$mixed['total']) {
+                //No data to show
+                continue;
+            }
             $monthName = $labelData[$month];
             $return['mixed']['labels'][] = $monthName;
             $return['mixed']['totals'][] = $mixed['total'];

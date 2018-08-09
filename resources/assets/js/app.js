@@ -148,7 +148,7 @@ $('#clock-remove').click(function (e) {
       })
     },
     error  : function (xhr) {
-      activityBtnEnable(btn, 'sign-in-alt', 'Clock In')
+      activityBtnEnable(btn, 'times', 'Remove Time Punch')
 
       return swal('Error!', 'There was a problem removing the time punch. ' + xhr.responseJSON.message, 'error')
     }
@@ -203,10 +203,11 @@ if ($('#hours-table').length && !$('#no-hours').length) {
   })
 
   /** Charts */
+  let user_id = $('#user_id').val();
 
   //Chart Data
   $.get(
-    '/hours/charts'
+    '/hours/charts/'+user_id
   ).done(function (r) {
     loadGraphs(r)
   })
@@ -216,7 +217,8 @@ if ($('#hours-table').length && !$('#no-hours').length) {
     })
 
   function loadGraphs (data) {
-    console.log(data);
+    console.log(data)
+
     function dynamicColors () {
       var r = Math.floor(Math.random() * 255)
       var g = Math.floor(Math.random() * 255)
@@ -232,7 +234,7 @@ if ($('#hours-table').length && !$('#no-hours').length) {
       return pool
     }
 
-    let chart = new Chart(document.getElementById('line-chart'), {
+    let lineChart = new Chart(document.getElementById('line-chart'), {
       'type'   : 'line',
       'data'   : {
         'labels'  : data.line.labels,
@@ -246,7 +248,7 @@ if ($('#hours-table').length && !$('#no-hours').length) {
       },
       'options': {}
     })
-    let chart1 = new Chart(document.getElementById('pie-chart'), {
+    let pieChart = new Chart(document.getElementById('pie-chart'), {
       'type': 'doughnut',
       'data': {
         'labels'  : data.pie.labels,
@@ -257,7 +259,7 @@ if ($('#hours-table').length && !$('#no-hours').length) {
         }]
       }
     })
-    let chart2 = new Chart(document.getElementById('mixed-chart'), {
+    let mixedChart = new Chart(document.getElementById('mixed-chart'), {
       type   : 'bar',
       data   : {
         labels  : data.mixed.labels,
@@ -266,41 +268,58 @@ if ($('#hours-table').length && !$('#no-hours').length) {
           data           : data.mixed.totals,
           backgroundColor: 'rgba(255,99,132,0.2)',
           borderColor    : poolColors(1)[0]
-        },
-          {
-            label      : 'Out of Classroom',
-            data       : [65, 59, 80, 81, 56, 55, 40],
-            borderColor: poolColors(1)[0],
-            lineTension: 0.1,
-            type       : 'line',
-            fill       : false
-          },
-          {
-            label      : 'Event 1',
-            data       : [29, 19, 40, 11, 76, 5, 30],
-            borderColor: poolColors(1)[0],
-            lineTension: 0.1,
-            type       : 'line',
-            fill       : false
-          },
-          {
-            label      : 'Event 2',
-            data       : [11, 19, 20, 10, 46, 25, 10],
-            borderColor: poolColors(1)[0],
-            lineTension: 0.1,
-            type       : 'line',
-            fill       : false
-          },
-          {
-            label      : 'Event 3',
-            data       : [41, 29, 12, 33, 12, 32, 12],
-            borderColor: poolColors(1)[0],
-            lineTension: 0.1,
-            type       : 'line',
-            fill       : false
-          }]
+        }]
       },
+      /*
+        {
+          label      : 'Out of Classroom',
+          data       : [65, 59, 80, 81, 56, 55, 40],
+          borderColor: poolColors(1)[0],
+          lineTension: 0.1,
+          type       : 'line',
+          fill       : false
+        },
+        {
+          label      : 'Event 1',
+          data       : [29, 19, 40, 11, 76, 5, 30],
+          borderColor: poolColors(1)[0],
+          lineTension: 0.1,
+          type       : 'line',
+          fill       : false
+        },
+        {
+          label      : 'Event 2',
+          data       : [11, 19, 20, 10, 46, 25, 10],
+          borderColor: poolColors(1)[0],
+          lineTension: 0.1,
+          type       : 'line',
+          fill       : false
+        },
+        {
+          label      : 'Event 3',
+          data       : [41, 29, 12, 33, 12, 32, 12],
+          borderColor: poolColors(1)[0],
+          lineTension: 0.1,
+          type       : 'line',
+          fill       : false
+        }]*/
       options: {}
     })
+
+    //Add data to mixed chart
+    for (let evt in data.mixed.datasets) {
+      if (data.mixed.datasets.hasOwnProperty(evt)) {
+        console.log(data.mixed.datasets[evt])
+        mixedChart.data.datasets.push({
+          label      : evt,
+          data       : data.mixed.datasets[evt],
+          borderColor: poolColors(1)[0],
+          lineTension: 0.1,
+          type       : 'line',
+          fill       : false
+        })
+        mixedChart.update()
+      }
+    }
   }
 }
