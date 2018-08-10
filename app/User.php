@@ -49,8 +49,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereIsAdmin($value)
  * @property string                                                    $grade
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereGrade($value)
- * @property \Carbon\Carbon|null $deleted_at
- * @property-read \App\StudentInfo $student
+ * @property \Carbon\Carbon|null                                       $deleted_at
+ * @property-read \App\StudentInfo                                     $student
  * @method static bool|null forceDelete()
  * @method static \Illuminate\Database\Query\Builder|\App\User onlyTrashed()
  * @method static bool|null restore()
@@ -106,8 +106,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Hour::class);
     }
-    public function student() {
+
+    public function student()
+    {
         return $this->hasOne(StudentInfo::class);
+    }
+
+    public function clubs()
+    {
+        return $this->belongsToMany(Club::class)
+            ->withTimestamps();
     }
 
     /**

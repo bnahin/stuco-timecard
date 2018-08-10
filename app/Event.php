@@ -32,6 +32,11 @@ class Event extends Model
         $this->hasMany(Hour::class);
     }
 
+    public function club()
+    {
+        $this->belongsTo(Club::class);
+    }
+
     public function scopeActive($query)
     {
         return $query->where('is_active', 1);

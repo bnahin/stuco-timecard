@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEventsTable extends Migration
+class CreateClubsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateEventsTable extends Migration
      */
     public function up()
     {
-        Schema::create('events', function (Blueprint $table) {
+        Schema::create('clubs', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('event_name');
-            $table->boolean('is_active'); //Editable by admins. Able to be selected or not
-            $table->integer('club_id');
+            $table->string('join_code'); //If entered, automatically assign to club!
+            $table->string('club_name');
+            $table->boolean('public'); //Able to be selected (if part of club, always shown)
+
             $table->timestamps();
             $table->softDeletes();
         });
@@ -30,6 +31,6 @@ class CreateEventsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('events');
+        Schema::dropIfExists('clubs');
     }
 }

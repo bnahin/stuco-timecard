@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cb5fde8cfc78c9182af829d5c592d023",
+    "content-hash": "a81987ea1bf0aa7ee5c9f7cb63825cec",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -694,16 +694,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.6.29",
+            "version": "v5.6.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "acc6b5c54ab196d3358f60acc5f55d9ebaaccc02"
+                "reference": "8a708b989adc320c451ee639d812af81f884666b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/acc6b5c54ab196d3358f60acc5f55d9ebaaccc02",
-                "reference": "acc6b5c54ab196d3358f60acc5f55d9ebaaccc02",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/8a708b989adc320c451ee639d812af81f884666b",
+                "reference": "8a708b989adc320c451ee639d812af81f884666b",
                 "shasum": ""
             },
             "require": {
@@ -829,7 +829,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2018-07-26T16:01:26+00:00"
+            "time": "2018-08-09T20:36:39+00:00"
         },
         {
             "name": "laravel/socialite",
@@ -957,6 +957,74 @@
             "time": "2018-05-17T13:42:07+00:00"
         },
         {
+            "name": "laravelcollective/html",
+            "version": "v5.6.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/LaravelCollective/html.git",
+                "reference": "974605fcd22a7e4d19f0b2ef635a0d1d7400387d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/LaravelCollective/html/zipball/974605fcd22a7e4d19f0b2ef635a0d1d7400387d",
+                "reference": "974605fcd22a7e4d19f0b2ef635a0d1d7400387d",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/http": "5.6.*",
+                "illuminate/routing": "5.6.*",
+                "illuminate/session": "5.6.*",
+                "illuminate/support": "5.6.*",
+                "illuminate/view": "5.6.*",
+                "php": ">=7.1.3"
+            },
+            "require-dev": {
+                "illuminate/database": "5.6.*",
+                "mockery/mockery": "~1.0",
+                "phpunit/phpunit": "~7.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.6-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Collective\\Html\\HtmlServiceProvider"
+                    ],
+                    "aliases": {
+                        "Form": "Collective\\Html\\FormFacade",
+                        "Html": "Collective\\Html\\HtmlFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Collective\\Html\\": "src/"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylorotwell@gmail.com"
+                },
+                {
+                    "name": "Adam Engebretson",
+                    "email": "adam@laravelcollective.com"
+                }
+            ],
+            "description": "HTML and Form Builders for the Laravel Framework",
+            "homepage": "https://laravelcollective.com",
+            "time": "2018-06-18T15:04:16+00:00"
+        },
+        {
             "name": "league/flysystem",
             "version": "1.0.45",
             "source": {
@@ -1039,6 +1107,70 @@
                 "storage"
             ],
             "time": "2018-05-07T08:44:23+00:00"
+        },
+        {
+            "name": "league/fractal",
+            "version": "0.17.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/fractal.git",
+                "reference": "a0b350824f22fc2fdde2500ce9d6851a3f275b0e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/fractal/zipball/a0b350824f22fc2fdde2500ce9d6851a3f275b0e",
+                "reference": "a0b350824f22fc2fdde2500ce9d6851a3f275b0e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "doctrine/orm": "^2.5",
+                "illuminate/contracts": "~5.0",
+                "mockery/mockery": "~0.9",
+                "pagerfanta/pagerfanta": "~1.0.0",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "~1.5",
+                "zendframework/zend-paginator": "~2.3"
+            },
+            "suggest": {
+                "illuminate/pagination": "The Illuminate Pagination component.",
+                "pagerfanta/pagerfanta": "Pagerfanta Paginator",
+                "zendframework/zend-paginator": "Zend Framework Paginator"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.13-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Fractal\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Phil Sturgeon",
+                    "email": "me@philsturgeon.uk",
+                    "homepage": "http://philsturgeon.uk/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Handle the output of complex data structures ready for API output.",
+            "homepage": "http://fractal.thephpleague.com/",
+            "keywords": [
+                "api",
+                "json",
+                "league",
+                "rest"
+            ],
+            "time": "2017-06-12T11:04:56+00:00"
         },
         {
             "name": "league/oauth1-client",
@@ -1925,16 +2057,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v4.1.2",
+            "version": "v4.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "5c31f6a97c1c240707f6d786e7e59bfacdbc0219"
+                "reference": "ca80b8ced97cf07390078b29773dc384c39eee1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/5c31f6a97c1c240707f6d786e7e59bfacdbc0219",
-                "reference": "5c31f6a97c1c240707f6d786e7e59bfacdbc0219",
+                "url": "https://api.github.com/repos/symfony/console/zipball/ca80b8ced97cf07390078b29773dc384c39eee1f",
+                "reference": "ca80b8ced97cf07390078b29773dc384c39eee1f",
                 "shasum": ""
             },
             "require": {
@@ -1989,20 +2121,20 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-16T14:05:40+00:00"
+            "time": "2018-07-26T11:24:31+00:00"
         },
         {
             "name": "symfony/css-selector",
-            "version": "v4.1.2",
+            "version": "v4.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
-                "reference": "03ac71606ecb0b0ce792faa17d74cc32c2949ef4"
+                "reference": "2a4df7618f869b456f9096781e78c57b509d76c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/03ac71606ecb0b0ce792faa17d74cc32c2949ef4",
-                "reference": "03ac71606ecb0b0ce792faa17d74cc32c2949ef4",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/2a4df7618f869b456f9096781e78c57b509d76c7",
+                "reference": "2a4df7618f869b456f9096781e78c57b509d76c7",
                 "shasum": ""
             },
             "require": {
@@ -2042,20 +2174,20 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "https://symfony.com",
-            "time": "2018-05-30T07:26:09+00:00"
+            "time": "2018-07-26T09:10:45+00:00"
         },
         {
             "name": "symfony/debug",
-            "version": "v4.1.2",
+            "version": "v4.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "a1f2118cedb8731c45e945cdd2b808ca82abc4b5"
+                "reference": "9316545571f079c4dd183e674721d9dc783ce196"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/debug/zipball/a1f2118cedb8731c45e945cdd2b808ca82abc4b5",
-                "reference": "a1f2118cedb8731c45e945cdd2b808ca82abc4b5",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/9316545571f079c4dd183e674721d9dc783ce196",
+                "reference": "9316545571f079c4dd183e674721d9dc783ce196",
                 "shasum": ""
             },
             "require": {
@@ -2098,20 +2230,20 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-06T14:52:28+00:00"
+            "time": "2018-07-26T11:24:31+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v4.1.2",
+            "version": "v4.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "00d64638e4f0703a00ab7fc2c8ae5f75f3b4020f"
+                "reference": "bfb30c2ad377615a463ebbc875eba64a99f6aa3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/00d64638e4f0703a00ab7fc2c8ae5f75f3b4020f",
-                "reference": "00d64638e4f0703a00ab7fc2c8ae5f75f3b4020f",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/bfb30c2ad377615a463ebbc875eba64a99f6aa3e",
+                "reference": "bfb30c2ad377615a463ebbc875eba64a99f6aa3e",
                 "shasum": ""
             },
             "require": {
@@ -2161,20 +2293,20 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-10T11:02:47+00:00"
+            "time": "2018-07-26T09:10:45+00:00"
         },
         {
             "name": "symfony/finder",
-            "version": "v4.1.2",
+            "version": "v4.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "84714b8417d19e4ba02ea78a41a975b3efaafddb"
+                "reference": "e162f1df3102d0b7472805a5a9d5db9fcf0a8068"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/84714b8417d19e4ba02ea78a41a975b3efaafddb",
-                "reference": "84714b8417d19e4ba02ea78a41a975b3efaafddb",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/e162f1df3102d0b7472805a5a9d5db9fcf0a8068",
+                "reference": "e162f1df3102d0b7472805a5a9d5db9fcf0a8068",
                 "shasum": ""
             },
             "require": {
@@ -2210,20 +2342,20 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2018-06-19T21:38:16+00:00"
+            "time": "2018-07-26T11:24:31+00:00"
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v4.1.2",
+            "version": "v4.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "8da9ea68ab2d80dfabd41e0d14b9606bb47a10c0"
+                "reference": "7d93e3547660ec7ee3dad1428ba42e8076a0e5f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/8da9ea68ab2d80dfabd41e0d14b9606bb47a10c0",
-                "reference": "8da9ea68ab2d80dfabd41e0d14b9606bb47a10c0",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/7d93e3547660ec7ee3dad1428ba42e8076a0e5f1",
+                "reference": "7d93e3547660ec7ee3dad1428ba42e8076a0e5f1",
                 "shasum": ""
             },
             "require": {
@@ -2264,20 +2396,20 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-16T14:05:40+00:00"
+            "time": "2018-08-01T14:07:44+00:00"
         },
         {
             "name": "symfony/http-kernel",
-            "version": "v4.1.2",
+            "version": "v4.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-kernel.git",
-                "reference": "ebd28f4f88a2ca0a0488882ad73c4004f3afdbe3"
+                "reference": "6347be5110efb27fe45ea04bf213078b67a05036"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/ebd28f4f88a2ca0a0488882ad73c4004f3afdbe3",
-                "reference": "ebd28f4f88a2ca0a0488882ad73c4004f3afdbe3",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/6347be5110efb27fe45ea04bf213078b67a05036",
+                "reference": "6347be5110efb27fe45ea04bf213078b67a05036",
                 "shasum": ""
             },
             "require": {
@@ -2351,29 +2483,32 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-23T17:16:22+00:00"
+            "time": "2018-08-01T15:30:34+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.8.0",
+            "version": "v1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "7cc359f1b7b80fc25ed7796be7d96adc9b354bae"
+                "reference": "e3d826245268269cd66f8326bd8bc066687b4a19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/7cc359f1b7b80fc25ed7796be7d96adc9b354bae",
-                "reference": "7cc359f1b7b80fc25ed7796be7d96adc9b354bae",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/e3d826245268269cd66f8326bd8bc066687b4a19",
+                "reference": "e3d826245268269cd66f8326bd8bc066687b4a19",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
+            "suggest": {
+                "ext-ctype": "For best performance"
+            },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.8-dev"
+                    "dev-master": "1.9-dev"
                 }
             },
             "autoload": {
@@ -2406,20 +2541,20 @@
                 "polyfill",
                 "portable"
             ],
-            "time": "2018-04-30T19:57:29+00:00"
+            "time": "2018-08-06T14:22:27+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.8.0",
+            "version": "v1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "3296adf6a6454a050679cde90f95350ad604b171"
+                "reference": "d0cd638f4634c16d8df4508e847f14e9e43168b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/3296adf6a6454a050679cde90f95350ad604b171",
-                "reference": "3296adf6a6454a050679cde90f95350ad604b171",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/d0cd638f4634c16d8df4508e847f14e9e43168b8",
+                "reference": "d0cd638f4634c16d8df4508e847f14e9e43168b8",
                 "shasum": ""
             },
             "require": {
@@ -2431,7 +2566,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.8-dev"
+                    "dev-master": "1.9-dev"
                 }
             },
             "autoload": {
@@ -2465,20 +2600,20 @@
                 "portable",
                 "shim"
             ],
-            "time": "2018-04-26T10:06:28+00:00"
+            "time": "2018-08-06T14:22:27+00:00"
         },
         {
             "name": "symfony/polyfill-php56",
-            "version": "v1.8.0",
+            "version": "v1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php56.git",
-                "reference": "af98553c84912459db3f636329567809d639a8f6"
+                "reference": "7b4fc009172cc0196535b0328bd1226284a28000"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php56/zipball/af98553c84912459db3f636329567809d639a8f6",
-                "reference": "af98553c84912459db3f636329567809d639a8f6",
+                "url": "https://api.github.com/repos/symfony/polyfill-php56/zipball/7b4fc009172cc0196535b0328bd1226284a28000",
+                "reference": "7b4fc009172cc0196535b0328bd1226284a28000",
                 "shasum": ""
             },
             "require": {
@@ -2488,7 +2623,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.8-dev"
+                    "dev-master": "1.9-dev"
                 }
             },
             "autoload": {
@@ -2521,20 +2656,20 @@
                 "portable",
                 "shim"
             ],
-            "time": "2018-04-26T10:06:28+00:00"
+            "time": "2018-08-06T14:22:27+00:00"
         },
         {
             "name": "symfony/polyfill-php72",
-            "version": "v1.8.0",
+            "version": "v1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php72.git",
-                "reference": "a4576e282d782ad82397f3e4ec1df8e0f0cafb46"
+                "reference": "95c50420b0baed23852452a7f0c7b527303ed5ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php72/zipball/a4576e282d782ad82397f3e4ec1df8e0f0cafb46",
-                "reference": "a4576e282d782ad82397f3e4ec1df8e0f0cafb46",
+                "url": "https://api.github.com/repos/symfony/polyfill-php72/zipball/95c50420b0baed23852452a7f0c7b527303ed5ae",
+                "reference": "95c50420b0baed23852452a7f0c7b527303ed5ae",
                 "shasum": ""
             },
             "require": {
@@ -2543,7 +2678,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.8-dev"
+                    "dev-master": "1.9-dev"
                 }
             },
             "autoload": {
@@ -2576,20 +2711,20 @@
                 "portable",
                 "shim"
             ],
-            "time": "2018-04-26T10:06:28+00:00"
+            "time": "2018-08-06T14:22:27+00:00"
         },
         {
             "name": "symfony/polyfill-util",
-            "version": "v1.8.0",
+            "version": "v1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-util.git",
-                "reference": "1a5ad95d9436cbff3296034fe9f8d586dce3fb3a"
+                "reference": "8e15d04ba3440984d23e7964b2ee1d25c8de1581"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-util/zipball/1a5ad95d9436cbff3296034fe9f8d586dce3fb3a",
-                "reference": "1a5ad95d9436cbff3296034fe9f8d586dce3fb3a",
+                "url": "https://api.github.com/repos/symfony/polyfill-util/zipball/8e15d04ba3440984d23e7964b2ee1d25c8de1581",
+                "reference": "8e15d04ba3440984d23e7964b2ee1d25c8de1581",
                 "shasum": ""
             },
             "require": {
@@ -2598,7 +2733,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.8-dev"
+                    "dev-master": "1.9-dev"
                 }
             },
             "autoload": {
@@ -2628,20 +2763,20 @@
                 "polyfill",
                 "shim"
             ],
-            "time": "2018-04-26T10:06:28+00:00"
+            "time": "2018-08-06T14:22:27+00:00"
         },
         {
             "name": "symfony/process",
-            "version": "v4.1.2",
+            "version": "v4.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "1d1677391ecf00d1c5b9482d6050c0c27aa3ac3a"
+                "reference": "f01fc7a4493572f7f506c49dcb50ad01fb3a2f56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/1d1677391ecf00d1c5b9482d6050c0c27aa3ac3a",
-                "reference": "1d1677391ecf00d1c5b9482d6050c0c27aa3ac3a",
+                "url": "https://api.github.com/repos/symfony/process/zipball/f01fc7a4493572f7f506c49dcb50ad01fb3a2f56",
+                "reference": "f01fc7a4493572f7f506c49dcb50ad01fb3a2f56",
                 "shasum": ""
             },
             "require": {
@@ -2677,20 +2812,20 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2018-05-31T10:17:53+00:00"
+            "time": "2018-07-26T11:24:31+00:00"
         },
         {
             "name": "symfony/routing",
-            "version": "v4.1.2",
+            "version": "v4.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/routing.git",
-                "reference": "73770bf3682b4407b017c2bdcb2b11cdcbce5322"
+                "reference": "6912cfebc0ea4e7a46fdd15c9bd1f427dd39ff1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/routing/zipball/73770bf3682b4407b017c2bdcb2b11cdcbce5322",
-                "reference": "73770bf3682b4407b017c2bdcb2b11cdcbce5322",
+                "url": "https://api.github.com/repos/symfony/routing/zipball/6912cfebc0ea4e7a46fdd15c9bd1f427dd39ff1b",
+                "reference": "6912cfebc0ea4e7a46fdd15c9bd1f427dd39ff1b",
                 "shasum": ""
             },
             "require": {
@@ -2754,20 +2889,20 @@
                 "uri",
                 "url"
             ],
-            "time": "2018-06-28T06:30:33+00:00"
+            "time": "2018-07-26T11:24:31+00:00"
         },
         {
             "name": "symfony/translation",
-            "version": "v4.1.2",
+            "version": "v4.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "2dd74d6b2dcbd46a93971e6ce7d245cf3123e957"
+                "reference": "6fcd1bd44fd6d7181e6ea57a6f4e08a09b29ef65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/2dd74d6b2dcbd46a93971e6ce7d245cf3123e957",
-                "reference": "2dd74d6b2dcbd46a93971e6ce7d245cf3123e957",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/6fcd1bd44fd6d7181e6ea57a6f4e08a09b29ef65",
+                "reference": "6fcd1bd44fd6d7181e6ea57a6f4e08a09b29ef65",
                 "shasum": ""
             },
             "require": {
@@ -2823,20 +2958,20 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-23T08:20:20+00:00"
+            "time": "2018-07-26T11:24:31+00:00"
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v4.1.2",
+            "version": "v4.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "9f882aed43f364de1d43038e8fb39703c577afc1"
+                "reference": "69e174f4c02ec43919380171c6f7550753299316"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/9f882aed43f364de1d43038e8fb39703c577afc1",
-                "reference": "9f882aed43f364de1d43038e8fb39703c577afc1",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/69e174f4c02ec43919380171c6f7550753299316",
+                "reference": "69e174f4c02ec43919380171c6f7550753299316",
                 "shasum": ""
             },
             "require": {
@@ -2898,7 +3033,7 @@
                 "debug",
                 "dump"
             ],
-            "time": "2018-07-05T11:54:23+00:00"
+            "time": "2018-07-26T11:24:31+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
@@ -2996,6 +3131,303 @@
                 "environment"
             ],
             "time": "2018-07-29T20:33:41+00:00"
+        },
+        {
+            "name": "yajra/laravel-datatables",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yajra/datatables.git",
+                "reference": "541481aa26c179ebcbf106fca835e3e3f480b966"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yajra/datatables/zipball/541481aa26c179ebcbf106fca835e3e3f480b966",
+                "reference": "541481aa26c179ebcbf106fca835e3e3f480b966",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0",
+                "yajra/laravel-datatables-buttons": "3.*",
+                "yajra/laravel-datatables-fractal": "1.*",
+                "yajra/laravel-datatables-html": "3.*",
+                "yajra/laravel-datatables-oracle": "8.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arjay Angeles",
+                    "email": "aqangeles@gmail.com"
+                }
+            ],
+            "description": "Laravel DataTables Complete Package.",
+            "keywords": [
+                "datatables",
+                "jquery",
+                "laravel"
+            ],
+            "time": "2017-08-31T02:05:46+00:00"
+        },
+        {
+            "name": "yajra/laravel-datatables-buttons",
+            "version": "v3.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yajra/laravel-datatables-buttons.git",
+                "reference": "d7ee45d911c8d7224b4f7cb0b76541bfc046c463"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-buttons/zipball/d7ee45d911c8d7224b4f7cb0b76541bfc046c463",
+                "reference": "d7ee45d911c8d7224b4f7cb0b76541bfc046c463",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "5.4.*|5.5.*|5.6.*",
+                "maatwebsite/excel": "^2.0",
+                "php": ">=7.0",
+                "yajra/laravel-datatables-html": "3.*",
+                "yajra/laravel-datatables-oracle": "8.*"
+            },
+            "require-dev": {
+                "mockery/mockery": "~1.0",
+                "phpunit/phpunit": "~6.0"
+            },
+            "suggest": {
+                "barryvdh/laravel-snappy": "Allows exporting of dataTable to PDF using the print view.",
+                "dompdf/dompdf": "Allows exporting of dataTable to PDF using the DomPDF."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Yajra\\DataTables\\ButtonsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Yajra\\DataTables\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arjay Angeles",
+                    "email": "aqangeles@gmail.com"
+                }
+            ],
+            "description": "Laravel DataTables Buttons Plugin.",
+            "keywords": [
+                "buttons",
+                "datatables",
+                "jquery",
+                "laravel"
+            ],
+            "time": "2018-07-31T08:07:35+00:00"
+        },
+        {
+            "name": "yajra/laravel-datatables-fractal",
+            "version": "v1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yajra/laravel-datatables-fractal.git",
+                "reference": "23804250ce32ddba216295ce47f713f551dba45c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-fractal/zipball/23804250ce32ddba216295ce47f713f551dba45c",
+                "reference": "23804250ce32ddba216295ce47f713f551dba45c",
+                "shasum": ""
+            },
+            "require": {
+                "league/fractal": "^0.17.0",
+                "php": ">=7.0",
+                "yajra/laravel-datatables-oracle": "8.*"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.*",
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Yajra\\DataTables\\FractalServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Yajra\\DataTables\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arjay Angeles",
+                    "email": "aqangeles@gmail.com"
+                }
+            ],
+            "description": "Laravel DataTables Fractal Plugin.",
+            "keywords": [
+                "api",
+                "datatables",
+                "fractal",
+                "laravel"
+            ],
+            "time": "2018-06-12T06:23:13+00:00"
+        },
+        {
+            "name": "yajra/laravel-datatables-html",
+            "version": "v3.7.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yajra/laravel-datatables-html.git",
+                "reference": "55e9b088429c5b5d727085b7081113b831d2b2bb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/55e9b088429c5b5d727085b7081113b831d2b2bb",
+                "reference": "55e9b088429c5b5d727085b7081113b831d2b2bb",
+                "shasum": ""
+            },
+            "require": {
+                "laravelcollective/html": "5.4.*|5.5.*|5.6.*",
+                "php": ">=7.0",
+                "yajra/laravel-datatables-oracle": "8.*"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.*",
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Yajra\\DataTables\\HtmlServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Yajra\\DataTables\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arjay Angeles",
+                    "email": "aqangeles@gmail.com"
+                }
+            ],
+            "description": "Laravel DataTables HTML builder plugin for Laravel 5.4+.",
+            "keywords": [
+                "JS",
+                "datatables",
+                "html",
+                "jquery",
+                "laravel"
+            ],
+            "time": "2018-07-06T01:59:07+00:00"
+        },
+        {
+            "name": "yajra/laravel-datatables-oracle",
+            "version": "v8.7.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yajra/laravel-datatables.git",
+                "reference": "1643ba54cf9c7556ac7bba90564f5900cc2473fe"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/1643ba54cf9c7556ac7bba90564f5900cc2473fe",
+                "reference": "1643ba54cf9c7556ac7bba90564f5900cc2473fe",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "5.4.*|5.5.*|5.6.*",
+                "illuminate/filesystem": "5.4.*|5.5.*|5.6.*",
+                "illuminate/http": "5.4.*|5.5.*|5.6.*",
+                "illuminate/support": "5.4.*|5.5.*|5.6.*",
+                "illuminate/view": "5.4.*|5.5.*|5.6.*",
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "~3.5"
+            },
+            "suggest": {
+                "yajra/laravel-datatables-buttons": "Plugin for server-side exporting of dataTable.",
+                "yajra/laravel-datatables-editor": "Plugin to use Datatables Editor (requires a license).",
+                "yajra/laravel-datatables-fractal": "Plugin for server-side response using Fractal.",
+                "yajra/laravel-datatables-html": "Plugin for server-side HTML builder of dataTable."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "8.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Yajra\\DataTables\\DataTablesServiceProvider"
+                    ],
+                    "aliases": {
+                        "DataTables": "Yajra\\DataTables\\Facades\\DataTables"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Yajra\\DataTables\\": "src/"
+                },
+                "files": [
+                    "src/helper.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arjay Angeles",
+                    "email": "aqangeles@gmail.com"
+                }
+            ],
+            "description": "jQuery DataTables API for Laravel 4|5",
+            "keywords": [
+                "datatables",
+                "jquery",
+                "laravel"
+            ],
+            "time": "2018-07-06T01:19:37+00:00"
         }
     ],
     "packages-dev": [
@@ -3631,16 +4063,16 @@
         },
         {
             "name": "laravel/homestead",
-            "version": "v7.14.1",
+            "version": "v7.14.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/homestead.git",
-                "reference": "d2ffd7dd4e106bf7ea0827874d7d27d1cd8879ad"
+                "reference": "59dfd90d59891d49b1024ad6d84b9c3c1d920bf3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/homestead/zipball/d2ffd7dd4e106bf7ea0827874d7d27d1cd8879ad",
-                "reference": "d2ffd7dd4e106bf7ea0827874d7d27d1cd8879ad",
+                "url": "https://api.github.com/repos/laravel/homestead/zipball/59dfd90d59891d49b1024ad6d84b9c3c1d920bf3",
+                "reference": "59dfd90d59891d49b1024ad6d84b9c3c1d920bf3",
                 "shasum": ""
             },
             "require": {
@@ -3678,7 +4110,7 @@
                 }
             ],
             "description": "A virtual machine for web artisans.",
-            "time": "2018-07-31T01:32:43+00:00"
+            "time": "2018-08-01T12:36:07+00:00"
         },
         {
             "name": "maximebf/debugbar",
@@ -4174,16 +4606,16 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "1.7.6",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "33a7e3c4fda54e912ff6338c48823bd5c0f0b712"
+                "reference": "4ba436b55987b4bf311cb7c6ba82aa528aac0a06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/33a7e3c4fda54e912ff6338c48823bd5c0f0b712",
-                "reference": "33a7e3c4fda54e912ff6338c48823bd5c0f0b712",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/4ba436b55987b4bf311cb7c6ba82aa528aac0a06",
+                "reference": "4ba436b55987b4bf311cb7c6ba82aa528aac0a06",
                 "shasum": ""
             },
             "require": {
@@ -4195,12 +4627,12 @@
             },
             "require-dev": {
                 "phpspec/phpspec": "^2.5|^3.2",
-                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.5"
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.5 || ^7.1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.7.x-dev"
+                    "dev-master": "1.8.x-dev"
                 }
             },
             "autoload": {
@@ -4233,7 +4665,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2018-04-18T13:57:24+00:00"
+            "time": "2018-08-05T17:53:17+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -4486,16 +4918,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.2.7",
+            "version": "7.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "8e878aff7917ef66e702e03d1359b16eee254e2c"
+                "reference": "f9b14c17860eccb440a0352a117a81eb754cff5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/8e878aff7917ef66e702e03d1359b16eee254e2c",
-                "reference": "8e878aff7917ef66e702e03d1359b16eee254e2c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f9b14c17860eccb440a0352a117a81eb754cff5a",
+                "reference": "f9b14c17860eccb440a0352a117a81eb754cff5a",
                 "shasum": ""
             },
             "require": {
@@ -4540,7 +4972,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "7.2-dev"
+                    "dev-master": "7.3-dev"
                 }
             },
             "autoload": {
@@ -4566,7 +4998,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-07-15T05:20:50+00:00"
+            "time": "2018-08-07T06:44:28+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -5133,16 +5565,16 @@
         },
         {
             "name": "symfony/class-loader",
-            "version": "v3.4.13",
+            "version": "v3.4.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/class-loader.git",
-                "reference": "e63c12699822bb3b667e7216ba07fbcc3a3e203e"
+                "reference": "31db283fc86d3143e7ff87e922177b457d909c30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/class-loader/zipball/e63c12699822bb3b667e7216ba07fbcc3a3e203e",
-                "reference": "e63c12699822bb3b667e7216ba07fbcc3a3e203e",
+                "url": "https://api.github.com/repos/symfony/class-loader/zipball/31db283fc86d3143e7ff87e922177b457d909c30",
+                "reference": "31db283fc86d3143e7ff87e922177b457d909c30",
                 "shasum": ""
             },
             "require": {
@@ -5185,20 +5617,20 @@
             ],
             "description": "Symfony ClassLoader Component",
             "homepage": "https://symfony.com",
-            "time": "2018-01-03T07:37:34+00:00"
+            "time": "2018-07-26T11:19:56+00:00"
         },
         {
             "name": "symfony/yaml",
-            "version": "v4.1.2",
+            "version": "v4.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "80e4bfa9685fc4a09acc4a857ec16974a9cd944e"
+                "reference": "46bc69aa91fc4ab78a96ce67873a6b0c148fd48c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/80e4bfa9685fc4a09acc4a857ec16974a9cd944e",
-                "reference": "80e4bfa9685fc4a09acc4a857ec16974a9cd944e",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/46bc69aa91fc4ab78a96ce67873a6b0c148fd48c",
+                "reference": "46bc69aa91fc4ab78a96ce67873a6b0c148fd48c",
                 "shasum": ""
             },
             "require": {
@@ -5244,7 +5676,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2018-05-30T07:26:09+00:00"
+            "time": "2018-07-26T11:24:31+00:00"
         },
         {
             "name": "theseer/tokenizer",

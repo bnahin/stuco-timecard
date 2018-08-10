@@ -48,10 +48,14 @@ Route::group(['middleware' => 'auth'], function () {
     /**
      * Admin
      */
-    Route::group(['middleware' => 'admin'], function () {
+    Route::group(['middleware' => 'admin', 'prefix' => '/admin'], function () {
         //Home
-        Route::get('/admin', 'AdminController@index')
+        Route::get('/', 'AdminController@index')
             ->name('admin-home');
+
+        //Assign Students Table
+        Route::get('/assign/get', 'AdminController@processAssignStudentsTable')
+            ->name('get-students');
     });
 });
 

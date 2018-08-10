@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEventsTable extends Migration
+class CreateClubUserPivotTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateEventsTable extends Migration
      */
     public function up()
     {
-        Schema::create('events', function (Blueprint $table) {
+        Schema::create('club_user', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('event_name');
-            $table->boolean('is_active'); //Editable by admins. Able to be selected or not
+            $table->integer('user_id');
             $table->integer('club_id');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -30,6 +28,6 @@ class CreateEventsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('events');
+        Schema::dropIfExists('user_club');
     }
 }

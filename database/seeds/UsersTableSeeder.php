@@ -14,6 +14,7 @@ class UsersTableSeeder extends Seeder
     {
         App\User::truncate();
         DB::table('users')->insert([
+            'id'             => 1,
             'google_id'      => '102261834875964430786',
             'student_id'     => 115602,
             'first_name'     => 'Blake',
@@ -24,5 +25,7 @@ class UsersTableSeeder extends Seeder
             'remember_token' => str_random(10),
             'is_admin'       => 1
         ]);
+        User::find(1)->clubs()->attach(1);
+
     }
 }

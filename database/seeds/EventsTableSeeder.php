@@ -16,6 +16,7 @@ class EventsTableSeeder extends Seeder
         App\Event::insert([
                 'id'         => 0,
                 'event_name' => 'Out of Classroom',
+                'club_id'    => 1,
                 'is_active'  => 1
             ]
         );

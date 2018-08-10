@@ -45,6 +45,11 @@ class Hour extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function club()
+    {
+        return $this->belongsTo(Club::class);
+    }
+
     /**
      * Check if the student is clocked out.
      *

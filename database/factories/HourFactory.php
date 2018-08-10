@@ -13,6 +13,7 @@ $factory->define(App\Hour::class, function (Faker $faker) {
         'event_id'   => $faker->numberBetween(0, 5),
         'start_time' => $start,
         'end_time'   => $end,
+        'club_id'    => 1,
         'comments'   => ($faker->boolean) ? $faker->realText() : null
     ];
 });

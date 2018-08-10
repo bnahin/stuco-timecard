@@ -203,11 +203,11 @@ if ($('#hours-table').length && !$('#no-hours').length) {
   })
 
   /** Charts */
-  let user_id = $('#user_id').val();
+  let user_id = $('#user_id').val()
 
   //Chart Data
   $.get(
-    '/hours/charts/'+user_id
+    '/hours/charts/' + user_id
   ).done(function (r) {
     loadGraphs(r)
   })
@@ -322,4 +322,23 @@ if ($('#hours-table').length && !$('#no-hours').length) {
       }
     }
   }
+}
+
+/**
+ Admin Page
+ */
+if ($('#admin-card').length) {
+  $('#assign-table').DataTable({
+    processing: true,
+    serverSide: true,
+    ajax      : '/admin/assign/get',
+    columns   : [
+      {data: 'student_id', name: 'student_id'},
+      {data: 'first_name', name: 'first_name'},
+      {data: 'last_name', name: 'last_name'},
+      {data: 'grade', name: 'grade'},
+      {data: 'email', name: 'email'}
+    ]
+
+  })
 }
