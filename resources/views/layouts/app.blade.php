@@ -50,19 +50,19 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('login') }}">Login</a>
                         </li>
-                    @else
+                    @endguest
+                    @auth('user')
                         <li class="nav-item {{ (Route::currentRouteName() == "my-hours") ? "active":"" }}">
                             <a class="nav-link" href=" {{ route('my-hours') }}"><i class="fas fa-clock"></i> My
                                 Hours</a>
                         </li>
-                    @endguest
-                    @admin
+                    @elseauth('admin')
                     <li class="nav-item {{ (Route::currentRouteName() == "admin-home") ? "active":"" }}">
                         <a class="nav-link" href="{{ route('admin-home') }}"><i
                                 class="fas fa-cogs"></i> Admin
                         </a>
                     </li>
-                    @endadmin
+                    @endauth
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

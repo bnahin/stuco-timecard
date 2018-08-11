@@ -24,7 +24,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <h2>Class Administration</h2>
+                <h2>Club Administration</h2>
                 <div class="card" id="admin-card">
                     <div class="card-body">
                         <div class="container row">
@@ -50,8 +50,15 @@
                                         <!--Events for selection -->
                                     </li>
                                     <li class="nav-item">
-                                        <a href="" class="nav-link" id="hourstats"><i class="fas fa-chart-pie"></i> Hour
+                                        <a href="" class="nav-link" data-target="hourstats"><i
+                                                class="fas fa-chart-pie"></i> Hour
                                             Statistics
+                                        </a>
+                                        <!-- Current students clocked out, statistics tables and charts-->
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="" class="nav-link" data-target="enrolled"><i class="fas fa-users"></i>
+                                            Enrolled Students
                                         </a>
                                         <!-- Current students clocked out, statistics tables and charts-->
                                     </li>
@@ -72,37 +79,47 @@
                                 <div id="studentm">
                                     <h5>Student Management</h5>
                                     <hr>
-                                    <div class="m-auto col-md-8">
-                                        <div class="card border-success mb-3">
-                                            <div class="card-header">Student Import</div>
-                                            <div class="card-body">
-                                                <h5 class="card-title">Upload student data</h5>
-                                                <p class="card-text">To replace the enrolled student database, export
-                                                    the
-                                                    data from Aeries using the command <code>ID FN LN STUEMAIL GR</code>.
-                                                    Required fields are Student ID, first name, last name, email, and
-                                                    grade.
-                                                </p>
-                                                <input id="input-import" name="import-file" type="file" class="file"
-                                                       data-show-preview="false" data-show-cancel="false"
-                                                       data-theme="fa">
+                                    <h4>Assign Students</h4>
+                                    <p class="text-muted">Students are assigned to your club when they enter your club's
+                                        access code, <code>BANBAN</code>. You can also manually add them here.</p>
+                                    <div class="row justify-content-center">
+                                        <div class="col-xs-3">
+                                            <div class="card bg-light">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Add by student ID or full name</h5>
+                                                    <p class="card-text text-muted">Use the <a href="#">Enrolled
+                                                            Students</a> page
+                                                        to search for an ID or name.</p>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control"
+                                                               id="assign-input"
+                                                               placeholder="ex. 115602 or Blake Nahin">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button class="btn btn-success" id="manual-assign"><i
+                                                                class="fas fa-plus"></i> Add
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                     <hr>
-                                    <h4>Assign Students</h4>
-                                    <table class="table" id="assign-table" data-action="{{ route('get-students') }}">
+                                    <table class="table table-hover" id="assigned-table">
                                         <thead class="thead-dark">
                                         <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">First Name</th>
-                                            <th scope="col">Last Name</th>
-                                            <th scope="col">Grade</th>
-                                            <th scope="col">Email</th>
+                                            <th>Student ID</th>
+                                            <th>Last Name</th>
+                                            <th>First Name</th>
+                                            <th>Email</th> <!--(ND) if next day)-->
+                                            <th>Member Assigned</th>
+                                            <th class="print-hide">Actions</th>
                                         </tr>
                                         </thead>
+                                        <tbody>
+                                        <!--Students that are a part of the admin's (current user) club -->
+                                        </tbody>
                                     </table>
-
                                 </div>
 
                                 <!--......-->
@@ -141,11 +158,42 @@
                                     </div>
                                     <hr>
                                 </div>
+                                <div id="enrolled" style="display:none;">
+                                    <div class="m-auto col-md-8">
+                                        <div class="card border-success mb-3">
+                                            <div class="card-header">Student Import</div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">Upload student data</h5>
+                                                <p class="card-text">To replace the enrolled student database, export
+                                                    the
+                                                    data from Aeries using the command <code>ID FN LN STUEMAIL GR</code>.
+                                                    Required fields are Student ID, first name, last name, email, and
+                                                    grade.
+                                                </p>
+                                                <input id="input-import" name="import-file" type="file" class="file"
+                                                       data-show-preview="false" data-show-cancel="false"
+                                                       data-theme="fa">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <table class="table" id="student-db" data-action="{{ route('get-students') }}">
+                                        <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">First Name</th>
+                                            <th scope="col">Last Name</th>
+                                            <th scope="col">Grade</th>
+                                            <th scope="col">Email</th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                        <!-- Change to session app "type" for dynamic title -->
                     </div>
                 </div>
+                <!-- Change to session app "type" for dynamic title -->
             </div>
         </div>
     </div>

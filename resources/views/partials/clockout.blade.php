@@ -8,11 +8,15 @@
         <div class="form-group col-md-3">
             <label for="student-id">Student ID</label>
             <input type="text" class="form-control" id="student-id" placeholder="ex. 115602"
-                {{ Auth::check() ? "value=". Auth::user()->student_id." disabled": '' }}>
+                {{ Auth::guard('user')->check() ? "value=". Auth::user()->student_id." disabled": '' }}>
         </div>
-        <div class="form-group col-md-9" {{ !Auth::check() ? 'style="display:none"' : '' }}>
+        <div class="form-group col-md-9" {{ isAdmin() ? 'style=display:none;' : '' }}>
             <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
-                <div class="card-header"><h5>Blake Nahin</h5><h6>Grade 12</h6></div>
+                <div class="card-header">
+                    <h5 id="student-info-name">
+                        @auth('user'){{ Auth::user()->full_name }} @endauth</h5>
+                    <h6 id="student-info-grade">
+                        @auth('user') Grade {{ Auth::user()->student->grade }} @endauth</h6></div>
             </div>
         </div>
     </div>

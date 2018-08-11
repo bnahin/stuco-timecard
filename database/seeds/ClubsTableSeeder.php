@@ -11,6 +11,7 @@ class ClubsTableSeeder extends Seeder
      */
     public function run()
     {
+        $this->command->line('Adding Student Council Club');
         App\Club::truncate();
         //This is needed for queries for charts
         App\Club::insert([

@@ -28,6 +28,11 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property int                 $student_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Hour whereStudentId($value)
+ * @property int $club_id
+ * @property int $needs_review
+ * @property-read \App\Club $club
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Hour whereClubId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Hour whereNeedsReview($value)
  */
 class Hour extends Model
 {

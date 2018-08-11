@@ -35,6 +35,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\App\StudentInfo withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\StudentInfo withoutTrashed()
  * @mixin \Eloquent
+ * @property-read mixed $full_name
  */
 class StudentInfo extends Model
 {

@@ -328,7 +328,7 @@ if ($('#hours-table').length && !$('#no-hours').length) {
  Admin Page
  */
 if ($('#admin-card').length) {
-  $('#assign-table').DataTable({
+  $('#student-db:visible').DataTable({
     processing: true,
     serverSide: true,
     ajax      : '/admin/assign/get',

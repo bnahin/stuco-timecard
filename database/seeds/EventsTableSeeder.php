@@ -11,6 +11,7 @@ class EventsTableSeeder extends Seeder
      */
     public function run()
     {
+        $this->command->line('Adding Events');
         App\Event::truncate();
         //This is needed for queries for charts
         App\Event::insert([

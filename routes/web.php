@@ -13,11 +13,13 @@
 
 /** Login */
 //Auth::routes();
-Route::get('/oauth-callback', 'GoogleAuthController@handle')->name('oauth-callback');
 Route::get('/login-google', 'GoogleAuthController@redirect')->name('login');
+Route::get('/oauth-callback', 'GoogleAuthController@handle')->name('oauth-callback');
+
+/** Logout */
 Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 
-Route::group(['middleware' => 'auth'], function () {
+Route::group(['middleware' => 'auth:user,admin'], function () {
     /**
      * Home
      */

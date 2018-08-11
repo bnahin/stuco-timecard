@@ -6,6 +6,25 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * App\ActivityLog
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property int $club_id
+ * @property string $message
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Club $club
+ * @property-read \App\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\ActivityLog whereClubId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\ActivityLog whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\ActivityLog whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\ActivityLog whereMessage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\ActivityLog whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\ActivityLog whereUserId($value)
+ * @mixin \Eloquent
+ */
 class ActivityLog extends Model
 {
     protected $guarded = [];

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin;
 use App\Common\Bnahin\EcrchsAuth;
 use App\StudentInfo;
 use Illuminate\Http\Request,
@@ -37,6 +38,18 @@ class GoogleAuthController extends Controller
     public function handle()
     {
         $apiUser = $this->api->getUser();
+
+        //Admin?
+        $admin = Admin::where('email', $apiUser->email);
+        if ($admin->exists()) {
+            $admin = $admin->first();
+            //Admin!
+            $admin->google_id = $apiUser->id;
+            $admin->saveOrFail();
+
+            Auth::guard('admin')->login($admin, true);
+            return redirect()->route('home');
+        }
 
         $user = User::updateOrCreate([
             'google_id' => $apiUser->id,

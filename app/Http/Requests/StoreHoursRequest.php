@@ -18,7 +18,7 @@ class StoreHoursRequest extends FormRequest
     public function authorize()
     {
         if (Auth::check()) {
-            if (Auth::user()->isAdmin()) {
+            if (Auth::guard('admin')->check()) {
                 // Admins can clock out anybody
                 return true;
             }

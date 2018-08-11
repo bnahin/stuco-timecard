@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\User;
 
 class UsersTableSeeder extends Seeder
 {
@@ -12,20 +11,17 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+        $this->command->line('Adding Users and Hours');
         App\User::truncate();
-        DB::table('users')->insert([
-            'id'             => 1,
-            'google_id'      => '102261834875964430786',
-            'student_id'     => 115602,
-            'first_name'     => 'Blake',
-            'last_name'      => 'Nahin',
-            'email'          => '115602@ecrchs.org',
-            'domain'         => 'ecrchs.org',
-            'grade'          => '12',
-            'remember_token' => str_random(10),
-            'is_admin'       => 1
-        ]);
-        User::find(1)->clubs()->attach(1);
+        factory(App\User::class, 8)->create()->each(function ($user) {
+            //Attach to club
+            $user->clubs()->attach(1);
 
+            //Hours
+            $stuid = $user->student->student_id;
+            factory(App\Hour::class, 80)->make(['student_id' => $stuid])->each(function ($hour) use ($user) {
+                $user->hours()->save($hour);
+            });
+        });
     }
 }

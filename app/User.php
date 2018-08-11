@@ -57,6 +57,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereDeletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\User withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\User withoutTrashed()
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Club[] $clubs
  */
 class User extends Authenticatable
 {

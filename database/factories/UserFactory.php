@@ -14,10 +14,20 @@ use Faker\Generator as Faker;
 */
 
 $factory->define(App\User::class, function (Faker $faker) {
+    static $id = 0;
+    $id++;
+    $student = App\StudentInfo::inRandomOrder()->first();
+    $student->user_id = $id;
+    $student->save();
+
     return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
+        'id'             => $id++,
+        'google_id'      => $faker->randomNumber(),
+        'first_name'     => $student->first_name,
+        'last_name'      => $student->last_name,
+        'grade'          => (int)$student->grade,
+        'email'          => $student->email,
+        'domain'         => 'ecrchs.org',
         'remember_token' => str_random(10),
     ];
 });
