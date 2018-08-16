@@ -7,6 +7,7 @@ use App\StudentInfo;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Session;
 
 class StoreHoursRequest extends FormRequest
 {
@@ -61,18 +62,21 @@ class StoreHoursRequest extends FormRequest
             //Step 1: User exists
             $id = $this->input('id');
 
-            $user = User::where('student_id', $id);
-            $hasUser = $user->count();
             $student = StudentInfo::where('student_id', $id);
-            $hasStudent = $student->count();
+            $hasStudent = $student->exists() &&
+                $student->first()->user()->exists() &&
+                $student->first()->user->clubs()->exists()
+                && $student->first()->user->clubs()
+                    ->where('club_id',
+                        (app()->isLocal()) ? 1 : Session::get('club-id'))->exists();
 
-            if ($hasUser || $hasStudent) {
+            if ($hasStudent) {
                 //Step 2: User not currently clocked out
                 if (Hour::isClockedOut($id)) {
                     $v->errors()->add('id', 'The student is already clocked out.');
                 }
             } else {
-                $v->errors()->add('id', 'The student does not exist.');
+                $v->errors()->add('id', 'The student does not exist in the current club.');
             }
         });
     }

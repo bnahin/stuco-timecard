@@ -12,6 +12,8 @@ class AdminTableSeeder extends Seeder
     public function run()
     {
         App\Admin::truncate();
+        DB::table('admin_club')->truncate();
+
         $this->command->line('Adding Admin account (BN)');
         DB::table('admins')->insert([
             'id'             => 1,

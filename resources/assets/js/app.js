@@ -328,6 +328,52 @@ if ($('#hours-table').length && !$('#no-hours').length) {
  Admin Page
  */
 if ($('#admin-card').length) {
+
+  //Assign Students
+  $('#manual-assign').click(function (e) {
+    e.preventDefault()
+    let form  = $('#manual-assign-form'),
+        input = $('#assign-input'),
+        btn   = $(this)
+    activityBtnDisable(btn)
+
+    form.find('.input-invalid').removeClass('input-invalid')
+
+    if (!input.val().length || input.val().length < 6) {
+      input.addClass('input-invalid')
+      return activityBtnEnable(btn, 'plus', 'Add')
+    }
+
+    $.ajax({
+      url    : form.attr('action'),
+      type   : 'POST',
+      data   : {id: input.val()},
+      success: function (result) {
+        activityBtnEnable(btn, 'plus', 'Add')
+        console.log(result)
+        if (result.status != 'success') {
+          return swal('Error!', 'Could not add student. ' + result.message, 'error')
+        }
+        else {
+          let student = result.message;
+          //TODO: Add row to table
+
+          swal('Success!', 'The student has been added.', 'success')
+        }
+      },
+      error  : function (xhr) {
+        activityBtnEnable(btn, 'plus', 'Add')
+        swal('Error!', 'Could not add student. ' + xhr.responseJSON.errors.id[0], 'error')
+      }
+    })
+  })
+
+  //Assigned Students
+  $('#assigned-table').DataTable({
+    'order': [[1, 'asc']]
+  })
+
+  //Enrolled Student DB
   $('#student-db:visible').DataTable({
     processing: true,
     serverSide: true,

@@ -3,14 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\StudentInfo;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\Facades\DataTables;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        return view('pages.admin');
+        $data = [];
+        $data['assigned'] = $this->getAssignedStudents();
+
+        return view('pages.admin')->with(compact('data'));
     }
 
     public function processAssignStudentsTable(Request $request)
@@ -18,5 +23,58 @@ class AdminController extends Controller
         $students = StudentInfo::select(['student_id', 'first_name', 'last_name', 'grade', 'email'])->get();
 
         return DataTables::of($students)->make();
+    }
+
+    private function getAssignedStudents()
+    {
+        $clubid = app()->isLocal() ? 1 : Session::get("club-id");
+        $students = User::whereHas('clubs', function ($q) use ($clubid) {
+            return $q->where('clubs.id', $clubid);
+        });
+
+        return $students->orderBy('last_name', 'asc')
+            ->get();
+    }
+
+    public function assignStudent(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|min:6'
+        ]);
+
+        $id = ucwords($request->id);
+        $message = null;
+
+        $studentInfo = StudentInfo::where('student_id', $id)
+            ->orWhere(\DB::raw("CONCAT_WS(' ',first_name,last_name)"), $id);
+
+        if (!$studentInfo->exists()) {
+            //Does not exists in student database
+            return response()->json(['status' => 'error', 'message' => 'Could not find student with that name or ID.']);
+        }
+
+        $student = $studentInfo->first();
+        if ($student->user()->exists()) {
+            //User model exists, associate.
+            User::where('student_info_id',$student->id)->first()->clubs()->attach(getClubId());
+            return response()->json(['status' => 'error', 'message' => 'The student is already assigned to this club.']);
+        }
+            //User does not exist, create!
+            $newUser = User::create([
+                'google_id'       => null,
+                'student_info_id' => $student->id,
+                'first_name'      => $student->first_name,
+                'last_name'       => $student->last_name,
+                'email'           => $student->email,
+                'domain'          => 'ecrchs.org'
+            ]);
+            $studentInfo->update(['user_id' => $newUser->id]);
+            $newUser->clubs()->attach(getClubId());
+
+        return response()->json(['status' => 'success', 'message' => $newUser ?: null]);
+        //Create user model and attach
+        //Null google id
+
+        //Without a user model the admin table will break!
     }
 }

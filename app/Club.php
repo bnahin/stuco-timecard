@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Club wherePublic($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Club whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Admin[] $admins
  */
 class Club extends Model
 {

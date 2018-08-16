@@ -20,6 +20,7 @@ class GoogleAuthProvider extends ServiceProvider
     {
         // View Composer for Auth User
         View::composer('*', function ($view) {
+            $user = null;
             if (Auth::guard('admin')->check()) {
                 $user = Auth::guard('admin')->user();
             } else {

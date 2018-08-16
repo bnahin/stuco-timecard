@@ -22,3 +22,9 @@ if (!function_exists('isUser')) {
         return \App\Helpers\AuthHelper::isUser();
     }
 }
+if (!function_exists('getClubId')) {
+    function getClubId()
+    {
+        return \App\Helpers\AuthHelper::getClubId();
+    }
+}

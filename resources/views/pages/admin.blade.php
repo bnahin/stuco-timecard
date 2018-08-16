@@ -18,6 +18,11 @@
     <!--DataTables-->
     <script type="text/javascript"
             src="https://cdn.datatables.net/v/bs4/dt-1.10.18/kt-2.4.0/r-2.2.2/sc-1.5.0/datatables.min.js"></script>
+
+    <!--jQuery Validate
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js"></script>
+    -->
 @endpush
 
 @section('content')
@@ -90,16 +95,20 @@
                                                     <p class="card-text text-muted">Use the <a href="#">Enrolled
                                                             Students</a> page
                                                         to search for an ID or name.</p>
-                                                    <div class="form-group">
-                                                        <input type="text" class="form-control"
-                                                               id="assign-input"
-                                                               placeholder="ex. 115602 or Blake Nahin">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <button class="btn btn-success" id="manual-assign"><i
-                                                                class="fas fa-plus"></i> Add
-                                                        </button>
-                                                    </div>
+                                                    <form id="manual-assign-form" method="post"
+                                                          action="{{ route('manual-assign') }}">
+                                                        @csrf
+                                                        <div class="form-group">
+                                                            <input type="text" class="form-control"
+                                                                   id="assign-input"
+                                                                   placeholder="ex. 115602 or Blake Nahin">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <button class="btn btn-success" id="manual-assign"><i
+                                                                    class="fas fa-plus"></i> Add
+                                                            </button>
+                                                        </div>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
@@ -111,13 +120,25 @@
                                             <th>Student ID</th>
                                             <th>Last Name</th>
                                             <th>First Name</th>
+                                            <th>Grade Level</th>
                                             <th>Email</th> <!--(ND) if next day)-->
-                                            <th>Member Assigned</th>
                                             <th class="print-hide">Actions</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <!--Students that are a part of the admin's (current user) club -->
+                                        @if($data['assigned'])
+                                            @foreach($data['assigned'] as $student)
+                                                <tr>
+                                                    <td>{{ $student->student->student_id }}</td>
+                                                    <td>{{ $student->last_name }}</td>
+                                                    <td>{{ $student->first_name }}</td>
+                                                    <td>{{ $student->student->grade }}</td>
+                                                    <td>{{ $student->email }}</td>
+                                                    <td>[Actions]</td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
                                         </tbody>
                                     </table>
                                 </div>

@@ -55,7 +55,9 @@ Route::group(['middleware' => 'auth:user,admin'], function () {
         Route::get('/', 'AdminController@index')
             ->name('admin-home');
 
-        //Assign Students Table
+        Route::post('/assign','AdminController@assignStudent')
+            ->name('manual-assign');
+        //Enrolled Student Database
         Route::get('/assign/get', 'AdminController@processAssignStudentsTable')
             ->name('get-students');
     });

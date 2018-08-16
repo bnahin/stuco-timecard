@@ -17,7 +17,8 @@ class CheckAdmin
      */
     public function handle($request, Closure $next)
     {
-        if (!Auth::guard('admin')->check()) {
+        if (!Auth::guard('admin')->check()
+            || !Auth::user()->clubs()->where('clubs.id', getClubId())->exists()) {
             return redirect('home')->with('forbidden', true);
         }
 

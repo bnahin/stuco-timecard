@@ -58,6 +58,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Query\Builder|\App\User withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\User withoutTrashed()
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Club[] $clubs
+ * @property int $student_info_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereStudentInfoId($value)
  */
 class User extends Authenticatable
 {

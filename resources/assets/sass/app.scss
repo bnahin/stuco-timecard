@@ -19,8 +19,13 @@
 *                              *
 * * * * * * * * * * * * * * * * */
 
+/** General **/
 body {
   background-color: #f0f0f0;
+}
+
+.input-invalid {
+  border-color: #dc3545;
 }
 
 /** Home **/

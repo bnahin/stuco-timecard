@@ -21,13 +21,13 @@ $factory->define(App\User::class, function (Faker $faker) {
     $student->save();
 
     return [
-        'id'             => $id++,
-        'google_id'      => $faker->randomNumber(),
-        'first_name'     => $student->first_name,
-        'last_name'      => $student->last_name,
-        'grade'          => (int)$student->grade,
-        'email'          => $student->email,
-        'domain'         => 'ecrchs.org',
-        'remember_token' => str_random(10),
+        'id'              => $id,
+        'google_id'       => $faker->randomNumber(),
+        'student_info_id' => $student->id,
+        'first_name'      => $student->first_name,
+        'last_name'       => $student->last_name,
+        'email'           => $student->email,
+        'domain'          => 'ecrchs.org',
+        'remember_token'  => str_random(10),
     ];
 });

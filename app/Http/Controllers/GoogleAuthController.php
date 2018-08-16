@@ -10,6 +10,7 @@ use Illuminate\Http\Request,
     App\User,
     Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 
 class GoogleAuthController extends Controller
 {
@@ -48,41 +49,56 @@ class GoogleAuthController extends Controller
             $admin->saveOrFail();
 
             Auth::guard('admin')->login($admin, true);
+
             return redirect()->route('home');
         }
 
-        $user = User::updateOrCreate([
-            'google_id' => $apiUser->id,
-        ], [
-            'domain'     => $apiUser->hd,
-            'email'      => $apiUser->email,
-            'first_name' => $apiUser->given_name,
-            'last_name'  => $apiUser->family_name
-        ]);
-
-        //Associate student info
-        $student = StudentInfo::where('email', $apiUser->email);
-        if ($student->exists()) {
-            $student->first()->user()->associate($user);
+        $user = User::where('email', $apiUser->email);
+        if ($user->exists()) {
+            //Exists!
+            $user->update([
+                'google_id'  => $apiUser->id,
+                'domain'     => $apiUser->hd,
+                'email'      => $apiUser->email,
+                'first_name' => $apiUser->given_name,
+                'last_name'  => $apiUser->family_name
+            ]);
+        }
+        else {
+            //Create!
+            $user = new User([
+                'google_id'  => $apiUser->id,
+                'domain'     => $apiUser->hd,
+                'email'      => $apiUser->email,
+                'first_name' => $apiUser->given_name,
+                'last_name'  => $apiUser->family_name
+            ]);
         }
 
-        //Associate hours
-        $newUser = User::where('google_id',$apiUser->id)->first();
-        if (!$newUser->student) {
-            abort(403,'User is not in the Aeries database.');
-        }
-        $hours = \App\Hour::where('student_id', $newUser->student->student_id)
-            ->whereNull('user_id');
-        if ($hours->count()) {
-            $hoursRes = $hours->get();
-            foreach ($hoursRes as $hour) {
-                $hour->user_id = $user->id;
-                $hour->save();
+            //Associate student info
+            $student = StudentInfo::where('email', $apiUser->email);
+            if ($student->exists()) {
+                $student->first()->user()->associate($user);
             }
+
+            //Associate hours
+            $newUser = User::where('google_id', $apiUser->id)->first();
+            if (!$newUser->student) {
+                abort(403, 'User is not in the Aeries database.');
+            }
+            $hours = \App\Hour::where('student_id', $newUser->student->student_id)
+                ->whereNull('user_id');
+            if ($hours->count()) {
+                $hoursRes = $hours->get();
+                foreach ($hoursRes as $hour) {
+                    $hour->user_id = $user->id;
+                    $hour->save();
+                }
+            }
+
+            Session::put('club-id', 1);
+            Auth::login($user, true);
+
+            return redirect()->route('home');
         }
-
-        Auth::login($user, true);
-
-        return redirect()->route('home');
     }
-}

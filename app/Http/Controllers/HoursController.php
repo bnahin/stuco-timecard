@@ -10,19 +10,20 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class HoursController extends Controller
 {
     public function index(User $user = null)
     {
         if ($user) {
-            if (!Auth::user()->isAdmin()) {
+            if (!isAdmin()) {
                 return redirect(route('home'))->with('forbidden', true);
             }
             $uid = $user->id;
             $fullName = $user->full_name;
         } else {
-            $uid = Auth::user()->id;
+            $uid = Auth::id();
             $fullName = Auth::user()->full_name;
         }
 
@@ -60,24 +61,25 @@ class HoursController extends Controller
         $hour->event_id = $event;
         $hour->start_time = Carbon::now();
         $hour->comments = $comments;
+        $hour->club_id = (app()->isLocal()) ? 1 : Session::get('club-id');
         #$hour->saveOrFail();
 
-        $user = User::where('student_id', $stuid);
-        if ($user->exists()) {
+        $student = StudentInfo::where('student_id', $stuid);
+        if ($student->exists()) {
             //Associate user
-            $hour->user_id = $user->first()->id;
+            $hour->user_id = $student->first()->user->id;
             $hour->saveOrFail();
         }
 
-        $name = StudentInfo::where('student_id', $hour->student_id)->first()->full_name;
+        $name = $student->first()->full_name;
         $event = $hour->getEventName();
-        if (Auth::user()->isAdmin()) {
+        if (Auth::guard('admin')->check()) {
             log_action("Clocked out $name for $event");
         } else {
             log_action("Clocked out for $event");
         }
 
-        return ['success' => true, 'messsage' => $user->first()->first_name . " has been clocked out."];
+        return ['success' => true, 'messsage' => $name . " has been clocked out."];
 
 
     }
@@ -85,11 +87,11 @@ class HoursController extends Controller
     public function delete(Hour $hour, Request $request)
     {
         $stuid = $hour->student_id;
-        if (Hour::isClockedOut($stuid) || Auth::user()->isAdmin()) {
+        if (Hour::isClockedOut($stuid) || isAdmin()) {
             //Delete hour
             try {
                 $hour->delete();
-                if (Auth::user()->isAdmin()) {
+                if (isAdmin()) {
                     log_action("Deleted time punch for " . $hour->getFullName() . " from " . $hour->start_time->toFormattedDateString());
                 } else {
                     log_action("Deleted own time punch");
@@ -123,6 +125,7 @@ class HoursController extends Controller
 
     public function charts(User $user)
     {
+        //TODO: add club_ids
         $uid = $user->id;
         //Line Chart: Hours per Month
         $lineRes = Hour::select(\DB::raw(

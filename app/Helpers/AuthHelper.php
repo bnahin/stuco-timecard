@@ -8,6 +8,7 @@ namespace App\Helpers;
 
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class AuthHelper
 {
@@ -24,6 +25,10 @@ class AuthHelper
     public static function isAdmin()
     {
         return Auth::guard('admin')->check();
+    }
 
+    public static function getClubId()
+    {
+        return (app()->isLocal()) ? 1 : Session::get('club-id');
     }
 }
