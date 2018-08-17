@@ -58,8 +58,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Query\Builder|\App\User withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\User withoutTrashed()
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Club[] $clubs
- * @property int $student_info_id
+ * @property int                                                       $student_info_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereStudentInfoId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User notBlockedFrom($clubid)
  */
 class User extends Authenticatable
 {
@@ -103,19 +104,35 @@ class User extends Authenticatable
     }
 
     /**
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeNotBlockedFrom($query, $clubid)
+    {
+        return $query->select('users.*')->leftJoin('blocked_users', function ($join) use ($clubid) {
+            $join->on('users.id', '=', 'blocked_users.id')
+                ->where('blocked_users.club_id', '=', $clubid);
+        })->whereNull('blocked_users.id');
+    }
+
+    /**
      * Eloquent Relationships
      */
-    public function hours()
+    public
+    function hours()
     {
         return $this->hasMany(Hour::class);
     }
 
-    public function student()
+    public
+    function student()
     {
         return $this->hasOne(StudentInfo::class);
     }
 
-    public function clubs()
+    public
+    function clubs()
     {
         return $this->belongsToMany(Club::class)
             ->withTimestamps();
@@ -124,8 +141,29 @@ class User extends Authenticatable
     /**
      * Functions
      */
-    public function isAdmin()
+    public
+    function isAdmin()
     {
         return $this->is_admin == 1;
+    }
+
+    public
+    function isBlockedFrom(
+        $clubid
+    ) {
+        return \DB::table('blocked_users')->where([
+            'user_id' => $this->id,
+            'club_id' => $clubid
+        ])->exists();
+    }
+
+    public
+    function blockFrom(
+        $clubid
+    ) {
+        return \DB::table('blocked_users')->insert([
+            'user_id' => $this->id,
+            'club_id' => $clubid
+        ]);
     }
 }

@@ -35,6 +35,9 @@
                         <div class="container row">
                             <div class="col-md-3" id="adm-nav-col">
                                 <ul class="nav flex-column" id="admin-nav">
+                                    <li class="nav-item nav-header">
+                                        USER MANAGEMENT
+                                    </li>
                                     <li class="nav-item">
                                         <a href="" class="nav-link active" data-target="studentm"><i
                                                 class="fas fa-user"></i>
@@ -43,11 +46,36 @@
                                         <!--<p class="text-muted">Test help text.</p>
                                     --></li>
                                     <li class="nav-item">
+                                        <a href="" class="nav-link" data-target="blocked"><i
+                                                class="fas fa-minus-circle"></i>
+                                            Blocked Students </a>
+                                        <!-- Class import, student search & add, view hours -->
+                                        <!--<p class="text-muted">Test help text.</p>
+                                    --></li>
+                                    <li class="nav-item no-bottom">
+                                        <a href="" class="nav-link" data-target="enrolled"><i class="fas fa-users"></i>
+                                            Enrolled Students
+                                        </a>
+                                        <!-- Current students clocked out, statistics tables and charts-->
+                                    </li>
+                                    <li class="nav-item nav-header">
+                                        Student Hours
+                                    </li>
+                                    <li class="nav-item">
                                         <a href="" class="nav-link" data-target="tconfig"><i class="fas fa-clock"></i>
                                             View Hours</a>
                                         <!--Turn on/off punches (master), minimum duration, allow mark for review, allow hour deletion [before and after clock in] -->
                                     </li>
-
+                                    <li class="nav-item no-bottom">
+                                        <a href="" class="nav-link" data-target="hourstats"><i
+                                                class="fas fa-chart-pie"></i> Hour
+                                            Statistics
+                                        </a>
+                                        <!-- Current students clocked out, statistics tables and charts-->
+                                    </li>
+                                    <li class="nav-item nav-header">
+                                        Configuration
+                                    </li>
                                     <li class="nav-item">
                                         <a href="" class="nav-link" data-target="eventm"><i class="fas fa-calendar"></i>
                                             Events Management
@@ -55,28 +83,13 @@
                                         <!--Events for selection -->
                                     </li>
                                     <li class="nav-item">
-                                        <a href="" class="nav-link" data-target="hourstats"><i
-                                                class="fas fa-chart-pie"></i> Hour
-                                            Statistics
-                                        </a>
-                                        <!-- Current students clocked out, statistics tables and charts-->
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="" class="nav-link" data-target="enrolled"><i class="fas fa-users"></i>
-                                            Enrolled Students
-                                        </a>
-                                        <!-- Current students clocked out, statistics tables and charts-->
-                                    </li>
-                                    <li class="nav-item">
                                         <a href="" class="nav-link" data-target="tconfig"><i class="fas fa-cogs"></i>
                                             Timecard Configuration</a>
                                         <!--Turn on/off punches (master), minimum duration, allow mark for review, allow hour deletion [before and after clock in] -->
                                     </li>
-                                    <li class="nav-item">
-                                        <a href="" class="nav-link" id="syslog"><i class="fas fa-cog"></i> System Log
-                                        </a>
-                                        <!-- Current students clocked out, statistics tables and charts-->
-                                    </li>
+                                    <li class="nav-item no-bottom">
+                                        <a href="" class="nav-link" id="syslog"><i class="fas fa-cog"></i> System Log </a>
+                                        </li>
                                 </ul>
 
                             </div>
@@ -141,6 +154,10 @@
                                         @endif
                                         </tbody>
                                     </table>
+                                </div>
+                                <div id="blocked">
+                                    <!--TODO: Blocked Students w/ action to unblock-->
+                                    
                                 </div>
 
                                 <!--......-->

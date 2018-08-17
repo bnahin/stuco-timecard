@@ -81,4 +81,12 @@ body {
   li {
     border-bottom: 1px solid #ccc;
   }
+  .nav-header {
+    color: #aaa;
+    font-weight:bold;
+    text-transform: uppercase;
+  }
+  .no-bottom {
+    border-bottom: none !important;
+  }
 }

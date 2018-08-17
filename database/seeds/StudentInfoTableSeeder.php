@@ -28,6 +28,7 @@ class StudentInfoTableSeeder extends Seeder
                 $this->command->error('Error! No student data file found.');
             }
         } else {
+            \DB::table('student_info')->update(['user_id' => null]);
             $this->command->line("Nevermind, there's already data here. ;)");
         }
     }

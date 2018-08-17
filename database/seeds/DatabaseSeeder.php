@@ -18,7 +18,8 @@ class DatabaseSeeder extends Seeder
             //HoursTableSeeder::class, //Random hours
             //Hours now handled by UsersTableSeeder
             ClubsTableSeeder::class, //Seed club (StuCo)
-            UsersTableSeeder::class, //Seed Users
+            UsersTableSeeder::class, //Seed Users,
+            BlockedUsersSeeder::class //Block Random Student
         ]);
     }
 }

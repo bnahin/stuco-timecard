@@ -27,13 +27,13 @@ class AdminController extends Controller
 
     private function getAssignedStudents()
     {
-        $clubid = app()->isLocal() ? 1 : Session::get("club-id");
+        $clubid = getClubId();
         $students = User::whereHas('clubs', function ($q) use ($clubid) {
             return $q->where('clubs.id', $clubid);
         });
 
-        return $students->orderBy('last_name', 'asc')
-            ->get();
+        return $students->notBlockedFrom($clubid)
+            ->orderBy('last_name', 'asc')->get();
     }
 
     public function assignStudent(Request $request)
@@ -53,25 +53,36 @@ class AdminController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Could not find student with that name or ID.']);
         }
 
-        $student = $studentInfo->first();
-        if ($student->user()->exists()) {
-            //User model exists, associate.
-            User::where('student_info_id',$student->id)->first()->clubs()->attach(getClubId());
-            return response()->json(['status' => 'error', 'message' => 'The student is already assigned to this club.']);
-        }
-            //User does not exist, create!
-            $newUser = User::create([
-                'google_id'       => null,
-                'student_info_id' => $student->id,
-                'first_name'      => $student->first_name,
-                'last_name'       => $student->last_name,
-                'email'           => $student->email,
-                'domain'          => 'ecrchs.org'
-            ]);
-            $studentInfo->update(['user_id' => $newUser->id]);
-            $newUser->clubs()->attach(getClubId());
+        $student = $studentInfo->with('user')->first();
+        if ($student->user) {
+            //User model exists, attach club.
+            $user = User::where('student_info_id', $student->id);
 
-        return response()->json(['status' => 'success', 'message' => $newUser ?: null]);
+            if ($user->first()->clubs()->where('clubs.id', getClubId())->exists()) {
+                //Already has club
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => 'The student is already assigned to this club.'
+                ]);
+            } else {
+                $user->first()->clubs()->attach(getClubId());
+
+                return response()->json(['status' => 'success', 'message' => $user->first()]);
+            }
+        }
+        //User does not exist, create!
+        $newUser = User::create([
+            'google_id'       => null,
+            'student_info_id' => $student->id,
+            'first_name'      => $student->first_name,
+            'last_name'       => $student->last_name,
+            'email'           => $student->email,
+            'domain'          => 'ecrchs.org'
+        ]);
+        $student->update(['user_id' => $newUser->id]);
+        $newUser->clubs()->attach(getClubId());
+
+        return response()->json(['status' => 'success', 'message' => $student ?: null]);
         //Create user model and attach
         //Null google id
 

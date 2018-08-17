@@ -45,6 +45,8 @@ class StudentInfo extends Model
 
     protected $table = 'student_info';
 
+    protected $guarded = [];
+
     public function user()
     {
         return $this->belongsTo(User::class);

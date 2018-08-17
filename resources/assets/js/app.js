@@ -328,7 +328,10 @@ if ($('#hours-table').length && !$('#no-hours').length) {
  Admin Page
  */
 if ($('#admin-card').length) {
-
+  //Assigned Students
+  let $assignedTable = $('#assigned-table').DataTable({
+    'order': [[1, 'asc']]
+  })
   //Assign Students
   $('#manual-assign').click(function (e) {
     e.preventDefault()
@@ -354,23 +357,24 @@ if ($('#admin-card').length) {
         if (result.status != 'success') {
           return swal('Error!', 'Could not add student. ' + result.message, 'error')
         }
-        else {
-          let student = result.message;
-          //TODO: Add row to table
 
-          swal('Success!', 'The student has been added.', 'success')
-        }
+        let student = result.message
+        $assignedTable.row.add([
+          student.student_id,
+          student.last_name,
+          student.first_name,
+          student.grade,
+          student.email,
+          '[Actions] like block, etc.'
+        ]).draw('full-hold')
+
+        return swal('Success!', 'The student has been added.', 'success')
       },
       error  : function (xhr) {
         activityBtnEnable(btn, 'plus', 'Add')
-        swal('Error!', 'Could not add student. ' + xhr.responseJSON.errors.id[0], 'error')
+        return swal('Error!', 'Could not add student. ' + xhr.responseJSON.errors.id[0], 'error')
       }
     })
-  })
-
-  //Assigned Students
-  $('#assigned-table').DataTable({
-    'order': [[1, 'asc']]
   })
 
   //Enrolled Student DB
