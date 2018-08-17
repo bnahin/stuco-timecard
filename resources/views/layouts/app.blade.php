@@ -57,8 +57,8 @@
                                 Hours</a>
                         </li>
                     @elseauth('admin')
-                    <li class="nav-item {{ (Route::currentRouteName() == "admin-home") ? "active":"" }}">
-                        <a class="nav-link" href="{{ route('admin-home') }}"><i
+                    <li class="nav-item {{ (Route::currentRouteName() == "admin") ? "active":"" }}">
+                        <a class="nav-link" href="{{ route('admin') }}"><i
                                 class="fas fa-cogs"></i> Admin
                         </a>
                     </li>

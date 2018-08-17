@@ -39,21 +39,25 @@
                                         USER MANAGEMENT
                                     </li>
                                     <li class="nav-item">
-                                        <a href="" class="nav-link active" data-target="studentm"><i
-                                                class="fas fa-user"></i>
+                                        <a href="{{ route('admin', ['page' => 'assign']) }}"
+                                           class="nav-link @if($page == "assign") active @endif"
+                                           data-target="assign"><i class="fas fa-user"></i>
                                             Student Management </a>
                                         <!-- Class import, student search & add, view hours -->
                                         <!--<p class="text-muted">Test help text.</p>
                                     --></li>
                                     <li class="nav-item">
-                                        <a href="" class="nav-link" data-target="blocked"><i
-                                                class="fas fa-minus-circle"></i>
+                                        <a href="{{ route('admin', ['page' => 'blocked']) }}"
+                                           class="nav-link @if($page == "blocked") active @endif"
+                                           data-target="blocked"><i class="fas fa-minus-circle"></i>
                                             Blocked Students </a>
                                         <!-- Class import, student search & add, view hours -->
                                         <!--<p class="text-muted">Test help text.</p>
                                     --></li>
                                     <li class="nav-item no-bottom">
-                                        <a href="" class="nav-link" data-target="enrolled"><i class="fas fa-users"></i>
+                                        <a href="{{ route('admin', ['page' => 'enrolled']) }}"
+                                           class="nav-link @if($page == "enrolled") active @endif"
+                                           data-target="enrolled"><i class="fas fa-users"></i>
                                             Enrolled Students
                                         </a>
                                         <!-- Current students clocked out, statistics tables and charts-->
@@ -62,14 +66,17 @@
                                         Student Hours
                                     </li>
                                     <li class="nav-item">
-                                        <a href="" class="nav-link" data-target="tconfig"><i class="fas fa-clock"></i>
+                                        <a href="{{ route('admin', ['page' => 'hours']) }}"
+                                           class="nav-link @if($page == "hours") active @endif"
+                                           data-target="hours"><i class="fas fa-clock"></i>
                                             View Hours</a>
                                         <!--Turn on/off punches (master), minimum duration, allow mark for review, allow hour deletion [before and after clock in] -->
                                     </li>
                                     <li class="nav-item no-bottom">
-                                        <a href="" class="nav-link" data-target="hourstats"><i
-                                                class="fas fa-chart-pie"></i> Hour
-                                            Statistics
+                                        <a href="{{ route('admin', ['page' => 'hourstats']) }}"
+                                           class="nav-link @if($page == "hourstats") active @endif"
+                                           data-target="hourstats"><i class="fas fa-chart-pie"></i>
+                                            Hour Statistics
                                         </a>
                                         <!-- Current students clocked out, statistics tables and charts-->
                                     </li>
@@ -77,156 +84,32 @@
                                         Configuration
                                     </li>
                                     <li class="nav-item">
-                                        <a href="" class="nav-link" data-target="eventm"><i class="fas fa-calendar"></i>
+                                        <a href="{{ route('admin', ['page' => 'events']) }}"
+                                           class="nav-link @if($page == "events") active @endif"
+                                           data-target="events">
+                                            <i class="fas fa-calendar"></i>
                                             Events Management
                                         </a>
                                         <!--Events for selection -->
                                     </li>
                                     <li class="nav-item">
-                                        <a href="" class="nav-link" data-target="tconfig"><i class="fas fa-cogs"></i>
+                                        <a href="{{ route('admin', ['page' => 'timecard']) }}"
+                                           class="nav-link @if($page == "timecard") active @endif"
+                                           data-target="timecard"><i class="fas fa-cogs"></i>
                                             Timecard Configuration</a>
                                         <!--Turn on/off punches (master), minimum duration, allow mark for review, allow hour deletion [before and after clock in] -->
                                     </li>
                                     <li class="nav-item no-bottom">
-                                        <a href="" class="nav-link" id="syslog"><i class="fas fa-cog"></i> System Log </a>
-                                        </li>
+                                        <a href="{{ route('admin', ['page' => 'system']) }}"
+                                           class="nav-link @if($page == "system") active @endif" data-target="system">
+                                            <i class="fas fa-cog"></i> System Log
+                                        </a>
+                                    </li>
                                 </ul>
 
                             </div>
-                            <div class="col-md-9 ml-sm-auto">
-                                <div id="studentm">
-                                    <h5>Student Management</h5>
-                                    <hr>
-                                    <h4>Assign Students</h4>
-                                    <p class="text-muted">Students are assigned to your club when they enter your club's
-                                        access code, <code>BANBAN</code>. You can also manually add them here.</p>
-                                    <div class="row justify-content-center">
-                                        <div class="col-xs-3">
-                                            <div class="card bg-light">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">Add by student ID or full name</h5>
-                                                    <p class="card-text text-muted">Use the <a href="#">Enrolled
-                                                            Students</a> page
-                                                        to search for an ID or name.</p>
-                                                    <form id="manual-assign-form" method="post"
-                                                          action="{{ route('manual-assign') }}">
-                                                        @csrf
-                                                        <div class="form-group">
-                                                            <input type="text" class="form-control"
-                                                                   id="assign-input"
-                                                                   placeholder="ex. 115602 or Blake Nahin">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <button class="btn btn-success" id="manual-assign"><i
-                                                                    class="fas fa-plus"></i> Add
-                                                            </button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <table class="table table-hover" id="assigned-table">
-                                        <thead class="thead-dark">
-                                        <tr>
-                                            <th>Student ID</th>
-                                            <th>Last Name</th>
-                                            <th>First Name</th>
-                                            <th>Grade Level</th>
-                                            <th>Email</th> <!--(ND) if next day)-->
-                                            <th class="print-hide">Actions</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <!--Students that are a part of the admin's (current user) club -->
-                                        @if($data['assigned'])
-                                            @foreach($data['assigned'] as $student)
-                                                <tr>
-                                                    <td>{{ $student->student->student_id }}</td>
-                                                    <td>{{ $student->last_name }}</td>
-                                                    <td>{{ $student->first_name }}</td>
-                                                    <td>{{ $student->student->grade }}</td>
-                                                    <td>{{ $student->email }}</td>
-                                                    <td>[Actions]</td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div id="blocked">
-                                    <!--TODO: Blocked Students w/ action to unblock-->
-                                    
-                                </div>
-
-                                <!--......-->
-                                <div id="hourstats" style="display:none;">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="card text-white bg-primary mb-4">
-                                                <div class="card-body">
-                                                    <h5 class="card-title"><strong><strong>8</strong> Registered
-                                                            Students</strong></h5>
-                                                    <p class="card-text">Students that have logged in using ECRCHS
-                                                        SSO.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="card text-white bg-success mb-4">
-                                                <div class="card-body">
-                                                    <h5 class="card-title"><strong><strong>40</strong> Assigned
-                                                            Students</strong></h5>
-                                                    <p class="card-text">Students that have been assigned to Student
-                                                        Council.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="card text-white bg-info mb-4">
-                                                <div class="card-body">
-                                                    <h5 class="card-title"><strong><strong>5, 361</strong> Total
-                                                            Students</strong></h5>
-                                                    <p class="card-text">Students that are enrolled at ECRCHS and were
-                                                        in the mass import.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                </div>
-                                <div id="enrolled" style="display:none;">
-                                    <div class="m-auto col-md-8">
-                                        <div class="card border-success mb-3">
-                                            <div class="card-header">Student Import</div>
-                                            <div class="card-body">
-                                                <h5 class="card-title">Upload student data</h5>
-                                                <p class="card-text">To replace the enrolled student database, export
-                                                    the
-                                                    data from Aeries using the command <code>ID FN LN STUEMAIL GR</code>.
-                                                    Required fields are Student ID, first name, last name, email, and
-                                                    grade.
-                                                </p>
-                                                <input id="input-import" name="import-file" type="file" class="file"
-                                                       data-show-preview="false" data-show-cancel="false"
-                                                       data-theme="fa">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <table class="table" id="student-db" data-action="{{ route('get-students') }}">
-                                        <thead class="thead-dark">
-                                        <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">First Name</th>
-                                            <th scope="col">Last Name</th>
-                                            <th scope="col">Grade</th>
-                                            <th scope="col">Email</th>
-                                        </tr>
-                                        </thead>
-                                    </table>
-                                </div>
+                            <div class="col-md-9 ml-sm-auto" id="adm-content">
+                                @include('pages.admin.'.$page)
                             </div>
                         </div>
                     </div>

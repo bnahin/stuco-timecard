@@ -10,15 +10,30 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AdminController extends Controller
 {
-    public function index()
-    {
-        $data = [];
-        $data['assigned'] = $this->getAssignedStudents();
 
-        return view('pages.admin')->with(compact('data'));
+    public function index($page = null)
+    {
+        $page = $page ?: 'assign';
+
+        return view('pages.admin')->with(
+            [
+                'data' => $this->getViewData($page),
+                'page' => $page
+            ]);
     }
 
-    public function processAssignStudentsTable(Request $request)
+    private function getViewData($page)
+    {
+        $data = null;
+        switch ($page) {
+            case 'assign':
+                $data = $this->getAssignedStudents();
+        }
+
+        return $data;
+    }
+
+    public function processEnrolledStudentsTable(Request $request)
     {
         $students = StudentInfo::select(['student_id', 'first_name', 'last_name', 'grade', 'email'])->get();
 

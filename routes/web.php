@@ -51,15 +51,15 @@ Route::group(['middleware' => 'auth:user,admin'], function () {
      * Admin
      */
     Route::group(['middleware' => 'admin', 'prefix' => '/admin'], function () {
-        //Home
-        Route::get('/', 'AdminController@index')
-            ->name('admin-home');
+        //Home and Pages
+        Route::get('/{page?}', 'AdminController@index')
+            ->name('admin');
 
-        Route::post('/assign','AdminController@assignStudent')
+        //Submissions/AJAX
+        Route::post('/enrolled/get', 'AdminController@processEnrolledStudentsTable')
+            ->name('get-enrolled');
+        Route::post('/assign', 'AdminController@assignStudent')
             ->name('manual-assign');
-        //Enrolled Student Database
-        Route::get('/assign/get', 'AdminController@processAssignStudentsTable')
-            ->name('get-students');
     });
 });
 

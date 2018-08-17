@@ -381,7 +381,10 @@ if ($('#admin-card').length) {
   $('#student-db:visible').DataTable({
     processing: true,
     serverSide: true,
-    ajax      : '/admin/assign/get',
+    ajax      : {
+      url : '/admin/enrolled/get',
+      type: 'POST'
+    },
     columns   : [
       {data: 'student_id', name: 'student_id'},
       {data: 'first_name', name: 'first_name'},
