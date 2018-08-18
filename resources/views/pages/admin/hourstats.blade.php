@@ -1,3 +1,7 @@
+@section('page-title')
+    Hour Statistics
+@endsection
+
 <div id="hourstats">
     <h5>Hour Statistics</h5>
     <hr>
@@ -5,20 +9,18 @@
         <div class="col-md-4">
             <div class="card text-white bg-primary mb-4">
                 <div class="card-body">
-                    <h5 class="card-title"><strong><strong>8</strong> Registered
-                            Students</strong></h5>
-                    <p class="card-text">Students that have logged in using ECRCHS
-                        SSO.</p>
+                    <h5 class="card-title">
+                        <strong><strong>{{ $data['members'] }}</strong>
+                            Club Members</strong></h5>
+                    <p class="card-text">Students that have been assigned to the club or joined with the code.</p>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card text-white bg-success mb-4">
                 <div class="card-body">
-                    <h5 class="card-title"><strong><strong>40</strong> Assigned
-                            Students</strong></h5>
-                    <p class="card-text">Students that have been assigned to Student
-                        Council.</p>
+                    <h5 class="card-title"><strong><strong>3</strong> On Assignment</strong></h5>
+                    <p class="card-text">Students that are currently clocked out.</p>
                 </div>
             </div>
         </div>

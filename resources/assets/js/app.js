@@ -63,7 +63,6 @@ $('#new-activity-submit').click(function (e) {
         icon   : 'success',
         timer  : 4000,
         buttons: false
-        //TODO make this self-destruct and redirect
       }).then(() => {
         location.reload()
       })
@@ -377,6 +376,113 @@ if ($('#admin-card').length) {
     })
   })
 
+  //Drop Students
+  $('.drop-student').click(function () {
+    let btn    = $(this),
+        id     = btn.data('id'),
+        action = '/admin/students/drop'
+    return swal({
+      title  : 'Are you sure?',
+      text   : 'Dropping this student will block them from using the system.',
+      icon   : 'warning',
+      buttons: {
+        cancel : 'No, cancel',
+        confirm: {
+          text      : 'Yes, drop student',
+          className : 'swal-btn-danger',
+          value     : true,
+          closeModal: false
+        }
+      }
+    })
+      .then(result => {
+        if (!result) throw null
+
+        $.ajax({
+          url    : action,
+          type   : 'PUT',
+          data   : {id: id},
+          success: (result) => {
+            if (result.status == 'success') {
+              return swal({
+                title  : 'Success!',
+                text   : 'The student has been dropped.',
+                icon   : 'success',
+                timer  : 4000,
+                buttons: false
+                //TODO make this self-destruct and redirect
+              }).then(() => {
+                location.reload()
+              })
+            } else {
+              //Dropped already
+              return swal({
+                title  : 'Already Dropped',
+                text   : 'The student has already been dropped.',
+                icon   : 'info',
+                timer  : 4000,
+                buttons: false
+              }).then(() => {
+                location.reload()
+              })
+            }
+          },
+          error  : (xhr) => {
+            return swal('Error!', 'Could not drop student. ' + xhr.responseJSON.errors.id[0])
+          }
+        })
+      })
+  })
+  $('#purge-students').click(function () {
+    let btn    = $(this),
+        action = '/admin/students/purge'
+    return swal({
+      title  : 'Are you sure?',
+      text   : 'Purging will remove all students from your club!!',
+      icon   : 'warning',
+      buttons: {
+        cancel : 'No, cancel',
+        confirm: {
+          text      : 'Yes, purge. Goodbye children.',
+          className : 'swal-btn-danger',
+          value     : true,
+          closeModal: false
+        }
+      }
+    })
+      .then(result => {
+        if (!result) return false;
+
+        $.ajax({
+          url    : action,
+          type   : 'POST',
+          success: (result) => {
+            if (result.status == 'success') {
+              return swal({
+                title  : 'Success!',
+                text   : 'The students have been purged.',
+                icon   : 'success',
+                timer  : 4000,
+                buttons: false
+              }).then(() => {
+                location.reload()
+              })
+            } else {
+              //Dropped already
+              return swal({
+                title  : 'Already Purged',
+                text   : 'The students have already been purged.',
+                icon   : 'info'
+              });
+            }
+          },
+          error  : (xhr) => {
+            return swal('Error!', 'Could not purge the children.')
+          }
+        })
+      })
+  })
+
   //Enrolled Student DB
   $('#student-db:visible').DataTable({
     processing: true,
@@ -393,5 +499,58 @@ if ($('#admin-card').length) {
       {data: 'email', name: 'email'}
     ]
 
+  })
+
+  //Blocked Students
+  $('#blocked-table').DataTable({
+    'order': [[1, 'asc']]
+  })
+  $('button.unblock').click(function (e) {
+    e.preventDefault()
+
+    let btn    = $(this),
+        id     = btn.data('id'),
+        action = '/admin/unblock'
+    activityBtnDisable(btn)
+
+    $.ajax({
+      url    : action,
+      type   : 'PUT',
+      data   : {id: id},
+      success: (result) => {
+        if (result.status == 'success') {
+          activityBtnEnable(btn, 'check', 'Success', false)
+          return swal({
+            title  : 'Success!',
+            text   : 'The student has been unblocked.',
+            icon   : 'success',
+            timer  : 4000,
+            buttons: false
+            //TODO make this self-destruct and redirect
+          }).then(() => {
+            location.reload()
+          })
+        }
+        else {
+          //Unblocked already?
+          return swal({
+            title  : 'Already Unblocked',
+            text   : 'The student has already been unblocked.',
+            icon   : 'info',
+            timer  : 4000,
+            buttons: false
+            //TODO make this self-destruct and redirect
+          }).then(() => {
+            location.reload()
+          })
+        }
+      },
+      error  : (xhr) => {
+        activityBtnEnable(btn, 'undo', 'Unblock')
+
+        return swal('Error!', 'Could not unblock student. ' + xhr.responseJSON.errors.id[0])
+
+      }
+    })
   })
 }

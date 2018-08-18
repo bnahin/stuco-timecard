@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@section('page-title')
+    {{ isAdmin() ? "My": "View" }} Hours
+@endsection
+
+
 {{-- DataTables Styles (CDN) --}}
 @push('styles')
     <link rel="stylesheet" type="text/css"

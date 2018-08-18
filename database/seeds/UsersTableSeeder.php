@@ -14,6 +14,7 @@ class UsersTableSeeder extends Seeder
         $this->command->line('Adding Users and Hours');
 
         App\User::truncate();
+        App\Hour::truncate();
         \DB::table('club_user')->truncate();
 
         factory(App\User::class, 9)->create()->each(function ($user) {

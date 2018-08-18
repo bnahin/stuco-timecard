@@ -11,7 +11,9 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'ECRCHS Student Council') }}</title>
+    <title>
+        {{ config('app.school-name')." ". ($clubName ?: 'Club Management') }}
+        | @yield('page-title', 'Home') </title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -26,7 +28,7 @@
     <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
-                {{ config('app.name', 'Laravel') }}
+                {{ $clubName }} Timecard @if(app()->isLocal()) [DEV] @endif
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -57,11 +59,11 @@
                                 Hours</a>
                         </li>
                     @elseauth('admin')
-                    <li class="nav-item {{ (Route::currentRouteName() == "admin") ? "active":"" }}">
-                        <a class="nav-link" href="{{ route('admin') }}"><i
-                                class="fas fa-cogs"></i> Admin
-                        </a>
-                    </li>
+                        <li class="nav-item {{ (Route::currentRouteName() == "admin") ? "active":"" }}">
+                            <a class="nav-link" href="{{ route('admin') }}"><i
+                                    class="fas fa-cogs"></i> Admin
+                            </a>
+                        </li>
                     @endauth
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -71,9 +73,12 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{ route('logout') }}"><i class="fas fa-sign-out-alt"></i>
                                 Sign Out</a>
-                            <!--<a class="dropdown-item" href="#">Another action</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>-->
+                            <h6 class="dropdown-header">{{ (isAdmin()) ? "Admin" : "My" }} other clubs</h6>
+                            @foreach($clubs as $club)
+                                <a class="dropdown-item"
+                                   href="/sessionswitch/{{ $club->id }}">{{ $club->club_name }}</a>
+                            @endforeach
                         </div>
                     </li>
                 </ul>

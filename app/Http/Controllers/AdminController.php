@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\BlockedUser;
 use App\StudentInfo;
 use App\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\Facades\DataTables;
@@ -24,10 +26,18 @@ class AdminController extends Controller
 
     private function getViewData($page)
     {
-        $data = null;
+        $data = [];
         switch ($page) {
             case 'assign':
                 $data = $this->getAssignedStudents();
+                break;
+            case 'blocked':
+                $data = BlockedUser::with('user')->where('club_id', getClubId())->get();
+                break;
+            case 'hourstats':
+                $data['members'] = $this->getAssignedStudents()
+                    ->count();
+                break;
         }
 
         return $data;
@@ -102,5 +112,61 @@ class AdminController extends Controller
         //Null google id
 
         //Without a user model the admin table will break!
+    }
+
+    public function unblock(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|int'
+        ]);
+
+        $id = $request->id;
+        try {
+            $blockedUser = BlockedUser::findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            return response()
+                ->json(['status' => 'error', 'message' => 'Already unblocked']);
+        }
+
+        $blockedUser->delete();
+
+        return response()->json(['status' => 'success']);
+
+        //Already unblocked
+    }
+
+    public function dropStudent(Request $request)
+    {
+        $id = $request->id;
+
+        try {
+            $user = User::findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            return response()
+                ->json(['status' => 'error', 'message' => 'Already dropped']);
+        }
+
+        $user->clubs()->detach(getClubId());
+        $user->blocks()->create(['club_id' => getClubId()]);
+
+        return response()->json(['status' => 'success']);
+    }
+
+    public function purgeStudents()
+    {
+        $students = User::whereHas('clubs', function ($query) {
+            $query->where('club_id', getClubId());
+        });
+        if ($students->exists()) {
+            //Purge
+            foreach ($students->get() as $student) {
+                $student->clubs()->detach(getClubId());
+            }
+
+            return response()->json(['status' => 'success']);
+        }
+
+        //No students exist
+        return response()->json(['status' => 'error', 'message' => 'No students in club.']);
     }
 }

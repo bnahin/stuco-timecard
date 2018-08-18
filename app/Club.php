@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Club whereUpdatedAt($value)
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Admin[] $admins
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\BlockedUser[] $blocks
  */
 class Club extends Model
 {
@@ -58,5 +59,9 @@ class Club extends Model
     public function logs()
     {
         return $this->hasMany(ActivityLog::class);
+    }
+
+    public function blocks() {
+        return $this->hasMany(BlockedUser::class);
     }
 }

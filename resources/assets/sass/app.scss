@@ -50,7 +50,7 @@ body {
   border-top: 3px solid #f780ff;
 }
 
-/** Admin Page **/
+/** Admin Pages **/
 #admin-card {
   border-top: 3px solid #ec6c6c;
   min-height: 85vh;
@@ -83,10 +83,24 @@ body {
   }
   .nav-header {
     color: #aaa;
-    font-weight:bold;
+    font-weight: bold;
     text-transform: uppercase;
   }
   .no-bottom {
     border-bottom: none !important;
+  }
+}
+
+#blocked-info {
+  margin-bottom: 6px;
+}
+
+.swal-btn-danger {
+  background-color: #d33333;
+  &:hover {
+    background-color: #f22f2f;
+  }
+  &:active {
+    background-color: #b91616;
   }
 }

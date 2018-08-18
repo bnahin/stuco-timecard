@@ -14,7 +14,7 @@ class ClubsTableSeeder extends Seeder
         $this->command->line('Adding Student Council Club');
         App\Club::truncate();
         //This is needed for queries for charts
-        App\Club::insert([
+        App\Club::create([
                 'id'         => 1,
                 'join_code' => 'BANBAN',
                 'club_name'    => 'Student Council',

@@ -130,13 +130,19 @@ class HoursController extends Controller
         //Line Chart: Hours per Month
         $lineRes = Hour::select(\DB::raw(
             "MONTH(start_time) as `month`, TRUNCATE(AVG(ROUND(TIME_TO_SEC(TIMEDIFF(end_time, start_time)) / 3600)), 2) AS hours"))
-            ->where('user_id', $uid)->groupBy("month")->get();
+            ->where('user_id', $uid)
+            ->where('club_id', getClubId())
+            ->groupBy("month")->get();
 
         //Pie Chart: Events by Name
         $pieRes = \DB::table('hours')
-            ->join('events', 'hours.event_id', '=', 'events.id')
+            ->join('events', function ($join) {
+                $join->on('hours.event_id', '=', 'events.id')
+                    ->where('events.club_id', getClubId());
+            })
             ->select(\DB::raw('hours.event_id AS event_id, events.event_name AS event_name, COUNT(*) AS count'))
             ->where('hours.user_id', $uid)
+            ->where('hours.club_id', getClubId())
             ->groupBy('event_id', 'event_name')->get();
 
         //Mixed Chart: Total Hours, Total Hours per Month by Event
@@ -154,16 +160,17 @@ class HoursController extends Controller
             /** Total Hours */
             $db = Hour::select(
                 \DB::raw("CEIL(SUM(TIME_TO_SEC(TIMEDIFF(end_time, start_time)) / 3600)) AS hours"))
-                ->where('user_id', $uid);
+                ->where('user_id', $uid)->where('club_id', getClubId());
             $totalHours = $db->whereRaw("MONTH(start_time) = ?", [$month]);
             $mixedRes[$month]['total'] = $totalHours->first()->hours ?: 0;
 
             /** Hours per Event */
-            $events = Event::all(); //Inlcuding inactive events
+            $events = Event::where('club_id', getClubId())->get(); //Inlcuding inactive events
             foreach ($events as $event) {
                 $db = Hour::select(
                     \DB::raw("CEIL(SUM(TIME_TO_SEC(TIMEDIFF(end_time, start_time)) / 3600)) AS hours"))
-                    ->where('user_id', $uid);
+                    ->where('user_id', $uid)
+                    ->where('club_id', getClubId());
                 $totalHours = $db->whereRaw("MONTH(start_time) = ?", [$month])
                     ->where('event_id', $event->id)
                     ->first()->hours;

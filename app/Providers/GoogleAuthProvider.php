@@ -18,8 +18,9 @@ class GoogleAuthProvider extends ServiceProvider
      */
     public function boot()
     {
-        // View Composer for Auth User
+        // View Composers
         View::composer('*', function ($view) {
+            /** Auth User */
             $user = null;
             if (Auth::guard('admin')->check()) {
                 $user = Auth::guard('admin')->user();
@@ -28,7 +29,22 @@ class GoogleAuthProvider extends ServiceProvider
                     $user = Auth::user();
                 }
             }
-            $view->with('user', $user);
+
+            /** Clubs */
+            if($user) {
+                $clubs = $user->clubs;
+
+                $clubId = getClubId();
+                $currClub = \App\Club::find($clubId);
+                $clubCode = $currClub->join_code;
+                $clubName = $currClub->club_name;
+
+                $view->with(
+                    compact('user', 'clubName',
+                        'clubs', 'clubId',
+                        'currClub', 'clubCode'
+                    ));
+            }
         });
     }
 

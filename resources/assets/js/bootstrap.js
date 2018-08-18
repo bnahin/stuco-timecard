@@ -61,6 +61,9 @@ $.ajaxSetup({
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
   }
 })
-
+$(function () {
+  $(document, '[data-toggle="tooltip"]').tooltip({container: 'body'})
+  $(document, '[rel="tooltip"]').tooltip({container: 'body'})
+})
 import swal from 'sweetalert'
 import Chart from 'chart.js'

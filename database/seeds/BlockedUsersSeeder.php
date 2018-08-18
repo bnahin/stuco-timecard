@@ -13,15 +13,17 @@ class BlockedUsersSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('blocked_users')->truncate();
+        App\BlockedUser::truncate();
 
         $user = App\User::inRandomOrder()->first();
         $clubid = 1;
-        DB::table('blocked_users')->insert([
+        /*DB::table('blocked_users')->insert([
             'user_id'    => $user->id,
             'club_id'    => $clubid,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
-        ]);
+        ]);*/
+        $user->blocks()->create(['club_id' => $clubid]);
+
     }
 }

@@ -60,6 +60,9 @@ Route::group(['middleware' => 'auth:user,admin'], function () {
             ->name('get-enrolled');
         Route::post('/assign', 'AdminController@assignStudent')
             ->name('manual-assign');
+        Route::put('/unblock', 'AdminController@unblock');
+        Route::put('/students/drop', 'AdminController@dropStudent');
+        Route::post('/students/purge', 'AdminController@purgeStudents');
     });
 });
 

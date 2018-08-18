@@ -61,6 +61,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property int                                                       $student_info_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereStudentInfoId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User notBlockedFrom($clubid)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\BlockedUser[] $blocks
  */
 class User extends Authenticatable
 {
@@ -110,10 +111,15 @@ class User extends Authenticatable
      */
     public function scopeNotBlockedFrom($query, $clubid)
     {
+        return $query->whereDoesntHave('blocks', function ($q) use ($clubid) {
+            $q->where('club_id', $clubid);
+        });
+        /*
         return $query->select('users.*')->leftJoin('blocked_users', function ($join) use ($clubid) {
             $join->on('users.id', '=', 'blocked_users.id')
                 ->where('blocked_users.club_id', '=', $clubid);
         })->whereNull('blocked_users.id');
+        */
     }
 
     /**
@@ -138,6 +144,11 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
+    public function blocks()
+    {
+        return $this->hasMany(BlockedUser::class);
+    }
+
     /**
      * Functions
      */
@@ -151,19 +162,33 @@ class User extends Authenticatable
     function isBlockedFrom(
         $clubid
     ) {
-        return \DB::table('blocked_users')->where([
+        /*return \DB::table('blocked_users')->where([
             'user_id' => $this->id,
             'club_id' => $clubid
-        ])->exists();
+        ])->exists();*/
+        return $this->blocks()
+            ->where('blocked_users.club_id', $clubid)
+            ->exists();
     }
 
     public
     function blockFrom(
         $clubid
     ) {
-        return \DB::table('blocked_users')->insert([
+        /*return \DB::table('blocked_users')->insert([
             'user_id' => $this->id,
             'club_id' => $clubid
+        ]);*/
+        return $this->blocks()->create([
+            'club_id' => $clubid
         ]);
+    }
+
+    public function hasMarked()
+    {
+        return $this->hours()
+            ->where('needs_review', true)
+            ->where('club_id', getClubId())
+            ->exists();
     }
 }

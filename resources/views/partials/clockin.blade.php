@@ -1,4 +1,7 @@
 {{-- Purple Border --}}
+@section('page-title')
+    Clock In
+@endsection
 
 <h3 class="card-title">Current Event</h3>
 <hr>

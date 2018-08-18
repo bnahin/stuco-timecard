@@ -1,3 +1,7 @@
+@section('page-title')
+    Clock Out
+@endsection
+
 <h3 class="card-title">Add New Activity</h3>
 <hr>
 {{-- When entering ID,

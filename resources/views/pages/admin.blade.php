@@ -29,7 +29,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <h2>Club Administration</h2>
+                <h2>Club Administration <code>{{ $clubCode }}</code></h2>
                 <div class="card" id="admin-card">
                     <div class="card-body">
                         <div class="container row">
@@ -66,10 +66,10 @@
                                         Student Hours
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{ route('admin', ['page' => 'hours']) }}"
-                                           class="nav-link @if($page == "hours") active @endif"
-                                           data-target="hours"><i class="fas fa-clock"></i>
-                                            View Hours</a>
+                                        <a href="{{ route('admin', ['page' => 'marked']) }}"
+                                           class="nav-link @if($page == "marked") active @endif"
+                                           data-target="marked"><i class="fas fa-clock"></i>
+                                            View Marked Hours</a>
                                         <!--Turn on/off punches (master), minimum duration, allow mark for review, allow hour deletion [before and after clock in] -->
                                     </li>
                                     <li class="nav-item no-bottom">

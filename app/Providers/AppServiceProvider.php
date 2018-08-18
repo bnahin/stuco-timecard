@@ -21,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
 
         /** Custom Blade Directives */
         Blade::if('admin' ,function () {
-            return Auth::check() && Auth::user()->isAdmin();
+            return isAdmin();
         });
         Blade::if('route' ,function ($route) {
             return Route::currentRouteName() === $route;
