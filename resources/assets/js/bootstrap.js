@@ -1,5 +1,5 @@
 window._ = require('lodash')
-window.Popper = require('popper.js').default
+//window.Popper = require('popper.js').default
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -11,7 +11,8 @@ try {
   // jQuery is now loaded on master layout
   // window.$ = window.jQuery = require('jquery');
 
-  require('bootstrap')
+  //Bootstrap is now loaded on master layout
+  //require('bootstrap')
 } catch (e) {}
 
 /**
@@ -62,8 +63,8 @@ $.ajaxSetup({
   }
 })
 $(function () {
-  $(document, '[data-toggle="tooltip"]').tooltip({container: 'body'})
-  $(document, '[rel="tooltip"]').tooltip({container: 'body'})
+  $('[data-toggle="tooltip"]').tooltip()
+  $('[rel="tooltip"]').tooltip()
 })
 import swal from 'sweetalert'
 import Chart from 'chart.js'

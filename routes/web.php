@@ -63,6 +63,7 @@ Route::group(['middleware' => 'auth:user,admin'], function () {
         Route::put('/unblock', 'AdminController@unblock');
         Route::put('/students/drop', 'AdminController@dropStudent');
         Route::post('/students/purge', 'AdminController@purgeStudents');
+        Route::post('/hour/getdata', 'AdminController@getHourData');
     });
 });
 

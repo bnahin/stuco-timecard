@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\BlockedUser;
+use App\Event;
+use App\Hour;
 use App\StudentInfo;
 use App\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -38,6 +40,9 @@ class AdminController extends Controller
                 $data['members'] = $this->getAssignedStudents()
                     ->count();
                 break;
+            case 'marked':
+                $data['hours'] = Hour::marked()->get();
+                $data['events'] = Event::active()->get();
         }
 
         return $data;
@@ -168,5 +173,25 @@ class AdminController extends Controller
 
         //No students exist
         return response()->json(['status' => 'error', 'message' => 'No students in club.']);
+    }
+
+    public function getHourData(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|int'
+        ]);
+
+        $id = $request->id;
+        $hour = Hour::find($id);
+
+        if (!$hour->count()) {
+            return response()->json(['status' => 'error', 'message' => 'Timepunch does not exist.']);
+        }
+
+        //TODO: Push Data
+        $data = [];
+
+
+        return response()->json(['status' => 'success', 'data' => $data]);
     }
 }

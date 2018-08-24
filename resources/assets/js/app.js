@@ -451,7 +451,7 @@ if ($('#admin-card').length) {
       }
     })
       .then(result => {
-        if (!result) return false;
+        if (!result) return false
 
         $.ajax({
           url    : action,
@@ -470,10 +470,10 @@ if ($('#admin-card').length) {
             } else {
               //Dropped already
               return swal({
-                title  : 'Already Purged',
-                text   : 'The students have already been purged.',
-                icon   : 'info'
-              });
+                title: 'Already Purged',
+                text : 'The students have already been purged.',
+                icon : 'info'
+              })
             }
           },
           error  : (xhr) => {
@@ -501,7 +501,7 @@ if ($('#admin-card').length) {
 
   })
 
-  //Blocked Students
+  /** Blocked Students **/
   $('#blocked-table').DataTable({
     'order': [[1, 'asc']]
   })
@@ -551,6 +551,53 @@ if ($('#admin-card').length) {
         return swal('Error!', 'Could not unblock student. ' + xhr.responseJSON.errors.id[0])
 
       }
+    })
+  })
+
+  /** Marked Hours **/
+  $('#marked-table').DataTable({
+    'order': [[0, 'asc']]
+  })
+
+  //--AJAX---//
+  $('.marked-edit').click(function () {
+    let btn = $(this),
+        id  = btn.data('id')
+
+    activityBtnDisable(btn)
+    $.ajax({
+      url    : '/admin/hour/getdata',
+      type   : 'POST',
+      data   : {id: id},
+      success: (result) => {
+        activityBtnEnable(btn, 'pencil-alt', '')
+        if (result.status == 'success') {
+          //Process.....
+          //TODO Put data in modal
+          let data = result.data;
+
+
+          //Then, show Modal
+          $('#marked-modal').modal('toggle')
+        }
+        else {
+          swal('Error!', 'Unable to retrieve timepunch data. ' + result.message, 'error')
+        }
+      },
+      error  : (xhr) => {
+        activityBtnEnable(btn, 'pencil-alt', '')
+        return swal('Error!', 'Unable to retrieve hour data. ' + xhr.responseJSON.errors.id[0].message)
+      }
+    })
+  })
+  $(function () {
+    $('.clockpicker').clockpicker({
+      twelvehour: true,
+    })
+    $('#start-time').datetimepicker({
+      formatDate: 'm/d/Y',
+      step      : 60,
+      timepicker: false
     })
   })
 }

@@ -104,3 +104,21 @@ body {
     background-color: #b91616;
   }
 }
+
+/**
+Edit Timepunch
+ */
+#edit-hour-form {
+  margin: auto;
+  width: 40rem;
+}
+
+#start-end-time-col {
+  padding-left: 29px;
+  .clockpicker {
+    display: inline-block;
+    .form-control {
+      width: 100% !important;
+    }
+  }
+}

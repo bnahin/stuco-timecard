@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -28,9 +29,9 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property int                 $student_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Hour whereStudentId($value)
- * @property int $club_id
- * @property int $needs_review
- * @property-read \App\Club $club
+ * @property int                 $club_id
+ * @property int                 $needs_review
+ * @property-read \App\Club      $club
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Hour whereClubId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Hour whereNeedsReview($value)
  */
@@ -39,6 +40,15 @@ class Hour extends Model
     protected $guarded = [];
 
     protected $dates = ['start_time', 'end_time'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(function (Builder $query) {
+            $query->where('club_id', getClubId());
+        });
+    }
 
     public function event()
     {
@@ -121,5 +131,15 @@ class Hour extends Model
         }
 
         return $return;
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeMarked(Builder $query)
+    {
+        return $query->where('needs_review', true);
     }
 }
