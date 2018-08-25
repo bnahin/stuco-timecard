@@ -36,4 +36,5 @@
         </div>
     </div>
     <hr>
+    <div class="alert alert-info"><i class="fas fa-info-circle"></i> Hour Statistics currently in development!</div>
 </div>

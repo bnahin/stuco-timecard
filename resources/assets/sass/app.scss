@@ -91,7 +91,7 @@ body {
   }
 }
 
-#blocked-info {
+#blocked-info, #events-info {
   margin-bottom: 6px;
 }
 
@@ -121,4 +121,13 @@ Edit Timepunch
       width: 100% !important;
     }
   }
+}
+
+.btn-hide, .btn-hide:hover, .btn-hide:active, .btn-hide:focus {
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+  cursor: default;
+  display: none;
 }

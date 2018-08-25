@@ -64,6 +64,12 @@ Route::group(['middleware' => 'auth:user,admin'], function () {
         Route::put('/students/drop', 'AdminController@dropStudent');
         Route::post('/students/purge', 'AdminController@purgeStudents');
         Route::post('/hour/getdata', 'AdminController@getHourData');
+        Route::put('/events/changeOrder', 'AdminController@changeEventsOrder');
+        Route::put('/events/updateName', 'AdminController@updateEventName');
+        Route::post('/events/toggleVis', 'AdminController@toggleVisibility');
+        Route::delete('/events/delete', 'AdminController@deleteEvent');
+        Route::post('/events/purge', 'AdminController@purgeEvent');
+        Route::post('/events/create', 'AdminController@createEvent');
     });
 });
 

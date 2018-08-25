@@ -9,7 +9,7 @@ use App\StudentInfo;
 use App\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 
 class AdminController extends Controller
@@ -43,6 +43,9 @@ class AdminController extends Controller
             case 'marked':
                 $data['hours'] = Hour::marked()->get();
                 $data['events'] = Event::active()->get();
+                break;
+            case 'events':
+                $data = Event::all();
         }
 
         return $data;
@@ -97,6 +100,8 @@ class AdminController extends Controller
             } else {
                 $user->first()->clubs()->attach(getClubId());
 
+                log_action("Assigned student {$user->full_name}");
+
                 return response()->json(['status' => 'success', 'message' => $user->first()]);
             }
         }
@@ -111,6 +116,8 @@ class AdminController extends Controller
         ]);
         $student->update(['user_id' => $newUser->id]);
         $newUser->clubs()->attach(getClubId());
+
+        log_action("Assigned student {$newUser->full_name}");
 
         return response()->json(['status' => 'success', 'message' => $student ?: null]);
         //Create user model and attach
@@ -133,6 +140,7 @@ class AdminController extends Controller
                 ->json(['status' => 'error', 'message' => 'Already unblocked']);
         }
 
+        log_action("Unblocked student {$blockedUser->user->full_name}");
         $blockedUser->delete();
 
         return response()->json(['status' => 'success']);
@@ -154,6 +162,8 @@ class AdminController extends Controller
         $user->clubs()->detach(getClubId());
         $user->blocks()->create(['club_id' => getClubId()]);
 
+        log_action("Dropped student " . $user->full_name);
+
         return response()->json(['status' => 'success']);
     }
 
@@ -167,6 +177,8 @@ class AdminController extends Controller
             foreach ($students->get() as $student) {
                 $student->clubs()->detach(getClubId());
             }
+
+            log_action("Purged all students");
 
             return response()->json(['status' => 'success']);
         }
@@ -189,9 +201,117 @@ class AdminController extends Controller
         }
 
         //TODO: Push Data
-        $data = [];
-
+        $data = [
+            'name'      => $hour->user->full_name,
+            'comments'  => $hour->comments ?: '<em>No Comments</em>',
+            'date'      => $hour->start_time->format('m/d/Y'),
+            'startTime' => $hour->start_time->format('h:iA'),
+            'endTime'   => $hour->end_time->format('h:iA'),
+            'event'     => $hour->event_id
+        ];
 
         return response()->json(['status' => 'success', 'data' => $data]);
+    }
+
+    public function changeEventsOrder(Request $request)
+    {
+        $request->validate([
+            'thisId' => 'int|required|exists:events,id',
+            'nextId' => 'int|exists:events,id',
+            'prevId' => 'int|exists:events,id',
+            'dir'    => [
+                Rule::in(['down', 'up'])
+            ]
+        ]);
+        if ($request->dir == 'up') {
+            //Swap this and previous event ordere
+            Event::find($request->thisId)->decrement('order');
+            Event::find($request->prevId)->increment('order');
+        } else {
+            //Swap this and next event order
+            Event::find($request->thisId)->increment('order');
+            Event::find($request->nextId)->decrement('order');
+        }
+
+        return response()->json(['bottom' => false, 'top' => false]);
+    }
+
+    public function updateEventName(Request $request)
+    {
+        $request->validate([
+            'id'  => 'required|exists:events',
+            'val' => 'required'
+        ]);
+
+        $event = Event::find($request->id);
+        $old = $event->event_name;
+        $event->event_name = $request->val;
+        $event->save();
+
+        log_action("Changed event \"$old\" to \"" . Event::find($request->id)->event_name . "\"");
+
+        return response()->json(['status' => 'success']);
+    }
+
+    public function toggleVisibility(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:events'
+        ]);
+
+        $event = Event::find($request->id);
+        $event->is_active = !$event->is_active;
+        $event->save();
+
+        log_action('Toggled event "' . Event::find($request->id)->event_name . '" visibility to ' . ($event->is_active) ? 'Active' : 'Hidden');
+
+        return response()->json(['status' => 'success']);
+    }
+
+    public function deleteEvent(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:events'
+        ]);
+
+        log_action('Deleted event "' . Event::find($request->id)->event_name . '"');
+
+        $event = Event::find($request->id);
+        $event->delete();
+
+        return response()->json(['status' => 'success']);
+    }
+
+    public function purgeEvent(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:events'
+        ]);
+
+        try {
+            $hours = Hour::where('event_id', $request->id)->delete();
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+
+        log_action('Purged event "' . Event::find($request->id)->event_name . '"');
+
+        return response()->json(['status' => 'success']);
+    }
+
+    public function createEvent(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|unique:events,event_name'
+        ]);
+
+        $event = new Event;
+        $event->event_name = $request->name;
+        $event->order = Event::getLast()->id + 1;
+        $event->is_active = true;
+        $event->club_id = getClubId();
+        $event->save();
+
+        return response()->json(['status' => 'success', 'id' => $event->id]);
     }
 }

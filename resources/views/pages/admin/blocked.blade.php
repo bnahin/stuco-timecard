@@ -9,6 +9,7 @@
     <!--TODO: Blocked Students w/ action to unblock-->
     <div class="card" id="blocked-info">
         <div class="card-body">
+            <i class="fas fa-info-circle"></i>
             These students have been blocked from your club. They cannot join, view their hours, or initiate a time
             punch. Dropped students are added here automatically.
         </div>

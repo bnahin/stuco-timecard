@@ -15,7 +15,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Editing <strong>Blake Nahin</strong>'s Timepunch</h5>
+                <h5 class="modal-title">Editing <strong id="name">Blake Nahin</strong>'s Timepunch</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -24,8 +24,7 @@
                 <div class="card bg-light mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Student's Comments</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
+                        <p class="card-text" id="comments"></p>
                     </div>
                 </div>
                 <form id="edit-hour-form">
@@ -41,9 +40,9 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="start-time" class="col-sm-2 col-form-label">Date</label>
+                        <label for="date" class="col-sm-2 col-form-label">Date</label>
                         <div class="col-sm-4">
-                            <input id="start-time" type="text" class="form-control">
+                            <input id="date" type="text" class="form-control">
                         </div>
                     </div>
                     <fieldset class="form-inline">
@@ -52,12 +51,12 @@
                             <div class="col-sm-10" id="start-end-time-col">
                                 <div class="input-group clockpicker" data-placement="right" data-align="top"
                                      data-autoclose="true">
-                                    <input type="text" class="form-control" value="09:32">
+                                    <input type="text" class="form-control" id="start-time">
                                 </div>
                                 <span class="fas fa-minus"></span>
                                 <div class="input-group clockpicker" data-placement="right" data-align="top"
                                      data-autoclose="true">
-                                    <input type="text" class="form-control" value="09:32">
+                                    <input type="text" class="form-control" id="end-time">
                                 </div>
 
                             </div>
@@ -68,8 +67,13 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 
-                <button type="button" class="btn btn-danger"><i class="fas fa-times"></i> Remove Timepunch</button>
-                <button type="button" class="btn btn-success"><i class="fas fa-check"></i> Save changes</button>
+                <button type="button" class="btn btn-danger action-btn" id="remove-timepunch" data-id="0"><i
+                        class="fas fa-times"></i> Remove
+                    Timepunch
+                </button>
+                <button type="button" class="btn btn-success action-btn" data-id="0"><i class="fas fa-check"></i> Save
+                    changes
+                </button>
             </div>
         </div>
     </div>
@@ -81,6 +85,7 @@
     <!--TODO: Blocked Students w/ action to unblock-->
     <div class="card" id="blocked-info">
         <div class="card-body">
+            <i class="fas fa-info-circle"></i>
             These time punches have been <strong>marked for review</strong>. Possible situations include a missed punch,
             accidental clock in, or date/time adjustments.
         </div>
@@ -101,12 +106,13 @@
                 <tr>
                     <td>{{ $marked->user->last_name }}</td>
                     <td>{{ $marked->user->first_name }}</td>
-                    <td>{{ $marked->start_time->format('m/d/Y H:i') }} - {{ $marked->end_time->format('H:i') }}</td>
+                    <td>{{ $marked->start_time->format('m/d/Y h:i a') }} - {{ $marked->end_time->format('h:i a') }}</td>
                     <td>
                         <div class="btn-group">
                             <button class="btn btn-info marked-edit" data-id="{{ $marked->id }}"><i
                                     class="fas fa-pencil-alt"></i></button>
-                            <button class="btn btn-outline-danger undo-mark" data-id="{{ $marked->id }}"><i
+                            <button class="btn btn-outline-danger undo-mark"
+                                    data-id="{{ $marked->id }}"><i
                                     class="fas fa-undo"></i></button>
                         </div>
                     </td>

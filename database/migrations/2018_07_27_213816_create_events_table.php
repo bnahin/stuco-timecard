@@ -18,6 +18,7 @@ class CreateEventsTable extends Migration
             $table->string('event_name');
             $table->boolean('is_active'); //Editable by admins. Able to be selected or not
             $table->integer('club_id');
+            $table->integer('order');
             $table->timestamps();
             $table->softDeletes();
         });

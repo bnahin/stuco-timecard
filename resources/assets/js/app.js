@@ -38,7 +38,7 @@ function activityBtnDisable (btn) {
   btn.html('<i class="fas fa-spinner fa-pulse"></i>')
 }
 
-function activityBtnEnable (btn, glyph, text, reset = true) {
+function activityBtnEnable (btn, glyph, text = '', reset = true) {
   if (reset) btn.attr('disabled', false)
   btn.html('<i class="fas fa-' + glyph + '"></i> ' + text)
 }
@@ -558,8 +558,6 @@ if ($('#admin-card').length) {
   $('#marked-table').DataTable({
     'order': [[0, 'asc']]
   })
-
-  //--AJAX---//
   $('.marked-edit').click(function () {
     let btn = $(this),
         id  = btn.data('id')
@@ -574,11 +572,25 @@ if ($('#admin-card').length) {
         if (result.status == 'success') {
           //Process.....
           //TODO Put data in modal
-          let data = result.data;
-
+          let data = result.data
+          $('#comments').html(data.comments)
+          $('#name').html(data.name)
+          $('option:selected').attr('selected', false)
+          $('option[value="' + data.event + '"]').attr('selected', true)
+          $('#date').val(data.date).datetimepicker({
+            timepicker: false,
+            mask      : true,
+            format    : 'm/d/Y',
+          })
+          $('#start-time').val(data.startTime)
+          $('#end-time').val(data.endTime)
+          $('.action-btn').attr('data-id', id)
 
           //Then, show Modal
           $('#marked-modal').modal('toggle')
+          $('.clockpicker').clockpicker({
+            twelvehour: true,
+          })
         }
         else {
           swal('Error!', 'Unable to retrieve timepunch data. ' + result.message, 'error')
@@ -590,14 +602,327 @@ if ($('#admin-card').length) {
       }
     })
   })
-  $(function () {
-    $('.clockpicker').clockpicker({
-      twelvehour: true,
+
+  /** Edit Hour Modal **/
+  //Remove Timepunch
+  $('#remove-timepunch').click(function (e) {
+    e.preventDefault()
+
+    let btn    = $(this),
+        action = '/hours/delete/' + btn.data('id')
+
+    activityBtnDisable(btn)
+    $.ajax({
+      url    : action,
+      type   : 'DELETE',
+      success: function () {
+        activityBtnEnable(btn, 'check', 'Success', false)
+        //Success
+        return swal({
+          title  : 'Success!',
+          text   : 'The time punch has been removed.',
+          icon   : 'success',
+          timer  : 4000,
+          buttons: false
+          //TODO make this self-destruct and redirect
+        }).then(() => {
+          location.reload()
+        })
+      },
+      error  : function (xhr) {
+        activityBtnEnable(btn, 'times', 'Remove Timepunch')
+
+        return swal('Error!', 'There was a problem removing the time punch. ' + xhr.responseJSON.message, 'error')
+      }
     })
-    $('#start-time').datetimepicker({
-      formatDate: 'm/d/Y',
-      step      : 60,
-      timepicker: false
+  })
+
+  /** Events Management **/
+  $(document).on('click', '.order-arrows button', function () {
+      let btn       = $(this),
+          thisRow   = btn.closest('tr'),
+          thisRowId = thisRow.data('id'),
+          prevRow   = thisRow.prev(),
+          prevRowId = prevRow.data('id'),
+          nextRow   = thisRow.next(),
+          nextRowId = nextRow.data('id'),
+          dir       = btn.data('dir')
+      activityBtnDisable(btn)
+      //Move up!
+      $.ajax({
+        url    : '/admin/events/changeOrder',
+        type   : 'PUT',
+        data   : {
+          thisId: thisRowId,
+          nextId: nextRowId,
+          prevId: prevRowId,
+          dir   : dir
+        },
+        success: function (result) {
+          $('button').attr('disabled', false).removeClass('btn-hide')
+
+          if (dir == 'up') {
+            //"Going Up!" --Willy Wonka
+            activityBtnEnable(btn, 'arrow-up')
+
+            thisRow.after(prevRow)
+          }
+          else {
+            activityBtnEnable(btn, 'arrow-down')
+
+            nextRow.after(thisRow)
+          }
+          thisRow.stop(true, true).effect('highlight', 2000)
+          $('#events-table > tbody > tr:last-child button[data-dir="down"]').addClass('btn-hide').attr('disabled', true)
+          //"Up and Out!" -- Willy Wonka
+          $('#events-table > tbody > tr:first-child button[data-dir="up"]').addClass('btn-hide').attr('disabled', true)
+
+        },
+        error  :
+
+          function (xhr) {
+            activityBtnEnable(btn, 'arrow-' + dir)
+
+            return swal('Error!', 'There was a problem changing the order. ' + xhr.responseJSON.message, 'error')
+          }
+      })
+
+    }
+  )
+  $(document).on('click', '.update-event', function () {
+    let btn   = $(this),
+        id    = btn.data('id'),
+        input = btn.closest('div').prev(),
+        val   = input.val()
+    activityBtnDisable(btn)
+    input.attr('disabled', true)
+
+    $.ajax({
+        url    : '/admin/events/updateName',
+        type   : 'PUT',
+        data   : {id: id, val: val},
+        success: (result) => {
+          if (result.status == 'success') {
+            activityBtnEnable(btn, 'check')
+            input.attr('disabled', false)
+            return swal({
+              title  : 'Success!',
+              text   : 'The event\'s name has been changed to "' + val + '".',
+              icon   : 'success',
+              timer  : 4000,
+              buttons: false
+            })
+          }
+          else {
+            activityBtnEnable(btn, 'check')
+            input.attr('disabled', false)
+            swal('Error!', 'Could not update event.', 'error')
+          }
+
+        },
+        error  : (xhr) => {
+          activityBtnEnable(btn, 'check')
+          input.attr('disabled', false)
+          swal('Error!', 'Could not update event. ' + xhr.responseJSON.message, 'error')
+        }
+      }
+    )
+  })
+  $(document).on('click', '.update-vis', function () {
+    let btn = $(this),
+        id  = btn.data('id')
+    activityBtnDisable(btn)
+    $.ajax({
+      url    : '/admin/events/toggleVis',
+      type   : 'POST',
+      data   : {id: id},
+      success: (result) => {
+        activityBtnEnable(btn, 'eye')
+        if (result.status == 'success') {
+          if (btn.hasClass('btn-outline-info')) {
+            btn.removeClass('btn-outline-info')
+              .addClass('btn-primary')
+          }
+          else {
+            btn.removeClass('btn-primary')
+              .addClass('btn-outline-info')
+          }
+        }
+        else {
+          swal('Error!', 'Could not update visibility.', 'error')
+        }
+      },
+      error  : (xhr) => {
+        activityBtnEnable(btn, 'eye')
+        swal('Error!', 'Could not update visibility. ' + xhr.responseJSON.message, 'error')
+      }
+    })
+  })
+  $(document).on('click', '.delete-event', function () {
+    let btn    = $(this),
+        id     = btn.data('id'),
+        action = '/admin/events/delete'
+    return swal({
+      title  : 'Are you sure?',
+      text   : 'Deleting this event will prevent it from being selected or edited. All hours recorded for this event if not purged will be final. You will also not be able to create another event with this name.',
+      icon   : 'warning',
+      buttons: {
+        cancel : 'No, cancel',
+        confirm: {
+          text      : 'Yes, delete event.',
+          className : 'swal-btn-danger',
+          value     : true,
+          closeModal: false
+        }
+      }
+    })
+      .then(result => {
+        if (!result) throw null
+
+        $.ajax({
+          url    : action,
+          type   : 'DELETE',
+          data   : {id: id},
+          success: (result) => {
+            if (result.status == 'success') {
+              return swal({
+                title  : 'Success!',
+                text   : 'The event has been deleted.',
+                icon   : 'success',
+                timer  : 4000,
+                buttons: false
+                //TODO make this self-destruct and redirect
+              }).then(() => {
+                $('tr[data-id="' + id + '"]').remove()
+                $('button').attr('disabled', false).removeClass('btn-hide')
+                $('#events-table > tbody > tr:last-child button[data-dir="down"]').addClass('btn-hide').attr('disabled', true)
+                //"Up and Out!" -- Willy Wonka
+                $('#events-table > tbody > tr:first-child button[data-dir="up"]').addClass('btn-hide').attr('disabled', true)
+
+              })
+            } else {
+              //Dropped already
+              return swal({
+                title  : 'Already Deleted',
+                text   : 'The event has already been deleted.',
+                icon   : 'info',
+                timer  : 4000,
+                buttons: false
+              }).then(() => {
+                location.reload()
+              })
+            }
+          },
+          error  : (xhr) => {
+            return swal('Error!', 'Could not delete event. ' + xhr.responseJSON.message)
+          }
+        })
+      })
+  })
+  $(document).on('click', '.purge-event', function () {
+    let btn    = $(this),
+        id     = btn.data('id'),
+        action = '/admin/events/purge'
+    return swal({
+      title  : 'Are you sure?',
+      text   : 'Purging this event will remove *all* recorded hours for it from *all* students. Be careful.',
+      icon   : 'warning',
+      buttons: {
+        cancel : 'No, cancel',
+        confirm: {
+          text      : 'Yes, purge event.',
+          className : 'swal-btn-danger',
+          value     : true,
+          closeModal: false
+        }
+      }
+    })
+      .then(result => {
+        if (!result) throw null
+
+        $.ajax({
+          url    : action,
+          type   : 'POST',
+          data   : {id: id},
+          success: (result) => {
+            if (result.status == 'success') {
+              return swal({
+                title: 'Success!',
+                text : 'The event has been purged.',
+                icon : 'success'
+              })
+            } else {
+              //Dropped already
+              return swal({
+                title: 'Error!',
+                text : 'Could not purge.',
+                icon : 'error',
+              })
+            }
+          },
+          error  : (xhr) => {
+            return swal('Error!', 'Could not purge event. ' + xhr.responseJSON.message)
+          }
+        })
+      })
+  })
+  $('.add-event').click(function () {
+    let btn   = $(this),
+        input = btn.closest('div').prev(),
+        name  = input.val()
+    activityBtnDisable(btn)
+    $.ajax({
+      url    : '/admin/events/create',
+      data   : {name: name},
+      type   : 'POST',
+      success: (result) => {
+        activityBtnEnable(btn, 'check')
+        if (result.status == 'success') {
+          let id  = result.id,
+              td1 = '<td class="order-arrows">' +
+                '<button class="btn btn-warning order" data-dir="down" data-id="' + id + '">' +
+                '<i class="fas fa-arrow-down"></i></button>' +
+                '<button class="btn btn-primary order" data-dir="up" data-id="' + id + '">' +
+                '<i class="fas fa-arrow-up"></i></button></td>',
+              td2 = '<td>' +
+                '<div class="input-group mb-3">' +
+                '<input class="form-control event-input" value="' + name + '">' +
+                '<div class="input-group-append">' +
+                '<button class="btn btn-outline-success update-event" type="button" data-id="' + id + '">' +
+                '<i class="fas fa-check"></i></button></div></div></td>',
+              td3 = '<td>' +
+                '<button' +
+                ' class="btn btn-primary update-vis"' +
+                ' data-id="' + id + '"' +
+                ' rel="tooltip"' +
+                ' title="Toggle visibility">' +
+                '<i class="fas fa-eye"></i></button> ' +
+                '<button class="btn btn-outline-danger delete-event" data-id="' + id + '" rel="tooltip"' +
+                ' title="Delete event">' +
+                '<i class="fas fa-times"></i></button> ' +
+                '<button class="btn btn-outline-warning purge-event" data-id="' + id + '"' +
+                ' rel="tooltip"\n' +
+                ' title="Purge event hours"><i' +
+                ' class="fas fa-backward"></i></button> ' +
+                '</td>'
+
+          $('#events-body').append('<tr data-id="' + id + '">' + td1 + td2 + td3 + '</tr>')
+          input.val('')
+
+          $('button').attr('disabled', false).removeClass('btn-hide')
+          $('#events-table > tbody > tr:last-child button[data-dir="down"]').addClass('btn-hide').attr('disabled', true)
+          //"Up and Out!" -- Willy Wonka
+          $('#events-table > tbody > tr:first-child button[data-dir="up"]').addClass('btn-hide').attr('disabled', true)
+
+        }
+        else {
+          swal('Error!', 'Could not create event.', 'error')
+        }
+      },
+      error  : (xhr) => {
+        activityBtnEnable(btn, 'check')
+        swal('Error!', 'Could not update visibility. ' + xhr.responseJSON.errors.name[0], 'error')
+      }
     })
   })
 }

@@ -55,15 +55,15 @@ class HourPolicy
     /**
      * Determine whether the user can delete the hour.
      *
-     * @param  \App\User $user
+     * @param  \App\User|\App\Admin $user
      * @param  \App\Hour $hour
      *
      * @return mixed
      */
-    public function delete(User $user, Hour $hour)
+    public function delete($user, Hour $hour)
     {
-        return (Hour::isClockedOut($user->student->student_id))
-            ? $hour->user_id === $user->id : $user->isAdmin() === true;
+        return (!$hour->end_time)
+            ? $hour->user_id === $user->id : isAdmin() === true;
     }
 
     /**

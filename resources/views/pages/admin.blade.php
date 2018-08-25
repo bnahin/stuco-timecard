@@ -93,11 +93,12 @@
                                         <!--Events for selection -->
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{ route('admin', ['page' => 'timecard']) }}"
-                                           class="nav-link @if($page == "timecard") active @endif"
+                                        <a href="{{ route('admin', ['page' => 'club']) }}"
+                                           class="nav-link @if($page == "club") active @endif"
                                            data-target="timecard"><i class="fas fa-cogs"></i>
-                                            Timecard Configuration</a>
-                                        <!--Turn on/off punches (master), minimum duration, allow mark for review, allow hour deletion [before and after clock in] -->
+                                            Club Configuration</a>
+                                        <!--Turn on/off punches (master), minimum duration, allow mark for review, allow hour deletion [before and after clock in]
+                                         club name, club description, etc-->
                                     </li>
                                     <li class="nav-item no-bottom">
                                         <a href="{{ route('admin', ['page' => 'system']) }}"

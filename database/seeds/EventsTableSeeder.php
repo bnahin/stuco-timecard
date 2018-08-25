@@ -15,10 +15,11 @@ class EventsTableSeeder extends Seeder
         App\Event::truncate();
         //This is needed for queries for charts
         App\Event::insert([
-                'id'         => 0,
+                'id'         => 1,
                 'event_name' => 'Out of Classroom',
                 'club_id'    => 1,
-                'is_active'  => 1
+                'is_active'  => 1,
+                'order'      => 0
             ]
         );
         factory(App\Event::class, 5)->create();
