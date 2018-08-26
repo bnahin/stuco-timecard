@@ -28,10 +28,11 @@
                     </div>
                 </div>
                 <form id="edit-hour-form">
+                    <input type="hidden" name="id" id="input-id">
                     <div class="form-group row">
                         <label for="event" class="col-sm-2 col-form-label">Event</label>
                         <div class="col-sm-6">
-                            <select class="form-control" id="event">
+                            <select class="form-control" id="event" name="event">
                                 @if(count($data['events']))
                                     @foreach($data['events'] as $event)
                                         <option value="{{ $event->id }}">{{ $event->event_name }}</option>
@@ -42,7 +43,7 @@
                     <div class="form-group row">
                         <label for="date" class="col-sm-2 col-form-label">Date</label>
                         <div class="col-sm-4">
-                            <input id="date" type="text" class="form-control">
+                            <input id="date" name="date" type="text" class="form-control">
                         </div>
                     </div>
                     <fieldset class="form-inline">
@@ -51,12 +52,12 @@
                             <div class="col-sm-10" id="start-end-time-col">
                                 <div class="input-group clockpicker" data-placement="right" data-align="top"
                                      data-autoclose="true">
-                                    <input type="text" class="form-control" id="start-time">
+                                    <input type="text" class="form-control" id="start-time" name="start_time">
                                 </div>
                                 <span class="fas fa-minus"></span>
                                 <div class="input-group clockpicker" data-placement="right" data-align="top"
                                      data-autoclose="true">
-                                    <input type="text" class="form-control" id="end-time">
+                                    <input type="text" class="form-control" id="end-time" name="end_time">
                                 </div>
 
                             </div>
@@ -71,7 +72,7 @@
                         class="fas fa-times"></i> Remove
                     Timepunch
                 </button>
-                <button type="button" class="btn btn-success action-btn" data-id="0"><i class="fas fa-check"></i> Save
+                <button type="button" class="btn btn-success action-btn" data-id="0" id="save-timepunch"><i class="fas fa-check"></i> Save
                     changes
                 </button>
             </div>
@@ -103,7 +104,7 @@
         <tbody>
         @if(count($data['hours']))
             @foreach ($data['hours'] as $marked)
-                <tr>
+                <tr id="{{ $marked->id }}">
                     <td>{{ $marked->user->last_name }}</td>
                     <td>{{ $marked->user->first_name }}</td>
                     <td>{{ $marked->start_time->format('m/d/Y h:i a') }} - {{ $marked->end_time->format('h:i a') }}</td>

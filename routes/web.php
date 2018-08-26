@@ -63,7 +63,11 @@ Route::group(['middleware' => 'auth:user,admin'], function () {
         Route::put('/unblock', 'AdminController@unblock');
         Route::put('/students/drop', 'AdminController@dropStudent');
         Route::post('/students/purge', 'AdminController@purgeStudents');
+
         Route::post('/hour/getdata', 'AdminController@getHourData');
+        Route::post('/hour/undoMark', 'AdminController@undoMark');
+        Route::post('/hour/update', 'AdminController@updateHour');
+
         Route::put('/events/changeOrder', 'AdminController@changeEventsOrder');
         Route::put('/events/updateName', 'AdminController@updateEventName');
         Route::post('/events/toggleVis', 'AdminController@toggleVisibility');

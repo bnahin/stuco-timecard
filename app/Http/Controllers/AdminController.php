@@ -10,6 +10,7 @@ use App\StudentInfo;
 use App\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -251,7 +252,11 @@ class AdminController extends Controller
         $event = Event::find($request->id);
         $old = $event->event_name;
         $event->event_name = $request->val;
-        $event->save();
+        try {
+            $event->saveOrFail();
+        } catch (\Throwable $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
 
         log_action("Changed event \"$old\" to \"" . Event::find($request->id)->event_name . "\"");
 
@@ -266,7 +271,11 @@ class AdminController extends Controller
 
         $event = Event::find($request->id);
         $event->is_active = !$event->is_active;
-        $event->save();
+        try {
+            $event->saveOrFail();
+        } catch (\Throwable $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
 
         log_action('Changed event "' . Event::find($request->id)->event_name . '" visibility to ' . (($event->is_active) ? 'Active' : 'Hidden'));
 
@@ -315,8 +324,61 @@ class AdminController extends Controller
         $event->order = Event::getLast()->id + 1;
         $event->is_active = true;
         $event->club_id = getClubId();
-        $event->save();
+        try {
+            $event->saveOrFail();
+        } catch (\Throwable $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
 
         return response()->json(['status' => 'success', 'id' => $event->id]);
+    }
+
+    public function undoMark(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:hours'
+        ]);
+
+        $hour = Hour::find($request->id);
+        $hour->needs_review = false;
+        try {
+            $hour->saveOrFail();
+        } catch (\Throwable $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+
+        return response()->json(['status' => 'success']);
+    }
+
+    public function updateHour(Request $request)
+    {
+        $request->validate([
+            'id'         => 'required|exists:hours',
+            'event'      => 'required|exists:events,id',
+            'date'       => 'required|date|date_format:m/d/Y',
+            'start_time' => 'required|before:end_time',
+            'end_time'   => 'required|after:start_time'
+        ]);
+
+        $hour = Hour::find($request->id);
+        $event = $request->event;
+
+        $startDate = new Carbon($request->date);
+        $startTime = $startDate->setTimeFromTimeString($request->start_time);
+
+        $endDate = new Carbon($request->date);
+        $endTime = $endDate->setTimeFromTimeString($request->end_time);
+
+        $hour->needs_review = false;
+        $hour->event_id = $event;
+        $hour->start_time = $startTime;
+        $hour->end_time = $endTime;
+        try {
+            $hour->saveOrFail();
+        } catch (\Throwable $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+
+        return response()->json(['status' => 'success']);
     }
 }

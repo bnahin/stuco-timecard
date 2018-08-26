@@ -580,6 +580,7 @@ if ($('#admin-card').length) {
           //Process.....
           //TODO Put data in modal
           let data = result.data
+          $('#input-id').val(id)
           $('#comments').html(data.comments)
           $('#name').html(data.name)
           $('option:selected').attr('selected', false)
@@ -609,39 +610,140 @@ if ($('#admin-card').length) {
       }
     })
   })
+  $('.undo-mark').click(function () {
+    let btn    = $(this),
+        id     = btn.data('id'),
+        action = '/admin/hour/undoMark',
+        tr     = btn.closest('tr')
+    return swal({
+      title  : 'Are you sure?',
+      text   : 'This will remove the Needs Review flag on this timepunch. The student will not be notified.',
+      icon   : 'warning',
+      buttons: {
+        cancel : 'No, cancel',
+        confirm: {
+          text      : 'Yes, undo mark.',
+          className : 'swal-btn-danger',
+          value     : true,
+          closeModal: false
+        }
+      }
+    })
+      .then(result => {
+        if (!result) throw null
 
-  /** Edit Hour Modal **/
+        $.ajax({
+          url    : action,
+          type   : 'POST',
+          data   : {id: id},
+          success: (result) => {
+            if (result.status == 'success') {
+              return swal({
+                title: 'Success!',
+                text : 'The Needs Review flag has been removed.',
+                icon : 'success'
+              }).then(() =>
+                tr.remove())
+            } else {
+              return swal({
+                title: 'Error!',
+                text : 'Could not remove Needs Review flag.',
+                icon : 'error',
+              })
+            }
+          },
+          error  : (xhr) => {
+            return swal('Error!', 'Could not remove Needs Review flag. ' + xhr.responseJSON.message)
+          }
+        })
+      })
+  })
+
   //Remove Timepunch
   $('#remove-timepunch').click(function (e) {
-    e.preventDefault()
-
     let btn    = $(this),
-        action = '/hours/delete/' + btn.data('id')
+        id     = btn.data('id'),
+        action = '/hours/delete/' + btn.data('id'),
+        tr     = $('tr#' + id),
+        modal  = $('#marked-modal')
+    return swal({
+      title  : 'Are you sure?',
+      text   : 'This will remove the entire timepunch.',
+      icon   : 'warning',
+      buttons: {
+        cancel : 'No, cancel',
+        confirm: {
+          text      : 'Yes, remove timepunch.',
+          className : 'swal-btn-danger',
+          value     : true,
+          closeModal: false
+        }
+      }
+    })
+      .then(result => {
+        if (!result) throw null
+
+        $.ajax({
+          url    : action,
+          type   : 'DELETE',
+          success: function () {
+            //Success
+            return swal({
+              title: 'Success!',
+              text : 'The time punch has been removed.',
+              icon : 'success'
+            }).then(() => {
+              //Close Modal
+              modal.modal('toggle')
+              tr.remove()
+            })
+          },
+          error  : function (xhr) {
+            activityBtnEnable(btn, 'times', 'Remove Timepunch')
+
+            return swal('Error!', 'There was a problem removing the time punch. ' + xhr.responseJSON.message, 'error')
+          }
+        })
+      })
+  })
+  $(document).on('blur', '#edit-hour-form .is-invalid', function () {
+    $(this).removeClass('is-invalid')
+  })
+  $('#save-timepunch').click(function (e) {
+    e.preventDefault()
+    let btn    = $(this),
+        modal  = $('#marked-modal'),
+        id     = btn.data('id'),
+        data   = $('#edit-hour-form').serialize(),
+        action = '/admin/hour/update'
 
     activityBtnDisable(btn)
     $.ajax({
       url    : action,
-      type   : 'DELETE',
-      success: function () {
-        activityBtnEnable(btn, 'check', 'Success', false)
-        //Success
-        return swal({
-          title  : 'Success!',
-          text   : 'The time punch has been removed.',
-          icon   : 'success',
-          timer  : 4000,
-          buttons: false
-          //TODO make this self-destruct and redirect
-        }).then(() => {
-          location.reload()
-        })
+      type   : 'POST',
+      data   : data,
+      success: (result) => {
+        activityBtnEnable(btn, 'check', 'Save Changes')
+        if (result.status == 'success') {
+          swal('Success!', 'The changes have been saved.', 'success')
+        }
+        else {
+          swal('Error!', 'Unable to save changes.', 'error')
+        }
       },
-      error  : function (xhr) {
-        activityBtnEnable(btn, 'times', 'Remove Timepunch')
-
-        return swal('Error!', 'There was a problem removing the time punch. ' + xhr.responseJSON.message, 'error')
+      error  : (xhr) => {
+        activityBtnEnable(btn, 'check', 'Save Changes')
+        let errs = xhr.responseJSON.errors
+        for (let i in errs) {
+          if (errs.hasOwnProperty(i)) {
+            $('[name="' + i + '"]').addClass('is-invalid')
+          }
+        }
       }
     })
+
+    activityBtnDisable(btn)
+
   })
 
   /** Events Management **/
@@ -822,6 +924,53 @@ if ($('#admin-card').length) {
           },
           error  : (xhr) => {
             return swal('Error!', 'Could not delete event. ' + xhr.responseJSON.message)
+          }
+        })
+      })
+  })
+  $(document).on('click', '.purge-event', function () {
+    let btn    = $(this),
+        id     = btn.data('id'),
+        action = '/admin/events/purge'
+    return swal({
+      title  : 'Are you sure?',
+      text   : 'Purging this event will remove *all* recorded hours for it from *all* students. Be careful.',
+      icon   : 'warning',
+      buttons: {
+        cancel : 'No, cancel',
+        confirm: {
+          text      : 'Yes, purge event.',
+          className : 'swal-btn-danger',
+          value     : true,
+          closeModal: false
+        }
+      }
+    })
+      .then(result => {
+        if (!result) throw null
+
+        $.ajax({
+          url    : action,
+          type   : 'POST',
+          data   : {id: id},
+          success: (result) => {
+            if (result.status == 'success') {
+              return swal({
+                title: 'Success!',
+                text : 'The event has been purged.',
+                icon : 'success'
+              })
+            } else {
+              //Dropped already
+              return swal({
+                title: 'Error!',
+                text : 'Could not purge.',
+                icon : 'error',
+              })
+            }
+          },
+          error  : (xhr) => {
+            return swal('Error!', 'Could not purge event. ' + xhr.responseJSON.message)
           }
         })
       })
