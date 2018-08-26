@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('page-title')
-    {{ isAdmin() ? "My": "View" }} Hours
+    {{ !isAdmin() ? "My": "View" }} Hours
 @endsection
 
 
@@ -19,6 +19,13 @@
 @endpush
 
 @section('content')
+    <!--Export Data -->
+    <input type="hidden" id="export-clubname" value="{{ config('app.school-name')." ". ($clubName ?: 'Club Management') }}">
+    <input type="hidden" id="export-header" value="@admin Hours for {{ $fullName }} @else My Hours @endadmin">
+    <input type="hidden" id="export-name" value="{{ $fullName }}">
+    <input type="hidden" id="export-stuid" value="{{ $studentId }}">
+    <input type="hidden" id="export-grade" value="{{ $grade }}">
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">

@@ -161,6 +161,13 @@ $('#clock-remove').click(function (e) {
 if ($('#hours-table').length && !$('#no-hours').length) {
   /** Data Table */
   $(document).ready(function () {
+    let exportData = {
+      clubName : $('#export-clubname').val(),
+      header   : $('#export-header').val(),
+      fullName : $('#export-name').val(),
+      studentId: $('#export-stuid').val(),
+      grade    : $('#export-grade').val()
+    }
     $('#hours-table').DataTable({
       'order'     : [[0, 'desc']],
       'columnDefs': [
@@ -173,22 +180,22 @@ if ($('#hours-table').length && !$('#no-hours').length) {
       'buttons'   : [
         {
           extend       : 'pdf',
-          messageTop   : 'Name: Nahin, Blake\nGrade: 12\nStudent ID: 115602',
+          messageTop   : 'Name: ' + exportData.fullName + '\nGrade: ' + exportData.grade + '\nStudent ID: ' + exportData.studentId,
           exportOptions: {
             columns: ':not(.print-hide)'
           }
         }, {
           extend       : 'excel',
-          messageTop   : 'Name: Nahin, Blake',
-          filename     : 'Nahin, Blake - Time Punches',
-          sheetName    : 'Nahin, Blake - Time Punches',
+          messageTop   : 'Name: ' + exportData.fullName + ' | Student ID: ' + exportData.studentId,
+          filename     : exportData.fullName + ' - Time Punches',
+          sheetName    : exportData.fullName + ' - Time Punches',
           exportOptions: {
             columns: ':not(.print-hide)'
           }
         },
         {
           extend       : 'print',
-          messageTop   : 'Name: Nahin, Blake | Grade: 12 | Student ID: 115602',
+          messageTop   : 'Name: ' + exportData.fullName + ' | Grade: ' + exportData.grade + ' | Student ID: ' + exportData.studentId,
           exportOptions: {
             columns: ':not(.print-hide)'
           }
@@ -924,5 +931,10 @@ if ($('#admin-card').length) {
         swal('Error!', 'Could not update visibility. ' + xhr.responseJSON.errors.name[0], 'error')
       }
     })
+  })
+
+  /** System Log **/
+  $('#syslog-table').DataTable({
+    'order': [[0, 'desc']]
   })
 }

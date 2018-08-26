@@ -33,32 +33,32 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUpdatedAt($value)
  * @mixin \Eloquent
- * @property string                                                    $google_id
- * @property int|null                                                  $student_id
- * @property string                                                    $first_name
- * @property string                                                    $last_name
- * @property string                                                    $domain
- * @property-read mixed                                                $full_name
+ * @property string                                                           $google_id
+ * @property int|null                                                         $student_id
+ * @property string                                                           $first_name
+ * @property string                                                           $last_name
+ * @property string                                                           $domain
+ * @property-read mixed                                                       $full_name
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereDomain($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereFirstName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereGoogleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereLastName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereStudentId($value)
- * @property int                                                       $is_admin
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Hour[] $hours
+ * @property int                                                              $is_admin
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Hour[]        $hours
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereIsAdmin($value)
- * @property string                                                    $grade
+ * @property string                                                           $grade
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereGrade($value)
- * @property \Carbon\Carbon|null                                       $deleted_at
- * @property-read \App\StudentInfo                                     $student
+ * @property \Carbon\Carbon|null                                              $deleted_at
+ * @property-read \App\StudentInfo                                            $student
  * @method static bool|null forceDelete()
  * @method static \Illuminate\Database\Query\Builder|\App\User onlyTrashed()
  * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereDeletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\User withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\User withoutTrashed()
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Club[] $clubs
- * @property int                                                       $student_info_id
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Club[]        $clubs
+ * @property int                                                              $student_info_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereStudentInfoId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User notBlockedFrom($clubid)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\BlockedUser[] $blocks
@@ -147,6 +147,11 @@ class User extends Authenticatable
     public function blocks()
     {
         return $this->hasMany(BlockedUser::class);
+    }
+
+    public function logs()
+    {
+        return $this->hasMany(ActivityLog::class);
     }
 
     /**

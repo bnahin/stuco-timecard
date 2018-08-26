@@ -3,6 +3,7 @@
 namespace App;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -32,10 +33,20 @@ class ActivityLog extends Model
 
     protected $dates = ['created_at', 'updated_at'];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(function (Builder $builder) {
+            $builder->where('club_id', getClubId());
+        });
+    }
+
     public static function new($message)
     {
+        $auth_field = (isAdmin()) ? 'admin_id' : 'user_id';
         static::insert([
-            'user_id'    => Auth::user()->id,
+            $auth_field  => Auth::user()->id,
             'message'    => $message,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
@@ -46,6 +57,11 @@ class ActivityLog extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class);
     }
 
     public function club()

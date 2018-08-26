@@ -24,6 +24,15 @@ body {
   background-color: #f0f0f0;
 }
 
+.btn-hide, .btn-hide:hover, .btn-hide:active, .btn-hide:focus {
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+  cursor: default;
+  display: none;
+}
+
 .input-invalid {
   border-color: #dc3545;
 }
@@ -123,11 +132,15 @@ Edit Timepunch
   }
 }
 
-.btn-hide, .btn-hide:hover, .btn-hide:active, .btn-hide:focus {
-  color: transparent;
-  text-shadow: none;
-  background-color: transparent;
-  border: 0;
-  cursor: default;
-  display: none;
+/** System Log Page **/
+.bg-by-admin {
+  background-color: #FF00871A !important;
+}
+
+.bg-clockin {
+  background-color: #3F03 !important;
+}
+
+.bg-clockout {
+  background-color: #00A5FF33 !important
 }

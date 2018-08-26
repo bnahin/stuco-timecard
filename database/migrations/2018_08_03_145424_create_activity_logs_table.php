@@ -15,8 +15,8 @@ class CreateActivityLogsTable extends Migration
     {
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id'); //belongs to user (user has many)
-            //$table->integer('admin_id')->nullable(); //belongs to user (optional foregn key)
+            $table->integer('user_id')->nullable(); //belongs to user (user has many)
+            $table->integer('admin_id')->nullable(); //belongs to admin (optional foregn key)
             $table->integer('club_id'); //Belongs to club
             $table->text('message');
             $table->timestamps();

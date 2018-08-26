@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ActivityLog;
 use App\BlockedUser;
 use App\Event;
 use App\Hour;
@@ -46,6 +47,10 @@ class AdminController extends Controller
                 break;
             case 'events':
                 $data = Event::all();
+                break;
+            case 'system':
+                $data = ActivityLog::all();
+                break;
         }
 
         return $data;
@@ -263,7 +268,7 @@ class AdminController extends Controller
         $event->is_active = !$event->is_active;
         $event->save();
 
-        log_action('Toggled event "' . Event::find($request->id)->event_name . '" visibility to ' . ($event->is_active) ? 'Active' : 'Hidden');
+        log_action('Changed event "' . Event::find($request->id)->event_name . '" visibility to ' . (($event->is_active) ? 'Active' : 'Hidden'));
 
         return response()->json(['status' => 'success']);
     }

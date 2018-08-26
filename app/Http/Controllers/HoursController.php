@@ -22,9 +22,13 @@ class HoursController extends Controller
             }
             $uid = $user->id;
             $fullName = $user->full_name;
+            $studentId = $user->student->student_id;
+            $grade = $user->student->grade;
         } else {
             $uid = Auth::id();
             $fullName = Auth::user()->full_name;
+            $studentId = Auth::user()->student->student_id;
+            $grade = Auth::user()->student->grade;
         }
 
         $hours = Hour::where('user_id', $uid)->orderByDesc('start_time')->get();
@@ -36,7 +40,10 @@ class HoursController extends Controller
 
         $numEvents = Hour::where('user_id', Auth::id())->count();
 
-        return view('pages.hours', compact('hours', 'totalHours', 'averageHours', 'numEvents', 'fullName', 'uid'));
+        return view('pages.hours',
+            compact('hours', 'totalHours', 'averageHours',
+                'numEvents', 'fullName', 'uid',
+                'studentId', 'grade'));
     }
 
     /**

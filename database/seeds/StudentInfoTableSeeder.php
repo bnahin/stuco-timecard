@@ -23,7 +23,7 @@ class StudentInfoTableSeeder extends Seeder
         if (App\StudentInfo::all()->count() < 2000) {
             $count = $this->auth->importEnrolled(true);
             if ($count) {
-                $this->command->line("Done! Imported $count students.");
+                $this->command->line("Done! Imported " . number_format($count) . " students.");
             } else {
                 $this->command->error('Error! No student data file found.');
             }

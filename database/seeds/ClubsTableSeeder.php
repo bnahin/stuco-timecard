@@ -13,6 +13,8 @@ class ClubsTableSeeder extends Seeder
     {
         $this->command->line('Adding Student Council Club');
         App\Club::truncate();
+        App\ActivityLog::truncate();
+
         //This is needed for queries for charts
         App\Club::create([
                 'id'         => 1,
