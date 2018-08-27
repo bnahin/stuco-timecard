@@ -62,6 +62,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereStudentInfoId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User notBlockedFrom($clubid)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\BlockedUser[] $blocks
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\ActivityLog[] $logs
  */
 class User extends Authenticatable
 {

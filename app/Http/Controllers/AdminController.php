@@ -17,18 +17,19 @@ use Yajra\DataTables\Facades\DataTables;
 class AdminController extends Controller
 {
 
-    public function index($page = null)
+    public function index($page = null, $param = null)
     {
         $page = $page ?: 'assign';
 
         return view('pages.admin')->with(
             [
-                'data' => $this->getViewData($page),
-                'page' => $page
+                'data'  => $this->getViewData($page, $param),
+                'page'  => $page,
+                'param' => $param
             ]);
     }
 
-    private function getViewData($page)
+    private function getViewData($page, $param)
     {
         $data = [];
         switch ($page) {
@@ -47,7 +48,7 @@ class AdminController extends Controller
                 $data['events'] = Event::active()->get();
                 break;
             case 'events':
-                $data = Event::all();
+                $data = ($param == "deleted") ? Event::onlyTrashed()->paginate(10) : Event::all();
                 break;
             case 'system':
                 $data = ActivityLog::all();
@@ -288,10 +289,18 @@ class AdminController extends Controller
             'id' => 'required|exists:events'
         ]);
 
-        log_action('Deleted event "' . Event::find($request->id)->event_name . '"');
+        $event = Event::withTrashed()->find($request->id);
+        if ($event->trashed()) {
+            //Perm delete!
+            Hour::where('event_id', $request->id)->delete(); //Purge all hours
+            $event->forceDelete(); //Delete from database
 
-        $event = Event::find($request->id);
-        $event->delete();
+            log_action('Destroyed event "' . $event->event_name . '"');
+        } else {
+            log_action('Deleted event "' . $event->event_name . '"');
+
+            $event->delete();
+        }
 
         return response()->json(['status' => 'success']);
     }

@@ -63,8 +63,9 @@ $.ajaxSetup({
   }
 })
 $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-  $('[rel="tooltip"]').tooltip()
+  $('body').tooltip({
+    selector:'[data-toggle="tooltip"], [rel="tooltip"]'
+  });
 })
 import swal from 'sweetalert'
 import Chart from 'chart.js'

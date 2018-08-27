@@ -30,6 +30,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereDeletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Event withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Event withoutTrashed()
+ * @property int $order
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereOrder($value)
  */
 class Event extends Model
 {

@@ -26,6 +26,9 @@ use Illuminate\Support\Facades\Session;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\ActivityLog whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\ActivityLog whereUserId($value)
  * @mixin \Eloquent
+ * @property int|null $admin_id
+ * @property-read \App\Admin|null $admin
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\ActivityLog whereAdminId($value)
  */
 class ActivityLog extends Model
 {

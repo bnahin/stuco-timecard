@@ -52,7 +52,7 @@ Route::group(['middleware' => 'auth:user,admin'], function () {
      */
     Route::group(['middleware' => 'admin', 'prefix' => '/admin'], function () {
         //Home and Pages
-        Route::get('/{page?}', 'AdminController@index')
+        Route::get('/{page?}/{param?}', 'AdminController@index')
             ->name('admin');
 
         //Submissions/AJAX

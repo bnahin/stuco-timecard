@@ -870,10 +870,18 @@ if ($('#admin-card').length) {
   $(document).on('click', '.delete-event', function () {
     let btn    = $(this),
         id     = btn.data('id'),
-        action = '/admin/events/delete'
+        action = '/admin/events/delete',
+        isPerm = btn.attr('data-isperm') === 'true', //$.data() doesn't work here
+        text   = ''
+    if (isPerm) {
+      text = 'This will purge all of its hours and allow the event name to be reused.'
+    }
+    else {
+      text = 'Deleting this event will prevent it from being selected or edited. All hours recorded for this event - if not purged - will be final. You will also not be able to create another event with this name unless it is destroyed on the Deleted Events tab.'
+    }
     return swal({
       title  : 'Are you sure?',
-      text   : 'Deleting this event will prevent it from being selected or edited. All hours recorded for this event if not purged will be final. You will also not be able to create another event with this name.',
+      text   : text,
       icon   : 'warning',
       buttons: {
         cancel : 'No, cancel',
@@ -898,8 +906,7 @@ if ($('#admin-card').length) {
                 title  : 'Success!',
                 text   : 'The event has been deleted.',
                 icon   : 'success',
-                timer  : 4000,
-                buttons: false
+                timer  : 4000
                 //TODO make this self-destruct and redirect
               }).then(() => {
                 $('tr[data-id="' + id + '"]').remove()
@@ -1063,6 +1070,8 @@ if ($('#admin-card').length) {
                 '</td>'
 
           $('#events-body').append('<tr data-id="' + id + '">' + td1 + td2 + td3 + '</tr>')
+          $('tr[data-id=' + id + ']').stop(true, true).effect('highlight', 2000)
+
           input.val('')
 
           $('button').attr('disabled', false).removeClass('btn-hide')

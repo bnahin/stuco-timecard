@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Club      $club
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Hour whereClubId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Hour whereNeedsReview($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Hour marked()
  */
 class Hour extends Model
 {
