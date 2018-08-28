@@ -1,7 +1,7 @@
 {
     "name": "bnahin/club-management",
     "description": "ECRCHS Club Management System",
-    "keywords": ["framework", "laravel"],
+    "keywords": ["laravel", "volunteer-hours", "club-management", "ecrchs"],
     "license": "MIT",
     "type": "project",
     "require": {

@@ -28,7 +28,7 @@
     <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
-                {{ $clubName }} Timecard @if(app()->isLocal()) [DEV] @endif
+                {{ $clubName }} @if(isAdmin()) Management @else Timecard @endif @if(app()->isLocal()) [DEV] @endif
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -62,6 +62,8 @@
                         <li class="nav-item {{ (Route::currentRouteName() == "admin") ? "active":"" }}">
                             <a class="nav-link" href="{{ route('admin') }}"><i
                                     class="fas fa-cogs"></i> Admin
+                                @if($adminBadge) <span
+                                    class="badge badge-success marked-badge">{{ $adminBadge }}</span> @endif
                             </a>
                         </li>
                     @endauth
@@ -90,6 +92,21 @@
         @yield('content')
     </main>
 </div>
+<footer>
+    <div class="container">
+        <span class="pull-left">
+            <strong>Club Management System v0.1a</strong>
+        </span>
+        <span class="pull-right">
+        Created for ECRCHS by Blake Nahin (Class of 2019)
+        <br>
+        <a href="https://github.com/bnahin/club-management" target="_blank" rel="tooltip" title="Open Source @ GitHub">
+            <i class="fab fa-github"></i>
+        </a> | <a href="https://laravel.com" target="_blank" rel="tooltip"
+                  title="Proudly made with the Laravel Framework"><span class="fab fa-laravel"></span></a>
+        </span>
+    </div>
+</footer>
 </body>
 
 <!-- Scripts -->

@@ -6,10 +6,52 @@ require('./bootstrap')
 *                              *
 * * * * * * * * * * * * * * * * */
 
+/** Functions */
+let Config = {
+  baseURL: 'http://stuco-timecard.test/',
+  isDev  : true
+}
+let Helpers = {
+  updateAdminMarkedCount () {
+    $('.marked-badge').each(function () {
+      let $this = $(this),
+          val   = parseInt($this.text())
+      if (val == 1) {
+        $this.remove()
+      }
+      else {
+        $this.text(val - 1)
+      }
+    })
+  },
+  buttons: {
+    activityBtnDisable (btn) {
+      btn.attr('disabled', true)
+      btn.html('<i class="fas fa-spinner fa-pulse"></i>')
+    },
+    activityBtnEnable (btn, glyph, text = '', reset = true) {
+      if (reset) btn.attr('disabled', false)
+      btn.html('<i class="fas fa-' + glyph + '"></i> ' + text)
+    }
+  }
+}
+let Request = {
+  send (url, type, success, error) {
+    $.ajax({
+        url    : Config.baseURL + url,
+        type   : type,
+        success: success,
+        error  : error
+      }
+    )
+  }
+}
+
 /**
  * Current Time Display (New Activity)
  */
-if ($('#current-time').length) {
+if ($('#current-time').length
+) {
   (function () {
     function checkTime (i) {
       return (i < 10) ? '0' + i : i
@@ -34,13 +76,11 @@ if ($('#current-time').length) {
  * New Activity Submission
  */
 function activityBtnDisable (btn) {
-  btn.attr('disabled', true)
-  btn.html('<i class="fas fa-spinner fa-pulse"></i>')
+  Helpers.buttons.activityBtnDisable(btn)
 }
 
 function activityBtnEnable (btn, glyph, text = '', reset = true) {
-  if (reset) btn.attr('disabled', false)
-  btn.html('<i class="fas fa-' + glyph + '"></i> ' + text)
+  Helpers.buttons.activityBtnEnable(btn, glyph, text, reset)
 }
 
 $('#new-activity-submit').click(function (e) {
@@ -578,7 +618,6 @@ if ($('#admin-card').length) {
         activityBtnEnable(btn, 'pencil-alt', '')
         if (result.status == 'success') {
           //Process.....
-          //TODO Put data in modal
           let data = result.data
           $('#input-id').val(id)
           $('#comments').html(data.comments)
@@ -642,8 +681,10 @@ if ($('#admin-card').length) {
                 title: 'Success!',
                 text : 'The Needs Review flag has been removed.',
                 icon : 'success'
-              }).then(() =>
-                tr.remove())
+              }).then(() => {
+                tr.remove()
+                Helpers.updateAdminMarkedCount()
+              })
             } else {
               return swal({
                 title: 'Error!',
@@ -725,6 +766,7 @@ if ($('#admin-card').length) {
       success: (result) => {
         activityBtnEnable(btn, 'check', 'Save Changes')
         if (result.status == 'success') {
+          Helpers.updateAdminMarkedCount()
           swal('Success!', 'The changes have been saved.', 'success')
         }
         else {
@@ -903,10 +945,10 @@ if ($('#admin-card').length) {
           success: (result) => {
             if (result.status == 'success') {
               return swal({
-                title  : 'Success!',
-                text   : 'The event has been deleted.',
-                icon   : 'success',
-                timer  : 4000
+                title: 'Success!',
+                text : 'The event has been deleted.',
+                icon : 'success',
+                timer: 4000
                 //TODO make this self-destruct and redirect
               }).then(() => {
                 $('tr[data-id="' + id + '"]').remove()

@@ -63,8 +63,7 @@ class GoogleAuthController extends Controller
                 'first_name' => $apiUser->given_name,
                 'last_name'  => $apiUser->family_name
             ]);
-        }
-        else {
+        } else {
             //Create!
             $user = new User([
                 'google_id'  => $apiUser->id,
@@ -75,30 +74,30 @@ class GoogleAuthController extends Controller
             ]);
         }
 
-            //Associate student info
-            $student = StudentInfo::where('email', $apiUser->email);
-            if ($student->exists()) {
-                $student->first()->user()->associate($user);
-            }
-
-            //Associate hours
-            $newUser = User::where('google_id', $apiUser->id)->first();
-            if (!$newUser->student) {
-                abort(403, 'User is not in the Aeries database.');
-            }
-            $hours = \App\Hour::where('student_id', $newUser->student->student_id)
-                ->whereNull('user_id');
-            if ($hours->count()) {
-                $hoursRes = $hours->get();
-                foreach ($hoursRes as $hour) {
-                    $hour->user_id = $user->id;
-                    $hour->save();
-                }
-            }
-
-            Session::put('club-id', 1);
-            Auth::login($user, true);
-
-            return redirect()->route('home');
+        //Associate student info
+        $student = StudentInfo::where('email', $apiUser->email);
+        if ($student->exists()) {
+            $student->first()->user()->associate($user);
         }
+
+        //Associate hours
+        $newUser = User::where('google_id', $apiUser->id)->first();
+        if (!$newUser->student) {
+            abort(403, 'User is not in the Aeries database.');
+        }
+        $hours = \App\Hour::where('student_id', $newUser->student->student_id)
+            ->whereNull('user_id');
+        if ($hours->count()) {
+            $hoursRes = $hours->get();
+            foreach ($hoursRes as $hour) {
+                $hour->user_id = $user->id;
+                $hour->save();
+            }
+        }
+
+        Session::put('club-id', 1); //TODO use ClubSessionManager
+        Auth::login($user, true);
+
+        return redirect()->route('home');
     }
+}

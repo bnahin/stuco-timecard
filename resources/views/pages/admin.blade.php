@@ -69,7 +69,8 @@
                                         <a href="{{ route('admin', ['page' => 'marked']) }}"
                                            class="nav-link @if($page == "marked") active @endif"
                                            data-target="marked"><i class="fas fa-clock"></i>
-                                            View Marked Hours</a>
+                                            View Marked Hours @if($adminBadge) <span
+                                                class="badge badge-success marked-badge">{{ $adminBadge }}</span> @endif</a>
                                         <!--Turn on/off punches (master), minimum duration, allow mark for review, allow hour deletion [before and after clock in] -->
                                     </li>
                                     <li class="nav-item no-bottom">

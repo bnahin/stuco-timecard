@@ -62,7 +62,7 @@ body {
 /** Admin Pages **/
 #admin-card {
   border-top: 3px solid #ec6c6c;
-  min-height: 85vh;
+  min-height: 650px;
 }
 
 #adm-nav-col {
@@ -143,4 +143,19 @@ Edit Timepunch
 
 .bg-clockout {
   background-color: #00A5FF33 !important
+}
+
+/**
+Footer
+ */
+footer {
+  height: 100px;
+  background-color: #dbdbdb;
+  padding: 15px;
+  text-align: center;
+  color: #727272;
+  border-top: 2px solid #ccc;
+  a:hover {
+    text-decoration: none;
+  }
 }
