@@ -6,7 +6,6 @@
 <div id="enrolled">
     <h5>Enrolled Student Database</h5>
     <hr>
-    <!--
     <div class="m-auto col-md-8">
         <div class="card border-success mb-3">
             <div class="card-header">Student Import</div>
@@ -25,7 +24,6 @@
         </div>
     </div>
     <hr>
-    -->
     <table class="table" id="student-db" data-action="{{ route('get-enrolled') }}">
         <thead class="thead-dark">
         <tr>

@@ -12,6 +12,47 @@ let Config = {
   isDev  : true
 }
 let Helpers = {
+  datetime: {
+    formatDate () {
+      let d = new Date()
+      let hh = d.getHours()
+      let m = d.getMinutes()
+      let s = d.getSeconds()
+      let dd = 'AM'
+      let h = hh
+      if (h >= 12) {
+        h = hh - 12
+        dd = 'PM'
+      }
+      if (h == 0) {
+        h = 12
+      }
+      m = m < 10 ? '0' + m : m
+
+      s = s < 10 ? '0' + s : s
+
+      /* 2 digit hours:
+      h = h<10?"0"+h:h; */
+
+      let pattern = new RegExp('0?' + hh + ':' + m + ':' + s)
+
+      let replacement = h + ':' + m
+      replacement += ':' + s
+      replacement += ' ' + dd
+
+      return replacement
+    }
+  },
+  buttons : {
+    activityBtnDisable (btn) {
+      btn.attr('disabled', true)
+      btn.html('<i class="fas fa-spinner fa-pulse"></i>')
+    },
+    activityBtnEnable (btn, glyph, text = '', reset = true) {
+      if (reset) btn.attr('disabled', false)
+      btn.html('<i class="fas fa-' + glyph + '"></i> ' + text)
+    }
+  },
   updateAdminMarkedCount () {
     $('.marked-badge').each(function () {
       let $this = $(this),
@@ -24,16 +65,6 @@ let Helpers = {
       }
     })
   },
-  buttons: {
-    activityBtnDisable (btn) {
-      btn.attr('disabled', true)
-      btn.html('<i class="fas fa-spinner fa-pulse"></i>')
-    },
-    activityBtnEnable (btn, glyph, text = '', reset = true) {
-      if (reset) btn.attr('disabled', false)
-      btn.html('<i class="fas fa-' + glyph + '"></i> ' + text)
-    }
-  }
 }
 let Request = {
   send (url, type, success, error) {
@@ -50,19 +81,14 @@ let Request = {
 /**
  * Current Time Display (New Activity)
  */
-if ($('#current-time').length
-) {
+if ($('#current-time').length) {
   (function () {
     function checkTime (i) {
       return (i < 10) ? '0' + i : i
     }
 
     function startTime () {
-      let today = new Date(),
-          h     = checkTime(today.getHours()),
-          m     = checkTime(today.getMinutes()),
-          s     = checkTime(today.getSeconds())
-      $('#current-time').html(h + ':' + m + ':' + s)
+      $('#current-time').html(Helpers.datetime.formatDate())
       setTimeout(function () {
         startTime()
       }, 500)

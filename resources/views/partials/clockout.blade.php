@@ -12,7 +12,7 @@
         <div class="form-group col-md-3">
             <label for="student-id">Student ID</label>
             <input type="text" class="form-control" id="student-id" placeholder="ex. 115602"
-                {{ Auth::guard('user')->check() ? "value='". Auth::user()->student->student_id."' disabled": '' }}>
+                @if(Auth::guard('user')->check()) value="{{Auth::user()->student->student_id }}" disabled @endif>
         </div>
         <div class="form-group col-md-9" {{ isAdmin() ? 'style=display:none;' : '' }}>
             <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">

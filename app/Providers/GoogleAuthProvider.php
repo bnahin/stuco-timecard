@@ -19,7 +19,7 @@ class GoogleAuthProvider extends ServiceProvider
     public function boot()
     {
         // View Composers
-        View::composer('*', function ($view) {
+        View::composer('*', function (\Illuminate\View\View $view) {
             /** Auth User */
             $user = null;
             if (Auth::guard('admin')->check()) {

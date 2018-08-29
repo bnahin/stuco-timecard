@@ -39,8 +39,6 @@ class HomeController extends Controller
         }
         $events = Event::active()->get();
 
-        $adminBadge = null;
-
         return view('home', compact(
             'events', 'clockedOut',
             'data', 'eventCount'));
