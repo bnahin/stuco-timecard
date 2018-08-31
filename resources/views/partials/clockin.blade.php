@@ -1,54 +1,48 @@
-{{-- Purple Border --}}
 @section('page-title')
-    Clock In
+    Clock Out
 @endsection
 
-<h3 class="card-title">Current Event</h3>
+<h3 class="card-title">Add New Activity</h3>
 <hr>
-<table class="table table-bordered table-striped" id="clock-in-table">
-    <tr>
-        <td colspan="3"><strong>Event: </strong> {{ $data->getEventName() }}</td>
-    </tr>
-    <tr>
-        <td style="width:25%;"><strong>Clocked out: </strong> {{ $data->start_time->format('g:i A') }}</td>
-        <td>{{ "{$data->getFullName()} {$data->student_id}" }}</td>
-        <td>Event <strong>{{ $eventCount }} {{-- Number of events for student --}} </strong></td>
-    </tr>
-    <tr>
-        <td colspan="3"><strong>Elapsed Time: </strong> <span
-                id="elapsed"><strong>4</strong> hours <strong>5</strong> minutes <strong>45</strong> seconds</span>
-        </td>
-    </tr>
-</table>
-<div class="form-group">
-    <label for="comments">Comments</label>
-    <textarea id="comments" class="form-control">{{ $data->comments }}</textarea>
-</div>
-<form id="clock-in-form" method="post" action="{{ route('clock-in', ['hour' => $data->id]) }}">
+{{-- When entering ID,
+ if already clocked out, disable all fields, change border color, add elapsed time and clock in button--}}
+<form id="new-activity" action="{{ route('clock-out') }}">
     @csrf
-    <input type="hidden" id="hour-id" value="{{ $data->id }}">
-    <div class="form-group">
-        <div class="btn-group" id="clock-in-btns">
-            <button class="btn btn-success clock-in" id="ci-main" type="button" data-return="/">
-                <i class="fas fa-sign-in-alt"></i> Clock In
-            </button>
-            <button type="button" id="ci-addon" class="btn btn-success dropdown-toggle dropdown-toggle-split"
-                    data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                <span class="sr-only">Toggle Dropdown</span>
-            </button>
-            <div class="dropdown-menu">
-                <a class="dropdown-item clock-in" href="#" data-return="{{ route('my-hours') }}"><i
-                        class="fas fa-eye"></i> Clock In and View Hours</a>
-                <a class="dropdown-item clock-in" href="#"
-                   data-return="{{ route('hour-mark', ['hour' => $data->id]) }}"><i class="fas fa-flag"></i> Clock In
-                    and Mark for
-                    Review</a>
+    <div class="form-row">
+        <div class="form-group col-md-3">
+            <label for="student-id">Student ID</label>
+            <input type="text" class="form-control" id="student-id" placeholder="ex. 115602"
+                   @if(Auth::guard('user')->check()) value="{{Auth::user()->student->student_id }}" disabled @endif>
+        </div>
+        <span id="loading-student" style="display:none;"><i class="fas fa-spinner fa-pulse"></i></span>
+        <div class="form-group col-md-9" id="student-info" {{ isAdmin() ? 'style=display:none;' : '' }}>
+            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                <div class="card-header">
+                    <h5 id="student-info-name">
+                        @auth('user'){{ Auth::user()->full_name }} @endauth</h5>
+                    <h6>
+                        Grade <span
+                            id="student-info-grade">@auth('user') {{ Auth::user()->student->grade }} @endauth</span>
+                    </h6></div>
             </div>
         </div>
-        <button class="btn btn-danger" id="clock-remove" data-action="{{ route('delete-hour',['hour' => $data->id]) }}">
-            <i
-                class="fas fa-times"></i> Remove Time Punch
-        </button>
     </div>
+    <div class="form-group">
+        <label for="event-name">Event Name</label>
+        <select id="event-name" class="form-control">
+            @foreach ($events as $event)
+                <option value="{{ $event->id }}">{{ $event->event_name }}</option>
+            @endforeach
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="comments">Comments</label>
+        <textarea id="comments" class="form-control" rows="2"></textarea>
+    </div>
+    <div class="form-group">
+        <p><strong>Current Time: </strong> <span id="current-time"></span></p>
+    </div>
+    <button type="submit" class="btn btn-info" id="new-activity-submit"><i
+            class="fas fa-sign-out-alt"></i> Clock Out
+    </button>
 </form>
