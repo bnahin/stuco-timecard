@@ -4,12 +4,12 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card" id="{{ $clockedOut ? 'clock-in':'new-activity' }}-card">
+                <div class="card" id="{{ $clockedIn ? 'clock-out':'new-activity' }}-card">
                     <div class="card-body">
-                        @if($clockedOut)
-                            @include('partials.clockin')
-                        @else
+                        @if($clockedIn)
                             @include('partials.clockout')
+                        @else
+                            @include('partials.clockin')
                         @endif
                     </div>
                 </div>

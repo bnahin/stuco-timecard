@@ -73,7 +73,7 @@ class Hour extends Model
      *
      * @return bool
      */
-    public static function isClockedOut($stuid)
+    public static function isClockedIn($stuid)
     {
         return Hour::where('student_id', $stuid)
             ->whereNotNull('start_time')
@@ -83,7 +83,7 @@ class Hour extends Model
 
     public static function getClockData($stuid)
     {
-        return static::isClockedOut($stuid) ?
+        return static::isClockedIn($stuid) ?
             Hour::where('student_id', $stuid)
                 ->whereNotNull('start_time')
                 ->whereNull('end_time')

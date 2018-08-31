@@ -22,6 +22,6 @@ class ClubsTableSeeder extends Seeder
                 'club_name'    => 'Student Council',
                 'public'  => 1
             ]
-        );
+        )->settings()->save(new \App\Setting(['club_id' => 1]));
     }
 }

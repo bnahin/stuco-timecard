@@ -8,35 +8,25 @@ namespace App\Helpers;
 
 
 use App\BlockedUser;
+use App\Hour;
 use App\StudentInfo;
 use App\User;
 use Illuminate\Database\Eloquent\Builder;
 
-class UserHelper
+class HourHelper
 {
 
     /**
-     * User belongs to current club
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $student
-     *
-     * @param  bool                                 $isBlocked
+     * Check if user is clocked out
+     * @param int $stuid
      *
      * @return bool
      */
-    public static function belongsToClub(Builder $student, &$isBlocked)
+    public static function getClockData($stuid)
     {
-        $belongs = $student->exists() &&
-            $student->first()->user()->exists() &&
-            $student->first()->user->clubs()->exists()
-            && $student->first()->user->clubs()
-                ->where('club_id', getClubId())->exists();
-        $isBlocked = ($student->exists()) ?
-            BlockedUser::where([
-                'club_id' => getClubId(),
-                'user_id' => $student->first()->user->id
-            ])->exists() : false;
-
-        return $belongs;
+        return Hour::where('student_id', $stuid)
+            ->whereNotNull('start_time')
+            ->whereNull('end_time')
+            ->exists();
     }
 }

@@ -7,17 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * App\Club
  *
- * @property int $id
- * @property string $join_code
- * @property string $club_name
- * @property int $public
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property string|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Event[] $events
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Hour[] $hours
+ * @property int                                                              $id
+ * @property string                                                           $join_code
+ * @property string                                                           $club_name
+ * @property int                                                              $public
+ * @property \Carbon\Carbon|null                                              $created_at
+ * @property \Carbon\Carbon|null                                              $updated_at
+ * @property string|null                                                      $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Event[]       $events
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Hour[]        $hours
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\ActivityLog[] $logs
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\User[] $users
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\User[]        $users
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Club whereClubName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Club whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Club whereDeletedAt($value)
@@ -26,8 +26,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Club wherePublic($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Club whereUpdatedAt($value)
  * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Admin[] $admins
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Admin[]       $admins
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\BlockedUser[] $blocks
+ * @property-read \App\Setting $settings
  */
 class Club extends Model
 {
@@ -51,7 +52,8 @@ class Club extends Model
             ->withTimestamps();
     }
 
-    public function admins() {
+    public function admins()
+    {
         return $this->belongsToMany(Admin::class)
             ->withTimestamps();
     }
@@ -61,7 +63,13 @@ class Club extends Model
         return $this->hasMany(ActivityLog::class);
     }
 
-    public function blocks() {
+    public function blocks()
+    {
         return $this->hasMany(BlockedUser::class);
+    }
+
+    public function settings()
+    {
+        return $this->hasOne(Setting::class);
     }
 }

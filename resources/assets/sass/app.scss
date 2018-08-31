@@ -6,6 +6,8 @@
 @import '../themes/bootstrap-cosmo';
 //FontAwesome
 @import url('~@fortawesome/fontawesome-free/css/all.css');
+//Switches
+@import "switches";
 
 .navbar-laravel {
   background-color: #fff;
@@ -37,17 +39,43 @@ body {
   border-color: #dc3545;
 }
 
+.nav-link {
+  transition: all 0.35s;
+}
+
+.toggle-handle {
+  background-color: white;
+}
+
+.card, .badge {
+  -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .16), 0 2px 10px 0 rgba(0, 0, 0, .12);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .16), 0 2px 10px 0 rgba(0, 0, 0, .12)
+}
+
+/** Navbar **/
+.nav-item.active > .nav-link {
+  background-color: rgba(0, 0, 0, .1);
+}
+
 /** Home **/
 #new-activity-card {
   border-top: 3px solid #43da43;
 }
 
-#clock-in-card {
+#clock-out-card {
   border-top: 3px solid #7c43da;
 }
 
-#clock-in-table {
+#clock-out-table {
   text-align: center;
+}
+
+#loading-student {
+  margin-top: 35px;
+}
+
+#new-activity-submit, #clock-out-submit {
+  width: 180px;
 }
 
 /** Hours Page **/

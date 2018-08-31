@@ -25,16 +25,19 @@ Route::group(['middleware' => 'auth:user,admin'], function () {
      */
     Route::get('/', 'HomeController@index')
         ->name('home');
+    Route::post('/user/ajax/getInfo', 'UserController@getInfo')
+        ->middleware('admin');
 
     /**
      * Hours
      */
 
     //Clock in, Clock Out
-    Route::post('/hours/new', 'HoursController@store')->name('clock-out');
-    Route::post('/hours/clockin/{hour}', 'HoursController@clockin')
+    Route::post('/hours/new', 'HoursController@store')->name('clock-in');
+    Route::post('/hours/clockout/{hour}', 'HoursController@clockout')
         ->middleware('can:update,hour')
-        ->name('clock-in');
+        ->name('clock-out');
+
     //Delete Timepunch
     Route::delete('/hours/delete/{hour}', 'HoursController@delete')
         ->middleware('can:delete,hour')
@@ -74,6 +77,8 @@ Route::group(['middleware' => 'auth:user,admin'], function () {
         Route::delete('/events/delete', 'AdminController@deleteEvent');
         Route::post('/events/purge', 'AdminController@purgeEvent');
         Route::post('/events/create', 'AdminController@createEvent');
+
+        Route::put('/club/update', 'ClubController@update')->name('update-club');
     });
 });
 

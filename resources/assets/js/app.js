@@ -13,8 +13,8 @@ let Config = {
 }
 let Helpers = {
   datetime: {
-    formatDate () {
-      let d = new Date()
+    formatDate (date = null) {
+      let d = (date) ? new Date(date) : new Date()
       let hh = d.getHours()
       let m = d.getMinutes()
       let s = d.getSeconds()
@@ -67,10 +67,11 @@ let Helpers = {
   },
 }
 let Request = {
-  send (url, type, success, error) {
+  send (url, type, data, success, error) {
     $.ajax({
         url    : Config.baseURL + url,
         type   : type,
+        data   : data,
         success: success,
         error  : error
       }
@@ -81,7 +82,11 @@ let Request = {
 /**
  * Current Time Display (New Activity)
  */
+
+let timeCounter
+let elapsedTimer
 if ($('#current-time').length) {
+  $('#student-id').focus();
   (function () {
     function checkTime (i) {
       return (i < 10) ? '0' + i : i
@@ -89,7 +94,7 @@ if ($('#current-time').length) {
 
     function startTime () {
       $('#current-time').html(Helpers.datetime.formatDate())
-      setTimeout(function () {
+      timeCounter = setTimeout(function () {
         startTime()
       }, 500)
     }
@@ -109,10 +114,11 @@ function activityBtnEnable (btn, glyph, text = '', reset = true) {
   Helpers.buttons.activityBtnEnable(btn, glyph, text, reset)
 }
 
-$('#new-activity-submit').click(function (e) {
+$('#new-activity-submit').on('click', function (e, submit = false) {
   e.preventDefault()
   let btn  = $(this),
-      form = $('#new-activity')
+      form = $('#new-activity'),
+      box  = $('#student-info')
   activityBtnDisable(btn)
 
   $.post(form.attr('action'),
@@ -127,30 +133,182 @@ $('#new-activity-submit').click(function (e) {
         title  : 'Success!',
         text   : 'The time punch was successful.',
         icon   : 'success',
-        timer  : 4000,
+        timer  : (submit) ? 1000 : 4000,
         buttons: false
       }).then(() => {
-        location.reload()
+        if (!submit) {
+          location.reload()
+        }
+        else {
+          box.hide()
+          $('#student-id').val('')
+          //Panel
+          $('#clock-out-card').attr('id', 'new-activity-card')
+          $('#comments').attr('disabled', false) //TODO keep??
+          $('#clock-in-title').text('Add New Activity')
+
+          //Button
+          Helpers.buttons.activityBtnEnable($('#new-activity-submit').show(), 'sign-in-alt', 'Clock In')
+          $('#clock-out-submit').hide().attr('data-id', 0)
+
+          //Current Time
+          clearInterval(elapsedTimer)
+          $('#elapsed-time-p').hide()
+          $('#current-time-p').show()
+        }
       })
     })
     .fail(function (xhr, status, error) {
-      activityBtnEnable(btn, 'sign-out-alt', 'Clock Out')
+      activityBtnEnable(btn, 'sign-in-alt', 'Clock In')
       //Validation error
-      return swal('Error!', 'There was a problem clocking out. ' + xhr.responseJSON.errors.id[0], 'error')
+      return swal('Error!', 'There was a problem clocking in. ' + xhr.responseJSON.errors.id[0], 'error')
     })
 })
+$('#clock-out-submit').on('click', function (e, short = false) {
+  /** Admin Clock Out **/
 
+  e.preventDefault()
+  let btn  = $(this),
+      id   = btn.data('id'),
+      box  = $('#student-info'),
+      form = $('#new-activity')
+  Helpers.buttons.activityBtnDisable(btn)
+  Request.send('hours/clockout/' + id, 'POST', {}, (success) => {
+    Helpers.buttons.activityBtnEnable(btn, 'sign-out-alt', 'Clock Out')
+    return swal({
+      title  : 'Success!',
+      text   : 'The student has been clocked out.',
+      icon   : 'success',
+      timer  : (short) ? 1000 : 4000,
+      buttons: false
+    }).then(() => {
+      box.hide()
+      $('#student-id').val('')
+      //Panel
+      $('#clock-out-card').attr('id', 'new-activity-card')
+      $('#comments').attr('disabled', false) //TODO keep??
+      $('#clock-in-title').text('Add New Activity')
+
+      //Button
+      $('#new-activity-submit').show()
+      $('#clock-out-submit').hide().attr('data-id', 0)
+
+      //Current Time
+      clearInterval(elapsedTimer)
+      $('#elapsed-time-p').hide()
+      $('#current-time-p').show()
+    })
+  }, (error) => {
+    activityBtnEnable(btn, 'sign-out-alt', 'Clock Out')
+    console.log(error.responseJSON)
+    return swal('Error!', 'Unable to clock out. :(', 'error')
+
+  })
+})
+$('input#student-id').on('blur', function (e, submit = false) {
+  let input   = $(this),
+      val     = input.val(),
+      loading = $('#loading-student').show(),
+      box     = $('#student-info').hide()
+  input.attr('disabled', true)
+
+  Request.send('user/ajax/getInfo', 'POST', {id: val}, (request) => {
+      let name        = request.user.name,
+          grade       = request.user.grade,
+          isClockedIn = request.hasOwnProperty('currentHour'),
+          hourData    = (isClockedIn) ? request.currentHour : null
+      $('#student-info-name').text(name)
+      $('#student-info-grade').text(grade)
+      box.show()
+
+      if (!isClockedIn) {
+        //Panel
+        $('#clock-out-card').attr('id', 'new-activity-card')
+        $('#comments').attr('disabled', false) //TODO keep??
+        $('#clock-in-title').text('Add New Activity')
+
+        //Button
+        $('#new-activity-submit').show()
+        $('#clock-out-submit').hide().attr('data-id', 0)
+        $('#new-activity-submit').attr('data-action')
+
+        //Current Time
+        clearInterval(elapsedTimer)
+        $('#elapsed-time-p').hide()
+        $('#current-time-p').show()
+      }
+      else {
+        //Panel
+        $('#new-activity-card').attr('id', 'clock-out-card')
+        $('#comments').attr('disabled', true) //TODO keep??
+        $('#clock-in-title').text('Clock Out')
+
+        //Button
+        $('#new-activity-submit').hide()
+        $('#clock-out-submit').show().attr('data-id', hourData.id)
+
+        //Elapsed Time
+        $('#current-time-p').hide()
+        let p = $('#elapsed-time-p').show()
+        window.start_time = hourData.start_time
+        elapsedTimer = setInterval(function () {
+          let start = new Date(window.start_time),
+              diff  = (new Date() - start) * 0.001,
+              h     = parseInt(Math.floor(((diff % 31536000) % 86400) / 3600), 10),
+              m     = parseInt(Math.floor((((diff % 31536000) % 86400) % 3600) / 60), 10),
+              s     = parseInt((((diff % 31536000) % 86400) % 3600) % 60, 10)
+          p.find('#hours').text((h < 10) ? '0' + h : h)
+          p.find('#minutes').text((m < 10) ? '0' + m : m)
+          p.find('#seconds').text((s < 10) ? '0' + s : s)
+
+        }, 500)
+      }
+
+      input.attr('disabled', false)
+      loading.hide()
+
+      if (submit) {
+        if (!isClockedIn) {
+          //Clock in!
+          $('#new-activity-submit').trigger('click', [true, hourData])
+        }
+        else {
+          //Clock out!
+          $('#clock-out-submit').trigger('click', [true])
+        }
+      }
+
+    }, (xhr) => {
+      input.attr('disabled', false)
+      loading.hide()
+      swal('Error!', 'Could not locate student. ' + xhr.responseJSON.errors.id[0], 'error')
+    }
+  )
+})
+
+$('#student-id').keydown(function (e) {
+  if (e.keyCode == 13) {
+    e.preventDefault()
+
+    if (($('#clock-out-card').length || $('#new-activity-card').length) && $('#clock-out-submit').length && $('#new-activity-submit').length) {
+      /** is admin **/
+      $('#student-id').triggerHandler('blur', [true])
+    }
+
+    return false
+  }
+})
 /**
- * Clock In Submission]
+ * Clock Out Submission
  */
 
-//Clock in
-$('.clock-in').click(function (e) {
+//Clock Out
+$('.clock-out').click(function (e) {
   e.preventDefault()
-  let mainBtn  = $('#ci-main'),
-      dropBtn  = $('#ci-addon'),
+  let mainBtn  = $('#co-main'),
+      dropBtn  = $('#co-addon'),
       returnTo = $(this).attr('data-return'),
-      action   = $('#clock-in-form').attr('action'),
+      action   = $('#clock-out-form').attr('action'),
       id       = $('#hour-id').val()
 
   //Disable Buttons
@@ -167,7 +325,7 @@ $('.clock-in').click(function (e) {
 
       return swal({
         title  : 'Success!',
-        text   : 'You have clocked in.',
+        text   : 'You have clocked out.',
         icon   : 'success',
         timer  : 4000,
         buttons: false
@@ -179,7 +337,7 @@ $('.clock-in').click(function (e) {
     })
     .fail(function (xhr) {
       mainBtn.attr('disabled', false)
-      mainBtn.html('<i class="fas fa-sign-in-alt"></i> Clock In')
+      mainBtn.html('<i class="fas fa-sign-in-alt"></i> Clock Out')
       dropBtn.attr('disabled', false)
       swal('Error!', 'There was an error processing the time punch.', 'error')
       console.log(xhr.responseJSON)
@@ -1158,6 +1316,35 @@ if ($('#admin-card').length) {
       }
     })
   })
+
+  /** Club Config */
+  if ($('#club-manage').length) {
+    $('.checkbox').bootstrapToggle('off')
+    $('.checkbox[checked]').bootstrapToggle('on')
+
+    $('#save-club').on('click', function (e) {
+      e.preventDefault()
+      let btn       = $(this),
+          action    = btn.data('action'),
+          desc      = $('#clubDesc').val(),
+          master    = $('#master').prop('checked'),
+          aDeletion = $('#aDeletion').prop('checked'),
+          aMark     = $('#aMark').prop('checked'),
+          aComments = $('#aComments').prop('checked')
+
+      let data = {desc: desc, master: master ? 1:0, allowDeletion: aDeletion ? 1:0, allowMark: aMark ? 1:0, allowComments: aComments ? 1:0}
+      Helpers.buttons.activityBtnDisable(btn);
+      Request.send(action, 'PUT', data, () => {
+        Helpers.buttons.activityBtnEnable(btn, 'check', 'Save Changes');
+        swal('Success!', 'The club has been updated.', 'success')
+      }, xhr => {
+        Helpers.buttons.activityBtnEnable(btn, 'check', 'Save Changes');
+        swal('Error!', 'Unable to update club configuration.', 'error');
+        console.log(xhr);
+      })
+    })
+
+  }
 
   /** System Log **/
   $('#syslog-table').DataTable({

@@ -40,16 +40,16 @@ class HourPolicy
     /**
      * Determine whether the user can update the hour.
      *
-     * @param  \App\User $user
+     * @param  \App\User|\App\Admin $user
      * @param  \App\Hour $hour
      *
      * @return mixed
      */
-    public function update(User $user, Hour $hour)
+    public function update($user, Hour $hour)
     {
         //Admin update: handled by middleware
         //Clock in here
-        return $user->isAdmin() || $hour->user_id === $user->id;
+        return isAdmin() || $hour->user_id === $user->id;
     }
 
     /**

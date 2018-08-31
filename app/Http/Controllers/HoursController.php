@@ -49,6 +49,7 @@ class HoursController extends Controller
     /**
      * Store new hour submission
      * "Add New Activity"
+     * "Clock In"
      *
      * @param \App\Http\Requests\StoreHoursRequest $request
      *
@@ -81,12 +82,12 @@ class HoursController extends Controller
         $name = $student->first()->full_name;
         $event = $hour->getEventName();
         if (Auth::guard('admin')->check()) {
-            log_action("Clocked out $name for $event");
+            log_action("Clocked in $name for $event");
         } else {
-            log_action("Clocked out for $event");
+            log_action("Clocked in for $event");
         }
 
-        return ['success' => true, 'messsage' => $name . " has been clocked out."];
+        return ['success' => true, 'messsage' => $name . " has been clocked in."];
 
 
     }
@@ -94,7 +95,7 @@ class HoursController extends Controller
     public function delete(Hour $hour, Request $request)
     {
         $stuid = $hour->student_id;
-        if (Hour::isClockedOut($stuid) || isAdmin()) {
+        if (Hour::isClockedIn($stuid) || isAdmin()) {
             //Delete hour
             try {
                 $hour->delete();
@@ -113,19 +114,19 @@ class HoursController extends Controller
         }
     }
 
-    public function clockin(Hour $hour, Request $request)
+    public function clockout(Hour $hour, Request $request)
     {
         if ($hour->end_time) {
-            //Already clocked in, possibly by admin? Whatever!
+            //Already clocked out, possibly by admin? Whatever!
             return response()->json(['success' => true]);
         }
-        //Clock in!
+        //Clock out!
         $hour->end_time = Carbon::now();
         $hour->comments = $request->comments ?? null;
         $hour->saveOrFail();
 
         $name = $hour->getEventName();
-        log_action("Clocked in from $name");
+        log_action("Clocked out from $name");
 
         return response()->json(['success' => true]);
     }

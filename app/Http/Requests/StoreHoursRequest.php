@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Helpers\UserHelper;
 use App\Hour;
 use App\StudentInfo;
 use App\User;
@@ -63,17 +64,11 @@ class StoreHoursRequest extends FormRequest
             $id = $this->input('id');
 
             $student = StudentInfo::where('student_id', $id);
-            $hasStudent = $student->exists() &&
-                $student->first()->user()->exists() &&
-                $student->first()->user->clubs()->exists()
-                && $student->first()->user->clubs()
-                    ->where('club_id',
-                        (app()->isLocal()) ? 1 : Session::get('club-id'))->exists();
-
+            $hasStudent = UserHelper::belongsToClub($student, $isBlocked);
             if ($hasStudent) {
                 //Step 2: User not currently clocked out
-                if (Hour::isClockedOut($id)) {
-                    $v->errors()->add('id', 'The student is already clocked out.');
+                if (Hour::isClockedIn($id)) {
+                    $v->errors()->add('id', 'The student is already clocked in.');
                 }
             } else {
                 $v->errors()->add('id', 'The student does not exist in the current club.');

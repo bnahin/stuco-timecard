@@ -2,11 +2,11 @@
     Clock Out
 @endsection
 
-<h3 class="card-title">Add New Activity</h3>
+<h3 class="card-title" id="clock-in-title">Add New Activity</h3>
 <hr>
 {{-- When entering ID,
  if already clocked out, disable all fields, change border color, add elapsed time and clock in button--}}
-<form id="new-activity" action="{{ route('clock-out') }}">
+<form id="new-activity" action="{{ route('clock-in') }}">
     @csrf
     <div class="form-row">
         <div class="form-group col-md-3">
@@ -40,9 +40,17 @@
         <textarea id="comments" class="form-control" rows="2"></textarea>
     </div>
     <div class="form-group">
-        <p><strong>Current Time: </strong> <span id="current-time"></span></p>
+        <p id="current-time-p"><strong>Current Time: </strong> <span id="current-time"></span></p>
+        @if(isAdmin())<p id="elapsed-time-p" style="display:none;"><strong>Elasped Time: </strong> <span
+                id="hours"></span> hours <span
+                id="minutes"></span> minutes <span id="seconds"></span> seconds</p> @endif
     </div>
-    <button type="submit" class="btn btn-info" id="new-activity-submit"><i
-            class="fas fa-sign-out-alt"></i> Clock Out
+    <button type="submit" class="btn btn-primary" id="new-activity-submit"><i
+            class="fas fa-sign-in-alt"></i> Clock In
     </button>
+    @if(isAdmin())
+        <button type="submit" data-id="0" class="btn btn-success" style="display:none" id="clock-out-submit"><i
+                class="fas fa-sign-out-alt"></i> Clock Out
+        </button>
+    @endif
 </form>

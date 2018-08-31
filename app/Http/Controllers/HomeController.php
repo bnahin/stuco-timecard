@@ -26,12 +26,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $clockedOut = false;
+        $clockedIn = false;
 
         if (Auth::guard('user')->check()) {
             $stuid = Auth::user()->student->student_id;
-            if (Hour::isClockedOut($stuid)) {
-                $clockedOut = true;
+            if (Hour::isClockedIn($stuid)) {
+                $clockedIn = true;
                 $data = Hour::getClockData($stuid);
                 $eventCount = Hour::where('user_id', Auth::id())->count();
             }
@@ -40,7 +40,7 @@ class HomeController extends Controller
         $events = Event::active()->get();
 
         return view('home', compact(
-            'events', 'clockedOut',
+            'events', 'clockedIn',
             'data', 'eventCount'));
     }
 }
