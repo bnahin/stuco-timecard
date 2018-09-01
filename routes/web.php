@@ -46,9 +46,11 @@ Route::group(['middleware' => 'auth:user,admin'], function () {
     //View Hours
     Route::get('/hours/{user?}', 'HoursController@index')->name('my-hours');
     Route::get('/hours/charts/{user}', 'HoursController@charts');
-    Route::get('/hours/mark/{hour}', function (App\Hour $hour) {
-        return 'My Hours & Mark For Review (Hour ID ' . $hour->id . ')';
-    })->name('hour-mark');
+    Route::post('/hours/mark/{hour}', 'HoursController@mark')
+        ->middleware('can:update,hour');
+    Route::post('/hours/undoMark', 'HoursController@undoMark');
+    Route::post('/hours/getData', 'HoursController@getData')
+        ->middleware('admin');
 
     /**
      * Admin

@@ -42,6 +42,13 @@ class AdminController extends Controller
             case 'hourstats':
                 $data['members'] = $this->getAssignedStudents()
                     ->count();
+                $data['hourCount'] = Hour::all()->count();
+
+                $total = Hour::select(\DB::raw('TIME_TO_SEC(TIMEDIFF(end_time, start_time)) AS total'))->get();
+                $data['totalHours'] = round($total->sum('total') / 3600);
+                $data['avgHours'] = round($total->avg('total') / 3600);
+
+                $data['numEvents'] = $data['hourCount'];
                 break;
             case 'marked':
                 $data['hours'] = Hour::marked()->get();

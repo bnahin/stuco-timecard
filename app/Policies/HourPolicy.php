@@ -34,7 +34,7 @@ class HourPolicy
     public function create(User $user)
     {
         // Handled by admin middleware (admin)
-        return $user->isAdmin();
+        return isAdmin();
     }
 
     /**
@@ -48,7 +48,7 @@ class HourPolicy
     public function update($user, Hour $hour)
     {
         //Admin update: handled by middleware
-        //Clock in here
+        //Clock in & Mark here
         return isAdmin() || $hour->user_id === $user->id;
     }
 

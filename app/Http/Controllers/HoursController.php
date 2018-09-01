@@ -33,6 +33,8 @@ class HoursController extends Controller
 
         $hours = Hour::where('user_id', $uid)->orderByDesc('start_time')->get();
 
+        $events = Event::active()->get();
+
         $total = Hour::select(\DB::raw('TIME_TO_SEC(TIMEDIFF(end_time, start_time)) AS total'))->where('user_id',
             $uid)->get();
         $totalHours = round($total->sum('total') / 3600);
@@ -43,7 +45,7 @@ class HoursController extends Controller
         return view('pages.hours',
             compact('hours', 'totalHours', 'averageHours',
                 'numEvents', 'fullName', 'uid',
-                'studentId', 'grade'));
+                'studentId', 'grade', 'events'));
     }
 
     /**
@@ -110,7 +112,7 @@ class HoursController extends Controller
 
             return response()->json(['success' => true]);
         } else {
-            return abort(422, 'You are not clocked out.');
+            return abort(422, 'You are not clocked in.');
         }
     }
 
@@ -249,5 +251,39 @@ class HoursController extends Controller
         $return['mixed']['datasets'] = $dataset;
 
         return $return;
+    }
+
+    public function mark(Hour $hour)
+    {
+        $hour->needs_review = true;
+        try {
+            $hour->saveOrFail();
+        } catch (\Throwable $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+
+        return response()->json(['status' => 'success']);
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \Throwable
+     */
+    public function undoMark(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:hours'
+        ]);
+
+        $hour = Hour::find($request->id);
+        $this->authorize('update', $hour);
+
+        $hour->needs_review = false;
+        $hour->saveOrFail();
+
+        return response()->json(['status' => 'success']);
     }
 }

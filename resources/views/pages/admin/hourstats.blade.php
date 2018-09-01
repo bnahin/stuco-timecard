@@ -27,7 +27,7 @@
         <div class="col-md-4">
             <div class="card text-white bg-info mb-4">
                 <div class="card-body">
-                    <h5 class="card-title"><strong><strong>5, 361</strong> Total
+                    <h5 class="card-title"><strong><strong>5,331 <!--TODO::From Cache--></strong> Total
                             Students</strong></h5>
                     <p class="card-text">Students that are enrolled at ECRCHS and were
                         in the mass import.</p>
@@ -37,4 +37,43 @@
     </div>
     <hr>
     <div class="alert alert-info"><i class="fas fa-info-circle"></i> Hour Statistics currently in development!</div>
+    @if (count(\App\Hour::all()))
+        <div id="stats" class="row text-center">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3>{{ $data['avgHours'] }} hours</h3>
+                        <h5>Average duration</h5>
+                        <hr>
+                        <canvas id="line-chart" width="400" height="400"></canvas>
+                        <!-- Average time per week/month - line -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3>{{ $data['numEvents'] }}</h3>
+                        <h5>Events</h5>
+                        <hr>
+                        <!-- Pie chart, event name -->
+                        <canvas id="pie-chart" width="400" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3>{{ $data['totalHours'] }} hours</h3>
+                        <h5>Total time</h5>
+                        <hr>
+                        <canvas id="mixed-chart" width="400" height="400"></canvas>
+                        <!-- Pie chart: time per event -->
+                        <!-- Line chart: time per month -->
+                        <!--Combine? Area chart, time per event (stacked line) per month -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>

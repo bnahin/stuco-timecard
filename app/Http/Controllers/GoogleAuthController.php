@@ -38,15 +38,12 @@ class GoogleAuthController extends Controller
      */
     public function handle()
     {
-        /*
-        $loginAs = "user";
+        $loginAs = "admin";
         Auth::logout();
         Session::invalidate();
         Auth::guard($loginAs)->login(
             ($loginAs == "user") ?
                 User::inRandomOrder()->first() : Admin::find(1));
-        */
-
 
         return redirect('/');
         $apiUser = $this->api->getUser();

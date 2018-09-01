@@ -552,6 +552,204 @@ if ($('#hours-table').length && !$('#no-hours').length) {
       }
     }
   }
+
+  $('.mark-hour').on('click', function () {
+    let btn = $(this),
+        id  = btn.data('id')
+    Helpers.buttons.activityBtnDisable(btn)
+    Request.send('hours/mark/' + id, 'POST', {}, () => {
+      Helpers.buttons.activityBtnEnable(btn, 'check', 'Success', false)
+      swal('Success!', 'The timepunch has been marked for review.', 'success')
+        .then(() => location.reload())
+    }, (xhr) => {
+      Helpers.buttons.activityBtnEnable(btn, 'flag', 'Mark for Review')
+      swal('Error!', 'Unable to mark for review.', 'error')
+      console.log(xhr)
+    })
+  })
+  $('.undo-mark').click(function () {
+    let btn    = $(this),
+        id     = btn.data('id'),
+        action = '/hours/undoMark'
+    Helpers.buttons.activityBtnDisable(btn)
+    return swal({
+      title  : 'Are you sure?',
+      text   : 'This will remove the Needs Review flag on this timepunch. The club leaders will not be notified.',
+      icon   : 'warning',
+      buttons: {
+        cancel : 'No, cancel',
+        confirm: {
+          text      : 'Yes, undo mark.',
+          className : 'swal-btn-danger',
+          value     : true,
+          closeModal: false
+        }
+      }
+    })
+      .then(result => {
+        if (!result) throw null
+
+        $.ajax({
+          url    : action,
+          type   : 'POST',
+          data   : {id: id},
+          success: (result) => {
+            if (result.status == 'success') {
+              Helpers.buttons.activityBtnEnable(btn, 'check', 'Success', false)
+              return swal({
+                title: 'Success!',
+                text : 'The Needs Review flag has been removed.',
+                icon : 'success'
+              }).then(() => {
+                location.reload()
+              })
+            } else {
+              Helpers.buttons.activityBtnEnable(btn, 'undo', 'Undo Mark for Review')
+
+              return swal({
+                title: 'Error!',
+                text : 'Could not remove Needs Review flag.',
+                icon : 'error',
+              })
+            }
+          },
+          error  : (xhr) => {
+            Helpers.buttons.activityBtnEnable(btn, 'undo', 'Undo Mark for Review')
+
+            return swal('Error!', 'Could not remove Needs Review flag. ' + xhr.responseJSON.message, 'error')
+          }
+        })
+      })
+  })
+
+  /** Admin **/
+  $('.hour-edit').click(function () {
+    let btn = $(this),
+        id  = btn.data('id')
+
+    Helpers.buttons.activityBtnDisable(btn)
+    $.ajax({
+      url    : '/admin/hour/getdata',
+      type   : 'POST',
+      data   : {id: id},
+      success: (result) => {
+        Helpers.buttons.activityBtnEnable(btn, 'edit', '')
+        if (result.status == 'success') {
+          //Process.....
+          let data = result.data
+          $('#input-id').val(id)
+          $('#name').html(data.name)
+          $('option:selected').attr('selected', false)
+          $('option[value="' + data.event + '"]').attr('selected', true)
+          $('#date').val(data.date).datetimepicker({
+            timepicker: false,
+            mask      : true,
+            format    : 'm/d/Y',
+          })
+          $('#start-time').val(data.startTime)
+          $('#end-time').val(data.endTime)
+          $('.action-btn').attr('data-id', id)
+
+          //Then, show Modal
+          $('#edit-modal').modal('toggle')
+          $('.clockpicker').clockpicker({
+            twelvehour: true,
+          })
+        }
+        else {
+          swal('Error!', 'Unable to retrieve timepunch data. ' + result.message, 'error')
+        }
+      },
+      error  : (xhr) => {
+        activityBtnEnable(btn, 'edit', '')
+        return swal('Error!', 'Unable to retrieve hour data. ' + xhr.responseJSON.errors.id[0].message)
+      }
+    })
+  })
+  $('.remove-timepunch').click(function (e) {
+    let btn    = $(this),
+        id     = btn.data('id'),
+        action = '/hours/delete/' + btn.data('id'),
+        modal  = $('#marked-modal')
+    return swal({
+      title  : 'Are you sure?',
+      text   : 'This will remove the entire timepunch.',
+      icon   : 'warning',
+      buttons: {
+        cancel : 'No, cancel',
+        confirm: {
+          text      : 'Yes, remove timepunch.',
+          className : 'swal-btn-danger',
+          value     : true,
+          closeModal: false
+        }
+      }
+    })
+      .then(result => {
+        if (!result) throw null
+
+        $.ajax({
+          url    : action,
+          type   : 'DELETE',
+          success: function () {
+            //Success
+            return swal({
+              title: 'Success!',
+              text : 'The time punch has been removed.',
+              icon : 'success'
+            }).then(() => {
+              //Close Modal
+             location.reload();
+            })
+          },
+          error  : function (xhr) {
+            activityBtnEnable(btn, 'times', 'Remove Timepunch')
+
+            return swal('Error!', 'There was a problem removing the time punch. ' + xhr.responseJSON.message, 'error')
+          }
+        })
+      })
+  })
+  $(document).on('blur', '#edit-hour-form .is-invalid', function () {
+    $(this).removeClass('is-invalid')
+  })
+  $('#save-timepunch').click(function (e) {
+    e.preventDefault()
+    let btn    = $(this),
+        modal  = $('#marked-modal'),
+        id     = btn.data('id'),
+        data   = $('#edit-hour-form').serialize(),
+        action = '/admin/hour/update'
+
+    activityBtnDisable(btn)
+    $.ajax({
+      url    : action,
+      type   : 'POST',
+      data   : data,
+      success: (result) => {
+        activityBtnEnable(btn, 'check', 'Save Changes')
+        if (result.status == 'success') {
+          swal('Success!', 'The changes have been saved.', 'success')
+        }
+        else {
+          swal('Error!', 'Unable to save changes.', 'error')
+        }
+      },
+      error  : (xhr) => {
+        activityBtnEnable(btn, 'check', 'Save Changes')
+        let errs = xhr.responseJSON.errors
+        for (let i in errs) {
+          if (errs.hasOwnProperty(i)) {
+            $('[name="' + i + '"]').addClass('is-invalid')
+          }
+        }
+      }
+    })
+
+    activityBtnDisable(btn)
+
+  })
+
 }
 
 /**
@@ -878,7 +1076,7 @@ if ($('#admin-card').length) {
             }
           },
           error  : (xhr) => {
-            return swal('Error!', 'Could not remove Needs Review flag. ' + xhr.responseJSON.message)
+            return swal('Error!', 'Could not remove Needs Review flag. ' + xhr.responseJSON.message, 'error')
           }
         })
       })
@@ -1332,15 +1530,21 @@ if ($('#admin-card').length) {
           aMark     = $('#aMark').prop('checked'),
           aComments = $('#aComments').prop('checked')
 
-      let data = {desc: desc, master: master ? 1:0, allowDeletion: aDeletion ? 1:0, allowMark: aMark ? 1:0, allowComments: aComments ? 1:0}
-      Helpers.buttons.activityBtnDisable(btn);
+      let data = {
+        desc         : desc,
+        master       : master ? 1 : 0,
+        allowDeletion: aDeletion ? 1 : 0,
+        allowMark    : aMark ? 1 : 0,
+        allowComments: aComments ? 1 : 0
+      }
+      Helpers.buttons.activityBtnDisable(btn)
       Request.send(action, 'PUT', data, () => {
-        Helpers.buttons.activityBtnEnable(btn, 'check', 'Save Changes');
+        Helpers.buttons.activityBtnEnable(btn, 'check', 'Save Changes')
         swal('Success!', 'The club has been updated.', 'success')
       }, xhr => {
-        Helpers.buttons.activityBtnEnable(btn, 'check', 'Save Changes');
-        swal('Error!', 'Unable to update club configuration.', 'error');
-        console.log(xhr);
+        Helpers.buttons.activityBtnEnable(btn, 'check', 'Save Changes')
+        swal('Error!', 'Unable to update club configuration.', 'error')
+        console.log(xhr)
       })
     })
 
