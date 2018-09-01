@@ -81,13 +81,19 @@ class Hour extends Model
             ->exists();
     }
 
-    public static function getClockData($stuid)
+    public static function getClockData($stuid = null)
     {
-        return static::isClockedIn($stuid) ?
-            Hour::where('student_id', $stuid)
-                ->whereNotNull('start_time')
-                ->whereNull('end_time')
-                ->firstOrFail() : false;
+        if ($stuid) {
+            return static::isClockedIn($stuid) ?
+                Hour::where('student_id', $stuid)
+                    ->whereNotNull('start_time')
+                    ->whereNull('end_time')
+                    ->firstOrFail() : false;
+        }
+
+        return Hour::whereNotNull('start_time')
+            ->whereNull('end_time')
+            ->count();
     }
 
     public function getEventName()

@@ -36,8 +36,9 @@ class AppServiceProvider extends ServiceProvider
                 $adminBadge = 0;
             }
 
-            $settings = \App\Setting::findOrFail(getClubId())->first();
-
+            if (getClubId()) {
+                $settings = \App\Setting::findOrFail(getClubId())->first();
+            }
             $view->with(compact('adminBadge', 'settings'));
         });
     }

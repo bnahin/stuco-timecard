@@ -206,10 +206,12 @@ $('#clock-out-submit').on('click', function (e, short = false) {
   })
 })
 $('input#student-id').on('blur', function (e, submit = false) {
-  let input   = $(this),
-      val     = input.val(),
-      loading = $('#loading-student').show(),
-      box     = $('#student-info').hide()
+  let input = $(this),
+      val   = input.val(),
+      box   = $('#student-info').hide()
+  if (!val.length) return false
+
+  let loading = $('#loading-student').show()
   input.attr('disabled', true)
 
   Request.send('user/ajax/getInfo', 'POST', {id: val}, (request) => {
@@ -699,7 +701,7 @@ if ($('#hours-table').length && !$('#no-hours').length) {
               icon : 'success'
             }).then(() => {
               //Close Modal
-             location.reload();
+              location.reload()
             })
           },
           error  : function (xhr) {
@@ -1548,6 +1550,125 @@ if ($('#admin-card').length) {
       })
     })
 
+  }
+
+  /** Hour Statistics **/
+  //Chart Data
+  $.get(
+    '/admin/ajax/hours/statCharts'
+  ).done(function (r) {
+    aLoadGraphs(r)
+  })
+    .fail(function (xhr) {
+      $('canvas').remove()
+      console.log('Unable to retrieve charts :(')
+    })
+
+  function aLoadGraphs (data) {
+    console.log(data)
+
+    function dynamicColors () {
+      var r = Math.floor(Math.random() * 255)
+      var g = Math.floor(Math.random() * 255)
+      var b = Math.floor(Math.random() * 255)
+      return 'rgba(' + r + ',' + g + ',' + b + ', 0.5)'
+    }
+
+    function poolColors (a) {
+      var pool = []
+      for (i = 0; i < a; i++) {
+        pool.push(dynamicColors())
+      }
+      return pool
+    }
+
+    let lineChart = new Chart(document.getElementById('line-chart'), {
+      'type'   : 'line',
+      'data'   : {
+        'labels'  : data.line.labels,
+        'datasets': [{
+          'label'      : 'Average Hours',
+          'data'       : data.line.data,
+          'fill'       : false,
+          'borderColor': 'rgb(75, 192, 192)',
+          'lineTension': 0.1
+        }]
+      },
+      'options': {}
+    })
+    let pieChart = new Chart(document.getElementById('pie-chart'), {
+      'type': 'doughnut',
+      'data': {
+        'labels'  : data.pie.labels,
+        'datasets': [{
+          'label'          : 'Number of Events',
+          'data'           : data.pie.data,
+          'backgroundColor': poolColors(data.pie.data.length)
+        }]
+      }
+    })
+    let mixedChart = new Chart(document.getElementById('mixed-chart'), {
+      type   : 'bar',
+      data   : {
+        labels  : data.mixed.labels,
+        datasets: [{
+          label          : 'Total Hours',
+          data           : data.mixed.totals,
+          backgroundColor: 'rgba(255,99,132,0.2)',
+          borderColor    : poolColors(1)[0]
+        }]
+      },
+      /*
+        {
+          label      : 'Out of Classroom',
+          data       : [65, 59, 80, 81, 56, 55, 40],
+          borderColor: poolColors(1)[0],
+          lineTension: 0.1,
+          type       : 'line',
+          fill       : false
+        },
+        {
+          label      : 'Event 1',
+          data       : [29, 19, 40, 11, 76, 5, 30],
+          borderColor: poolColors(1)[0],
+          lineTension: 0.1,
+          type       : 'line',
+          fill       : false
+        },
+        {
+          label      : 'Event 2',
+          data       : [11, 19, 20, 10, 46, 25, 10],
+          borderColor: poolColors(1)[0],
+          lineTension: 0.1,
+          type       : 'line',
+          fill       : false
+        },
+        {
+          label      : 'Event 3',
+          data       : [41, 29, 12, 33, 12, 32, 12],
+          borderColor: poolColors(1)[0],
+          lineTension: 0.1,
+          type       : 'line',
+          fill       : false
+        }]*/
+      options: {}
+    })
+
+    //Add data to mixed chart
+    for (let evt in data.mixed.datasets) {
+      if (data.mixed.datasets.hasOwnProperty(evt)) {
+        console.log(data.mixed.datasets[evt])
+        mixedChart.data.datasets.push({
+          label      : evt,
+          data       : data.mixed.datasets[evt],
+          borderColor: poolColors(1)[0],
+          lineTension: 0.1,
+          type       : 'line',
+          fill       : false
+        })
+        mixedChart.update()
+      }
+    }
   }
 
   /** System Log **/

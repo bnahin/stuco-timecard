@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Common\Bnahin\EcrchsAuth;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -26,12 +27,12 @@ class GoogleAuthProvider extends ServiceProvider
                 $user = Auth::guard('admin')->user();
             } else {
                 if (Auth::check()) {
-                    $user = Auth::user();
+                    $user = Auth::guard('user')->user();
                 }
             }
 
             /** Clubs */
-            if($user) {
+            if ($user) {
                 $clubs = $user->clubs;
 
                 $clubId = getClubId();
@@ -45,6 +46,10 @@ class GoogleAuthProvider extends ServiceProvider
                         'currClub', 'clubCode'
                     ));
             }
+        });
+
+        View::composer('clubselect', function (\Illuminate\View\View $view) {
+            $view->with('auth', Session::get('temp-auth'));
         });
     }
 

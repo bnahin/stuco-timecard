@@ -29,6 +29,15 @@ class AuthHelper
 
     public static function getClubId()
     {
-        return (app()->isLocal()) ? 1 : Session::get('club-id');
+        return Session::get('club-id');
+    }
+
+    public static function logout()
+    {
+        Auth::logout();
+
+        Session::invalidate();
+
+        Session::regenerate();
     }
 }

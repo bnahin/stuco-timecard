@@ -17,9 +17,13 @@ Route::get('/login-google', 'GoogleAuthController@redirect')->name('login');
 Route::get('/oauth-callback', 'GoogleAuthController@handle')->name('oauth-callback');
 
 /** Logout */
-Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+Route::get('/logout', 'SessionController@logout')->name('logout');
 
-Route::group(['middleware' => 'auth:user,admin'], function () {
+/** Club Select */
+Route::get('/clubs', 'ClubController@index')->name('club-select');
+Route::get('/sessionswitch/{club}', 'SessionController@switchClub')->name('switch-club');
+
+Route::group(['middleware' => ['auth:user,admin', 'club']], function () {
     /**
      * Home
      */
@@ -72,6 +76,7 @@ Route::group(['middleware' => 'auth:user,admin'], function () {
         Route::post('/hour/getdata', 'AdminController@getHourData');
         Route::post('/hour/undoMark', 'AdminController@undoMark');
         Route::post('/hour/update', 'AdminController@updateHour');
+        Route::get('/ajax/hours/statCharts', 'AdminController@charts');
 
         Route::put('/events/changeOrder', 'AdminController@changeEventsOrder');
         Route::put('/events/updateName', 'AdminController@updateEventName');

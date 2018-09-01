@@ -17,9 +17,21 @@ class UsersTableSeeder extends Seeder
         App\Hour::truncate();
         \DB::table('club_user')->truncate();
 
+        //Create as user for testing
+        App\User::create([
+            'id'              => 1,
+            'google_id'       => '102261834875964430786',
+            'student_info_id' => App\StudentInfo::where('student_id', 115602)->first()->id,
+            'first_name'      => 'Blake',
+            'last_name'       => 'Nahin',
+            'email'           => '115602@ecrchs.org',
+            'domain'          => 'ecrchs.org',
+            'remember_token'  => str_random(10)
+        ])->clubs()->attach(2);
+
         factory(App\User::class, 9)->create()->each(function ($user) {
             //Attach to club
-            $user->clubs()->attach(1);
+            $user->clubs()->attach(floor(random_int(1, 2)));
 
             //Hours
             $stuid = $user->student->student_id;

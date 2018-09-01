@@ -14,7 +14,7 @@ use Faker\Generator as Faker;
 */
 
 $factory->define(App\User::class, function (Faker $faker) {
-    static $id = 0;
+    static $id = 1;
     $id++;
     $student = App\StudentInfo::inRandomOrder()->first();
     $student->user_id = $id;

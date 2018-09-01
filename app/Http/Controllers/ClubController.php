@@ -2,20 +2,47 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin;
 use App\Club;
+use App\Helpers\AuthHelper;
 use App\Setting;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class ClubController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Club Select page
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
+        if (Session::has('club-id')) {
+            return redirect('/');
+        }
+        if(!Session::has('temp-auth')) {
+            AuthHelper::logout();
+            return redirect()->route('login');
+            //return redirect()->route('logout');
+        }
+        $auth = Session::get('temp-auth');
+        $clubs = [];
+
+        $user = User::where('email', $auth->email);
+        if ($user->exists() && $user->first()->clubs) {
+            //Student clubs
+            $clubs['student'] = $user->first()->clubs;
+        }
+
+        $admin = Admin::where('email', $auth->email);
+        if ($admin->exists() && $admin->first()->clubs) {
+            //Admin clubs
+            $clubs['admin'] = $admin->first()->clubs;
+        }
+
+        return view('clubselect')->with(['clubSelect' => $clubs]);
     }
 
     /**

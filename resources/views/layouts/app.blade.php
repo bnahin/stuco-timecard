@@ -77,14 +77,10 @@
                             <i class="fas fa-user"></i> {{ Auth::user()->full_name }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{ route('logout') }}"><i class="fas fa-sign-out-alt"></i>
-                                Sign Out</a>
-                            <div class="dropdown-divider"></div>
-                            <h6 class="dropdown-header">{{ (isAdmin()) ? "Admin" : "My" }} other clubs</h6>
-                            @foreach($clubs as $club)
-                                <a class="dropdown-item"
-                                   href="/sessionswitch/{{ $club->id }}">{{ $club->club_name }}</a>
-                            @endforeach
+                            <a class="dropdown-item" href="{{ route('logout') }}" style="color:red">
+                                <strong> <i class="fas fa-sign-out-alt"></i>
+                                    Sign Out/Switch Club</strong></a>
+
                         </div>
                     </li>
                 </ul>
@@ -95,13 +91,13 @@
     <main class="py-4">
         @yield('content')
     </main>
-</div>
-<footer>
-    <div class="container">
+
+    <footer>
+        <div class="container">
         <span class="pull-left">
             <strong>Club Management System v0.1a</strong>
         </span>
-        <span class="pull-right">
+            <span class="pull-right">
         Created for ECRCHS by Blake Nahin (Class of 2019)
         <br>
         <a href="https://github.com/bnahin/club-management" target="_blank" rel="tooltip" title="Open Source @ GitHub">
@@ -109,8 +105,9 @@
         </a> | <a href="https://laravel.com" target="_blank" rel="tooltip"
                   title="Proudly made with the Laravel Framework"><span class="fab fa-laravel"></span></a>
         </span>
-    </div>
-</footer>
+        </div>
+    </footer>
+</div>
 </body>
 
 <!-- Scripts -->

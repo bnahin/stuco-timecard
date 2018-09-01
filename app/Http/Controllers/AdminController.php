@@ -49,6 +49,8 @@ class AdminController extends Controller
                 $data['avgHours'] = round($total->avg('total') / 3600);
 
                 $data['numEvents'] = $data['hourCount'];
+                $data['numClocked'] = Hour::getClockData();
+                $data['numEnrolled'] = 3551; //TODO get from cache
                 break;
             case 'marked':
                 $data['hours'] = Hour::marked()->get();
@@ -396,5 +398,120 @@ class AdminController extends Controller
         }
 
         return response()->json(['status' => 'success']);
+    }
+
+    public function charts()
+    {
+        //Line Chart: Hours per Month
+        $lineRes = Hour::select(\DB::raw(
+            "MONTH(start_time) as `month`, TRUNCATE(AVG(ROUND(TIME_TO_SEC(TIMEDIFF(end_time, start_time)) / 3600)), 2) AS hours"))
+            ->where('club_id', getClubId())
+            ->groupBy("month")->get();
+
+        //Pie Chart: Events by Name
+        $pieRes = \DB::table('hours')
+            ->join('events', function ($join) {
+                $join->on('hours.event_id', '=', 'events.id')
+                    ->where('events.club_id', getClubId());
+            })
+            ->select(\DB::raw('hours.event_id AS event_id, events.event_name AS event_name, COUNT(*) AS count'))
+            ->where('hours.club_id', getClubId())
+            ->groupBy('event_id', 'event_name')->get();
+
+        //Mixed Chart: Total Hours, Total Hours per Month by Event
+        $mixedRes = [];
+        $labels = [];
+        for ($i = 0; $i < 8; $i++) {
+            //Past 8 months
+            $now = Carbon::now()->subMonths($i);
+
+            $monthName = $now->format('F');
+            $month = Carbon::now()->subMonths($i)->month;
+
+            $labels[$month] = $monthName;
+
+            /** Total Hours */
+            $db = Hour::select(
+                \DB::raw("CEIL(SUM(TIME_TO_SEC(TIMEDIFF(end_time, start_time)) / 3600)) AS hours"))
+                ->where('club_id', getClubId());
+            $totalHours = $db->whereRaw("MONTH(start_time) = ?", [$month]);
+            $mixedRes[$month]['total'] = $totalHours->first()->hours ?: 0;
+
+            /** Hours per Event */
+            $events = Event::where('club_id', getClubId())->get(); //Inlcuding inactive events
+            foreach ($events as $event) {
+                $db = Hour::select(
+                    \DB::raw("CEIL(SUM(TIME_TO_SEC(TIMEDIFF(end_time, start_time)) / 3600)) AS hours"))
+                    ->where('club_id', getClubId());
+                $totalHours = $db->whereRaw("MONTH(start_time) = ?", [$month])
+                    ->where('event_id', $event->id)
+                    ->first()->hours;
+
+                $mixedRes[$month]['events'][$event->event_name] =
+                    $totalHours ?: 0;
+            }
+
+        }
+        $response = $this->parseChartsForJs(
+            ['line' => $lineRes, 'pie' => $pieRes, 'mixed' => $mixedRes, 'labels' => $labels]
+        );
+
+        return response()->json($response);
+    }
+
+    private function parseChartsForJs(array $data)
+    {
+        $return = [];
+        $labelData = $data['labels'];
+        $pieData = $data['pie'];
+        $mixedData = $data['mixed'];
+
+        /** Line Chart */
+        $lineData = $data['line'];
+        foreach ($lineData as $line) {
+            $month = $line->month;
+            $total = $line->hours;
+
+            if (!isset($labelData[$month])) {
+                //Past 8 months ago, ignore
+                continue;
+            }
+            $monthName = $labelData[$month];
+
+            $return['line']['labels'][] = $monthName;
+            $return['line']['data'][] = $total;
+        }
+
+        /** Pie Chart */
+        foreach ($pieData as $pie) {
+            $id = $pie->event_id;
+            $name = $pie->event_name;
+            $total = $pie->count;
+
+            $return['pie']['labels'][] = $name;
+            $return['pie']['data'][] = $total;
+        }
+
+        /** Mixed Chart - "The Big One!" */
+        $dataset = [];
+        foreach ($mixedData as $month => $mixed) {
+            if (!$mixed['total']) {
+                //No data to show
+                continue;
+            }
+            $monthName = $labelData[$month];
+            $return['mixed']['labels'][] = $monthName;
+            $return['mixed']['totals'][] = $mixed['total'];
+
+            //Each Event
+            $c = 0;
+            foreach ($mixed['events'] as $name => $total) {
+                $dataset[$name][] = $total;
+            }
+
+        }
+        $return['mixed']['datasets'] = $dataset;
+
+        return $return;
     }
 }

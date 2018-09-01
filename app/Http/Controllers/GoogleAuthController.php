@@ -38,7 +38,7 @@ class GoogleAuthController extends Controller
      */
     public function handle()
     {
-        $loginAs = "admin";
+        /*$loginAs = "admin";
         Auth::logout();
         Session::invalidate();
         Auth::guard($loginAs)->login(
@@ -46,7 +46,14 @@ class GoogleAuthController extends Controller
                 User::inRandomOrder()->first() : Admin::find(1));
 
         return redirect('/');
+*/
+
         $apiUser = $this->api->getUser();
+        Session::put('temp-auth', $apiUser);
+
+        return redirect()->route('club-select'); //Redirects to club select
+
+        //Put the bottom in sessionswitch, use guard based on club selected and temp auth
 
         //Admin?
         $admin = Admin::where('email', $apiUser->email);

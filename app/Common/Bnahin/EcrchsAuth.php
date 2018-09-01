@@ -42,7 +42,11 @@ class EcrchsAuth
             $this->user = $user;
 
         } else {
-            $this->user = Socialite::driver('google')->user();
+            $user = Socialite::driver('google')->user();
+            $this->user = $user;
+        }
+        if (!in_array($user['hd'], ["ecrchs.org", "ecrchs.net"])) {
+            return abort(403, "Not a member of the ECRCHS organization"); //Not member of ECRCHS organization
         }
 
         return (object)$this->user;
