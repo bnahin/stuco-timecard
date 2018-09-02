@@ -3,6 +3,7 @@
 @endsection
 
 <h3 class="card-title" id="clock-in-title">Add New Activity</h3>
+<h6 class="card-title">{{ $clubName }}</h6>
 <hr>
 {{-- When entering ID,
  if already clocked out, disable all fields, change border color, add elapsed time and clock in button--}}

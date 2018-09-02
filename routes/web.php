@@ -22,6 +22,7 @@ Route::get('/logout', 'SessionController@logout')->name('logout');
 /** Club Select */
 Route::get('/clubs', 'ClubController@index')->name('club-select');
 Route::get('/sessionswitch/{club}', 'SessionController@switchClub')->name('switch-club');
+Route::post('/clubs/join', 'ClubController@join')->name('join');
 
 Route::group(['middleware' => ['auth:user,admin', 'club']], function () {
     /**

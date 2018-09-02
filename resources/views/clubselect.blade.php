@@ -7,9 +7,9 @@
         <div class="card">
             <div class="card-body">
                 <p>
-                    <span class="pull-left"><i class="fas fa-user"></i> {{ $auth->name }}</span>
-                    <span class="pull-right">
-                        <a href="{{ route('logout') }}" style="color:red" id="clubselect-logout">
+                    <span class="float-left"><i class="fas fa-user"></i> {{ $auth->name }}</span>
+                    <span class="float-right">
+                        <a href="{{ route('logout') }}" id="clubselect-logout">
                             <i class="fas fa-sign-out-alt"></i> Log Out</a></span>
                     <br>
                 </p>
@@ -18,12 +18,22 @@
                 <div class="m-auto col-md-8">
                     <div class="card border-success bg-light mb-3">
                         <div class="card-body">
-                            <h5 class="card-title text-center">Join w/ Code</h5>
-                            <p class="card-text">
-                                <input type="text" class="form-control form-control-lg" id="join-code"
-                                       placeholder="ex. BANBAN" min="6" max="6">
-                                <button class="btn btn-block btn-success"><i class="fas fa-plus"></i> Join!</button>
-                            </p>
+                            @if($errors->has('code'))
+                                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i>
+                                    @foreach($errors->get('code') as $error) {{ $error }} @endforeach
+                                </div>
+                            @endif
+                            <form id="join-form" action="{{ route('join') }}" method="POST">
+                                @csrf
+                                <h5 class="card-title text-center">Join w/ Code</h5>
+                                <p class="card-text">
+                                    <input type="text" class="form-control form-control-lg" id="join-code"
+                                           placeholder="ex. BANBAN" minlength="6" maxlength="6" name="code" required>
+                                    <button type="submit" id="join-btn" class="btn btn-block btn-success"><i
+                                            class="fas fa-plus"></i> Join!
+                                    </button>
+                                </p>
+                            </form>
                         </div>
                     </div>
                 </div>

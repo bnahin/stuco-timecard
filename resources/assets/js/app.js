@@ -79,10 +79,6 @@ let Request = {
   }
 }
 
-/**
- * Current Time Display (New Activity)
- */
-
 let timeCounter
 let elapsedTimer
 if ($('#current-time').length) {
@@ -103,9 +99,7 @@ if ($('#current-time').length) {
   })()
 }
 
-/**
- * New Activity Submission
- */
+/*New Activity Submission */
 function activityBtnDisable (btn) {
   Helpers.buttons.activityBtnDisable(btn)
 }
@@ -300,11 +294,8 @@ $('#student-id').keydown(function (e) {
     return false
   }
 })
-/**
- * Clock Out Submission
- */
 
-//Clock Out
+/** Clock Out **/
 $('.clock-out').click(function (e) {
   e.preventDefault()
   let mainBtn  = $('#co-main'),
@@ -347,7 +338,7 @@ $('.clock-out').click(function (e) {
 
 })
 
-//Remove Timepunch
+/** Remove Timepunch **/
 $('#clock-remove').click(function (e) {
   e.preventDefault()
 
@@ -380,10 +371,7 @@ $('#clock-remove').click(function (e) {
   })
 })
 
-/**
- Hours Page
- */
-
+/** Hours Page */
 if ($('#hours-table').length && !$('#no-hours').length) {
   /** Data Table */
   $(document).ready(function () {
@@ -754,9 +742,7 @@ if ($('#hours-table').length && !$('#no-hours').length) {
 
 }
 
-/**
- Admin Page
- */
+/** Admin Page */
 if ($('#admin-card').length) {
   //Assigned Students
   let $assignedTable = $('#assigned-table').DataTable({
@@ -1676,3 +1662,9 @@ if ($('#admin-card').length) {
     'order': [[0, 'desc']]
   })
 }
+
+/** Club Select **/
+$('#join-btn').click(function () {
+  if ($('#join-form')[0].checkValidity())
+    Helpers.buttons.activityBtnDisable($(this))
+})

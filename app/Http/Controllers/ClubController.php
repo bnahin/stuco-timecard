@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Admin;
 use App\Club;
 use App\Helpers\AuthHelper;
+use App\Http\Requests\JoinClubRequest;
 use App\Setting;
+use App\StudentInfo;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -22,8 +24,9 @@ class ClubController extends Controller
         if (Session::has('club-id')) {
             return redirect('/');
         }
-        if(!Session::has('temp-auth')) {
+        if (!Session::has('temp-auth')) {
             AuthHelper::logout();
+
             return redirect()->route('login');
             //return redirect()->route('logout');
         }
@@ -135,5 +138,58 @@ class ClubController extends Controller
     public function destroy(Club $club)
     {
         //
+    }
+
+    public function join(JoinClubRequest $request)
+    {
+        $auth = Session::get('temp-auth');
+
+        //If user does not exist, create and attach.
+        //Otherwise, attach.
+        //Redirect to /sessionswitch/{club}
+        $user = User::where('email', $auth->email);
+        $club = Club::where('join_code', $request->code)->first();
+        if ($user->exists()) {
+            //Attach
+            $user->first()->clubs()->attach($club->id);
+        }
+        else {
+            //Create
+            $user = User::create([
+                'google_id'  => $auth->id,
+                'domain'     => $auth->hd,
+                'email'      => $auth->email,
+                'first_name' => $auth->given_name,
+                'last_name'  => $auth->family_name
+            ]);
+
+            //Attach Club
+            $user->clubs()->attach($club->id);
+
+            //Associate StudentInfo
+            $student = StudentInfo::where('email', $auth->email);
+            if ($student->exists()) {
+                $student->first()->user()->associate($user);
+            }
+
+            //Associate hours
+            $newUser = User::where('google_id', $auth->id)->first();
+            if (!$newUser->student) {
+                abort(403, 'User is not in the Aeries database.');
+            }
+            $hours = \App\Hour::where('student_id', $newUser->student->student_id)
+                ->whereNull('user_id');
+            if ($hours->count()) {
+                $hoursRes = $hours->get();
+                foreach ($hoursRes as $hour) {
+                    $hour->user_id = $user->id;
+                    $hour->save();
+                }
+            }
+        }
+
+        //Login to session
+        return redirect()->route('switch-club', ['club' => $club->id]);
+
     }
 }

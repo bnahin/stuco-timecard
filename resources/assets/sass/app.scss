@@ -80,8 +80,12 @@ body {
   }
 }
 
-#clubselect-logout:hover {
-  text-decoration: none;
+#clubselect-logout {
+  color: red;
+  &:hover {
+    text-decoration: none;
+    color: #a21a00;
+  }
 }
 
 /** Home **/
@@ -214,5 +218,10 @@ footer {
   border-top: 2px solid #ccc;
   a:hover {
     text-decoration: none;
+  }
+  #footer-logo {
+    height: 80px;
+    display: block;
+    margin: auto;
   }
 }

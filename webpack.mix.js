@@ -14,7 +14,7 @@ let mix = require('laravel-mix')
 //Custom App
 mix.js('resources/assets/js/app.js', 'public/js')
   .sass('resources/assets/sass/app.scss', 'public/css')
-mix.browserSync({
+/*mix.browserSync({
   proxy: 'stuco-timecard.test',
   open : false
-})
+})*/
