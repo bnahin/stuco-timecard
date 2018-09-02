@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container" id="club-select">
-        <img src="http://ecrchs.net/wp-content/uploads/2015/10/logo.png" alt="ECRCHS" class="ecr-logo">
+        <img src="{{ asset('img/ecr-logo.png') }}" alt="ECRCHS" class="ecr-logo">
         <h3 class="text-center">Club Management | Select Club</h3>
         <div class="card">
             <div class="card-body">
@@ -23,7 +23,7 @@
                                     @foreach($errors->get('code') as $error) {{ $error }} @endforeach
                                 </div>
                             @endif
-                            <form id="join-form" action="{{ route('join') }}" method="POST">
+                            <form id="join-form" action="{{ route('join') }}" method="POST" autocomplete="off">
                                 @csrf
                                 <h5 class="card-title text-center">Join w/ Code</h5>
                                 <p class="card-text">
@@ -37,44 +37,49 @@
                         </div>
                     </div>
                 </div>
-                @if(count($clubSelect['student']) && count($clubSelect['admin']))
-                    <h5>Student Clubs</h5>
-                @endif
+                <h5>Student Clubs</h5>
                 @if(count($clubSelect['student']))
-                    <div class="list-group">
+                    <div class="list-group" style="margin-bottom:8px;">
                         @foreach($clubSelect['student'] as $club)
                             <a href="{{ route('switch-club', ['club' => $club->id]) }}"
                                class="list-group-item list-group-item-action flex-column align-items-start">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h5 class="mb-1">{{ $club->club_name }}</h5>
-                                    <!--TODO: Join date-->
-                                    <!-- <small>3 days ago</small>-->
-                                    <p class="pull-right"><i class="fas fa-arrow-right"></i></p>
-
+                                    <p class="pull-right">
+                                        <i class="fas fa-arrow-right"></i>
+                                        <br>
+                                        <span class="badge badge-info" style="position:absolute;" rel="tooltip"
+                                              title="Announcements">5</span>
+                                    </p>
                                 </div>
                                 <p class="mb-1">{{ $club->settings->club_desc }}</p>
+                                <small class="text-muted">Joined {{ $club->pivot->created_at->format('m/d/Y') }}</small>
                             </a>
                         @endforeach
                     </div>
-                @endif
-                @if(count($clubSelect['student']) && count($clubSelect['admin']))
-                    <h5 style="margin-top:30px;">Admin Clubs</h5>
+                    {{ $clubSelect['student']->links() }}
                 @endif
                 @if(count($clubSelect['admin']))
-                    <div class="list-group">
+                    <h5 style="margin-top:30px;">Admin Clubs</h5>
+                    <div class="list-group" style="margin-bottom:8px;">
                         @foreach($clubSelect['admin'] as $club)
                             <a href="{{ route('switch-club', ['club' => $club->id]) }}"
                                class="list-group-item list-group-item-action flex-column align-items-start">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h5 class="mb-1">{{ $club->club_name }}</h5>
-                                    <p class="pull-right"><i class="fas fa-arrow-right"></i></p>
-                                    <!--TODO: Join date-->
-                                    <!-- <small>3 days ago</small>-->
+                                    <p class="pull-right">
+                                        <i class="fas fa-arrow-right"></i>
+                                        <br>
+                                        <span class="badge badge-success" style="position:absolute;" rel="tooltip"
+                                              title="Notifications">3</span>
+                                    </p>
                                 </div>
                                 <p class="mb-1">{{ $club->settings->club_desc }}</p>
+                                <small class="text-muted">Created {{ $club->created_at->format('m/d/Y') }}</small>
                             </a>
                         @endforeach
                     </div>
+                    {{ $clubSelect['admin']->links() }}
                 @endif
             </div>
         </div>

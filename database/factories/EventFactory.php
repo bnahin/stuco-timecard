@@ -8,7 +8,6 @@ $factory->define(App\Event::class, function (Faker $faker) {
     return [
         'event_name' => 'Event ' . $order,
         'is_active'  => 1,
-        'club_id'    => 1,
         'order'      => $order++
     ];
 });

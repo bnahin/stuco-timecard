@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Common\Bnahin\EcrchsAuth;
+use App\Common\Bnahin\EcrchsServices;
 use App\StudentInfo;
 use App\User;
 use Illuminate\Http\Request;
@@ -17,7 +17,7 @@ class StudentInfoController extends Controller
 
     private $auth;
 
-    public function __construct(Excel $excel, EcrchsAuth $auth)
+    public function __construct(Excel $excel, EcrchsServices $auth)
     {
         $this->excel = $excel;
         $this->auth = $auth;

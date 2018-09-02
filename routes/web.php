@@ -39,7 +39,7 @@ Route::group(['middleware' => ['auth:user,admin', 'club']], function () {
 
     //Clock in, Clock Out
     Route::post('/hours/new', 'HoursController@store')->name('clock-in');
-    Route::post('/hours/clockout/{hour}', 'HoursController@clockout')
+    Route::post('/hours/clockout/{hour}/{mark?}', 'HoursController@clockout')
         ->middleware('can:update,hour')
         ->name('clock-out');
 
@@ -57,6 +57,11 @@ Route::group(['middleware' => ['auth:user,admin', 'club']], function () {
     Route::post('/hours/getData', 'HoursController@getData')
         ->middleware('admin');
 
+    /*
+     * Clubs
+     */
+    Route::get('/clubs/mine', 'ClubController@myClubs')->name('my-clubs');
+    Route::post('/clubs/leave/', 'ClubController@leave')->name('leave-club');
     /**
      * Admin
      */

@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Common\Bnahin\EcrchsAuth;
+use App\Common\Bnahin\EcrchsServices;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -36,15 +36,16 @@ class GoogleAuthProvider extends ServiceProvider
                 $clubs = $user->clubs;
 
                 $clubId = getClubId();
-                $currClub = \App\Club::find($clubId);
-                $clubCode = $currClub->join_code;
-                $clubName = $currClub->club_name;
+                if ($clubId) {
+                    $currClub = \App\Club::find($clubId);
+                    $clubCode = $currClub->join_code;
+                    $clubName = $currClub->club_name;
 
-                $view->with(
-                    compact('user', 'clubName',
-                        'clubs', 'clubId',
-                        'currClub', 'clubCode'
-                    ));
+                    $view->with(
+                        compact('user', 'clubName',
+                            'clubId', 'currClub', 'clubCode'
+                        ));
+                }
             }
         });
 

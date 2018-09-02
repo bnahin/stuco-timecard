@@ -30,7 +30,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereDeletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Event withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Event withoutTrashed()
- * @property int $order
+ * @property int                 $order
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event whereOrder($value)
  */
 class Event extends Model
@@ -44,6 +44,9 @@ class Event extends Model
         parent::boot();
 
         static::addGlobalScope(function (Builder $builder) {
+            if (getClubId()) {
+                $builder->where('club_id', getClubId());
+            }
             $builder->orderBy('order', 'asc');
         });
     }

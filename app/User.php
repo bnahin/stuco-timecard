@@ -142,7 +142,7 @@ class User extends Authenticatable
     function clubs()
     {
         return $this->belongsToMany(Club::class)
-            ->withTimestamps();
+            ->withTimestamps()->withPivot('created_at');
     }
 
     public function blocks()

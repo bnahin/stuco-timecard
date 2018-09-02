@@ -29,7 +29,10 @@ class SessionController extends Controller
         }
 
         $auth = Session::get('temp-auth');
+        $joined = (Session::has('joined-club')) ? Session::get('joined-club') : false;
         AuthHelper::logout(); //Logs user out and removes session variables
+
+        if($joined) Session::put('joined-club', $joined); //Keep joined club flash
 
         //Admin?
         $admin = Admin::where('email', $auth->email);

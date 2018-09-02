@@ -296,6 +296,32 @@ $('#student-id').keydown(function (e) {
 })
 
 /** Clock Out **/
+if ($('#clock-out-table').length) {
+  elapsedTimer = setInterval(function () {
+    let start = new Date(window.start_time),
+        diff  = (new Date() - start) * 0.001,
+        h     = parseInt(Math.floor(((diff % 31536000) % 86400) / 3600), 10),
+        m     = parseInt(Math.floor((((diff % 31536000) % 86400) % 3600) / 60), 10),
+        s     = parseInt((((diff % 31536000) % 86400) % 3600) % 60, 10)
+
+    if(h) {
+      $('#hours').show();
+      $('#ehours').text(h);
+    }
+    else {
+      $('#hours').hide()
+    }
+    if(m) {
+      $('#minutes').show();
+      $('#eminutes').text(m)
+    }
+    else {
+      $('#minutes').hide();
+    }
+    $('#esecs').text(s)
+
+  }, 500)
+}
 $('.clock-out').click(function (e) {
   e.preventDefault()
   let mainBtn  = $('#co-main'),
@@ -303,6 +329,9 @@ $('.clock-out').click(function (e) {
       returnTo = $(this).attr('data-return'),
       action   = $('#clock-out-form').attr('action'),
       id       = $('#hour-id').val()
+
+  if ($(this).hasClass('mark-review'))
+    action += '/mark'
 
   //Disable Buttons
   mainBtn.attr('disabled', true)
@@ -320,8 +349,7 @@ $('.clock-out').click(function (e) {
         title  : 'Success!',
         text   : 'You have clocked out.',
         icon   : 'success',
-        timer  : 4000,
-        buttons: false
+        timer  : 4000
         //TODO make this self-destruct and redirect
       }).then(() => {
         window.location = returnTo
@@ -459,7 +487,7 @@ if ($('#hours-table').length && !$('#no-hours').length) {
       'data'   : {
         'labels'  : data.line.labels,
         'datasets': [{
-          'label'      : 'Average Hours',
+          'label'      : 'Average Duration',
           'data'       : data.line.data,
           'fill'       : false,
           'borderColor': 'rgb(75, 192, 192)',
@@ -1573,7 +1601,7 @@ if ($('#admin-card').length) {
       'data'   : {
         'labels'  : data.line.labels,
         'datasets': [{
-          'label'      : 'Average Hours',
+          'label'      : 'Average Duration',
           'data'       : data.line.data,
           'fill'       : false,
           'borderColor': 'rgb(75, 192, 192)',
@@ -1667,4 +1695,33 @@ if ($('#admin-card').length) {
 $('#join-btn').click(function () {
   if ($('#join-form')[0].checkValidity())
     Helpers.buttons.activityBtnDisable($(this))
+})
+
+/** My Clubs **/
+$('.leave-club').click(function () {
+  let btn = $(this),
+      id  = btn.data('id')
+  return swal({
+    title  : 'Are you sure?',
+    text   : 'This will delete all of your hours and remove you from the club! Archive first if necessary.',
+    icon   : 'warning',
+    buttons: {
+      cancel : 'No, cancel',
+      confirm: {
+        text      : 'Yes, leave club.',
+        className : 'swal-btn-danger',
+        value     : true,
+        closeModal: false
+      }
+    }
+  }).then(result => {
+    if (!result) throw null
+
+    Request.send('clubs/leave', 'POST', {id: id}, result => {
+      if (result.status == 'success') location.reload()
+      else swal('Error!', 'Unable to leave club.', 'error')
+    }, xhr => {
+      swal('Error!', 'Unable to leave club. ' + xhr.responseJSON.errors.id[0], 'error')
+    })
+  })
 })

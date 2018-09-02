@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Common\Bnahin\EcrchsAuth;
+use App\Common\Bnahin\EcrchsServices;
 use Illuminate\Console\Command;
 
 class ImportStudents extends Command
@@ -30,11 +30,11 @@ class ImportStudents extends Command
 
     /**
      * The ECRCHS helper instance.
-     * @var \App\Common\Bnahin\EcrchsAuth $ecrchs
+     * @var \App\Common\Bnahin\EcrchsServices $ecrchs
      */
     protected $ecrchs;
 
-    public function __construct(EcrchsAuth $ecrchs)
+    public function __construct(EcrchsServices $ecrchs)
     {
         parent::__construct();
 

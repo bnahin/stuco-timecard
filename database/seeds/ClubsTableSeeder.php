@@ -11,12 +11,12 @@ class ClubsTableSeeder extends Seeder
      */
     public function run()
     {
-        $this->command->line('Adding Student Council Club');
         App\Club::truncate();
         App\ActivityLog::truncate();
         App\Setting::truncate();
 
-        //This is needed for queries for charts
+        $this->command->line('Adding Student Council Club');
+        //For Admin Test
         App\Club::create([
             'id'        => 1,
             'join_code' => 'BANBAN',
@@ -27,7 +27,9 @@ class ClubsTableSeeder extends Seeder
             'club_desc' => "Leading the school's ability to succeed."
         ]));
 
+
         $this->command->line('Adding La Familia Club');
+        //For User Test
         App\Club::create([
                 'id'        => 2,
                 'join_code' => 'AMSAMS',
@@ -37,6 +39,18 @@ class ClubsTableSeeder extends Seeder
         )->settings()->save(new \App\Setting([
             'club_id'   => 2,
             'club_desc' => "Connecting the school's student body with Latino culture. Somos una familia."
+        ]));
+
+        $this->command->line('Adding Key Club');
+        //For Join Test
+        App\Club::create([
+            'id'        => 3,
+            'join_code' => 'JOINUS',
+            'club_name' => 'Key Club',
+            'public'    => 1
+        ])->settings()->save(new \App\Setting([
+            'club_id'   => 3,
+            'club_desc' => "Uniting the world's students through community service."
         ]));
     }
 }

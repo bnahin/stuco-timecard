@@ -15,8 +15,15 @@
         <td>Event <strong>{{ $eventCount }} {{-- Number of events for student --}} </strong></td>
     </tr>
     <tr>
-        <td colspan="3"><strong>Elapsed Time: </strong> <span
-                id="elapsed"><strong>4</strong> hours <strong>5</strong> minutes <strong>45</strong> seconds</span>
+        <script>
+          window.start_time = "{{ $data->start_time }}"
+        </script>
+        <td colspan="3"><strong>Elapsed Time: </strong>
+            <span id="elapsed">
+                <span id="hours" style="display:none;"><strong id="ehours">0</strong> hours </span>
+                <span id="minutes" style="display:none;"><strong id="eminutes">0</strong> minutes </span>
+                <span id="seconds"><strong id="esecs">0</strong> seconds</span>
+            </span>
         </td>
     </tr>
 </table>
@@ -40,8 +47,8 @@
             <div class="dropdown-menu">
                 <a class="dropdown-item clock-out" href="#" data-return="{{ route('my-hours') }}"><i
                         class="fas fa-eye"></i> Clock Out and View Hours</a>
-                <a class="dropdown-item clock-out" href="#"
-                   data-return="{{ route('hour-mark', ['hour' => $data->id]) }}"><i class="fas fa-flag"></i> Clock Out
+                <a class="dropdown-item clock-out mark-review" href="#"
+                   data-return="{{ route('my-hours') }}"><i class="fas fa-flag"></i> Clock Out
                     and Mark for
                     Review</a>
             </div>

@@ -34,7 +34,8 @@
                         <a class="nav-link" href="/">Home</a>
                     </li>
                     <li class="nav-item {{ (Route::currentRouteName() == "news") ? "active":"" }}">
-                        <a class="nav-link" href="#"><i class="fas fa-comment"></i> Announcements</a>
+                        <a class="nav-link" href="#" onclick="swal('Coming Soon!', 'Club announcements are currently in development.', 'info')"><i class="fas fa-comment"></i> Announcements <span
+                                class="badge badge-info">3</span></a>
                     </li>
                     @auth('user')
                         <li class="nav-item {{ (Route::currentRouteName() == "my-hours") ? "active":"" }}">
@@ -55,15 +56,18 @@
                                 class="fas fa-life-ring"></i> Help</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        <a class="nav-link dropdown-toggle {{ (Route::currentRouteName() == "my-clubs") ? "active":"" }}" href="#" id="navbarDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-user"></i> {{ Auth::user()->full_name }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item {{ (Route::currentRouteName() == "my-clubs") ? "active":"" }}" href="{{ route('my-clubs') }}">
+                                <i class="fas fa-graduation-cap"></i> My Clubs - @admin Admin @else Student @endadmin
+                            </a>
+                            <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ route('logout') }}" style="color:red">
                                 <strong> <i class="fas fa-sign-out-alt"></i>
                                     Sign Out/Switch Club</strong></a>
-
                         </div>
                     </li>
                 </ul>
@@ -75,7 +79,7 @@
         @yield('content')
     </main>
 
-    @include('partials.footer.footer');
+    @include('partials.footer.footer')
 </div>
 </body>
 @include('partials.footer.scripts')

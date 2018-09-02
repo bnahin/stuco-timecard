@@ -63,6 +63,11 @@ body {
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .16), 0 2px 10px 0 rgba(0, 0, 0, .12)
 }
 
+/** Alerts **/
+alert.alert-success {
+  border-left: 3px solid #215f0c80;
+}
+
 /** Navbar **/
 .nav-item.active > .nav-link {
   background-color: rgba(0, 0, 0, .1);
@@ -77,6 +82,7 @@ body {
   #join-code {
     text-align: center;
     letter-spacing: 5px;
+    text-transform: uppercase;
   }
 }
 

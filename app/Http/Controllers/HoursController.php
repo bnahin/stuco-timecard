@@ -37,10 +37,10 @@ class HoursController extends Controller
 
         $total = Hour::select(\DB::raw('TIME_TO_SEC(TIMEDIFF(end_time, start_time)) AS total'))->where('user_id',
             $uid)->get();
-        $totalHours = round($total->sum('total') / 3600);
-        $averageHours = round($total->avg('total') / 3600);
+        $totalHours = round($total->sum('total') / 3600, 1);
+        $averageHours = round($total->avg('total') / 3600, 1);
 
-        $numEvents = Hour::where('user_id', Auth::id())->count();
+        $numEvents = Hour::where('user_id', $uid)->count();
 
         return view('pages.hours',
             compact('hours', 'totalHours', 'averageHours',
@@ -71,7 +71,7 @@ class HoursController extends Controller
         $hour->event_id = $event;
         $hour->start_time = Carbon::now();
         $hour->comments = $comments;
-        $hour->club_id = (app()->isLocal()) ? 1 : Session::get('club-id');
+        $hour->club_id = getClubId();
         #$hour->saveOrFail();
 
         $student = StudentInfo::where('student_id', $stuid);
@@ -116,7 +116,7 @@ class HoursController extends Controller
         }
     }
 
-    public function clockout(Hour $hour, Request $request)
+    public function clockout(Hour $hour, Request $request, $mark = false)
     {
         if ($hour->end_time) {
             //Already clocked out, possibly by admin? Whatever!
@@ -125,6 +125,7 @@ class HoursController extends Controller
         //Clock out!
         $hour->end_time = Carbon::now();
         $hour->comments = $request->comments ?? null;
+        $hour->needs_review = ($mark) ? true : false;
         $hour->saveOrFail();
 
         $name = $hour->getEventName();
@@ -137,9 +138,9 @@ class HoursController extends Controller
     {
         //TODO: add club_ids
         $uid = $user->id;
-        //Line Chart: Hours per Month
+        //Line Chart: Average Duration per Month
         $lineRes = Hour::select(\DB::raw(
-            "MONTH(start_time) as `month`, TRUNCATE(AVG(ROUND(TIME_TO_SEC(TIMEDIFF(end_time, start_time)) / 3600)), 2) AS hours"))
+            "MONTH(start_time) as `month`, ROUND(AVG(ROUND(TIME_TO_SEC(TIMEDIFF(end_time, start_time)) / 3600, 1)), 1) AS hours"))
             ->where('user_id', $uid)
             ->where('club_id', getClubId())
             ->groupBy("month")->get();
@@ -169,16 +170,17 @@ class HoursController extends Controller
 
             /** Total Hours */
             $db = Hour::select(
-                \DB::raw("CEIL(SUM(TIME_TO_SEC(TIMEDIFF(end_time, start_time)) / 3600)) AS hours"))
+                \DB::raw("ROUND(SUM(TIME_TO_SEC(TIMEDIFF(end_time, start_time)) / 3600), 1) AS hours"))
                 ->where('user_id', $uid)->where('club_id', getClubId());
             $totalHours = $db->whereRaw("MONTH(start_time) = ?", [$month]);
             $mixedRes[$month]['total'] = $totalHours->first()->hours ?: 0;
 
             /** Hours per Event */
             $events = Event::where('club_id', getClubId())->get(); //Inlcuding inactive events
+
             foreach ($events as $event) {
                 $db = Hour::select(
-                    \DB::raw("CEIL(SUM(TIME_TO_SEC(TIMEDIFF(end_time, start_time)) / 3600)) AS hours"))
+                    \DB::raw("ROUND(SUM(TIME_TO_SEC(TIMEDIFF(end_time, start_time)) / 3600), 1) AS hours"))
                     ->where('user_id', $uid)
                     ->where('club_id', getClubId());
                 $totalHours = $db->whereRaw("MONTH(start_time) = ?", [$month])

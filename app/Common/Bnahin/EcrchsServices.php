@@ -1,6 +1,6 @@
 <?php
 /**
- * ECRCHS Google SSO Wrapper
+ * ECRCHS Google SSO Wrapper & Services
  * @author Blake Nahin <bnahin@live.com>
  */
 
@@ -8,13 +8,14 @@ namespace App\Common\Bnahin;
 
 
 use GuzzleHttp\Client;
+use http\Exception\UnexpectedValueException;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Socialite\Facades\Socialite;
 
 use Maatwebsite\Excel\Excel;
 
-class EcrchsAuth
+class EcrchsServices
 {
     private $guzzle;
     public $user;
@@ -106,5 +107,13 @@ class EcrchsAuth
         }
 
         return $count;
+    }
+
+    public function exportHours(\App\User $user, \App\Club $club)
+    {
+        //If user is passed, export for user.
+        //If club is passed, export for club.
+
+        //Use $this->excel save functions
     }
 }

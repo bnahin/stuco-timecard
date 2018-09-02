@@ -1,13 +1,13 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Common\Bnahin\EcrchsAuth;
+use App\Common\Bnahin\EcrchsServices;
 
 class StudentInfoTableSeeder extends Seeder
 {
     private $auth;
 
-    public function __construct(EcrchsAuth $auth)
+    public function __construct(EcrchsServices $auth)
     {
         $this->auth = $auth;
     }

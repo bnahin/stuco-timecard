@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Admin;
-use App\Common\Bnahin\EcrchsAuth;
+use App\Common\Bnahin\EcrchsServices;
 use App\StudentInfo;
 use Illuminate\Http\Request,
     Laravel\Socialite\Facades\Socialite,
@@ -16,7 +16,7 @@ class GoogleAuthController extends Controller
 {
     protected $api;
 
-    public function __construct(EcrchsAuth $api)
+    public function __construct(EcrchsServices $api)
     {
         $this->api = $api;
     }

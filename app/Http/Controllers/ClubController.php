@@ -10,6 +10,7 @@ use App\Setting;
 use App\StudentInfo;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class ClubController extends Controller
@@ -36,16 +37,25 @@ class ClubController extends Controller
         $user = User::where('email', $auth->email);
         if ($user->exists() && $user->first()->clubs) {
             //Student clubs
-            $clubs['student'] = $user->first()->clubs;
+            $clubs['student'] = $user->first()->clubs()->paginate(5, ['*'], 'studentPage');
         }
 
         $admin = Admin::where('email', $auth->email);
         if ($admin->exists() && $admin->first()->clubs) {
             //Admin clubs
-            $clubs['admin'] = $admin->first()->clubs;
+            $clubs['admin'] = $admin->first()->clubs()->paginate(5, ['*'], 'adminPage');
         }
 
         return view('clubselect')->with(['clubSelect' => $clubs]);
+    }
+
+    public function myClubs()
+    {
+        $clubs = Auth::user()->clubs()
+            ->orderBy('pivot_created_at', 'desc')
+            ->paginate(6);
+
+        return view('pages.clubs')->with(compact('clubs'));
     }
 
     /**
@@ -152,8 +162,7 @@ class ClubController extends Controller
         if ($user->exists()) {
             //Attach
             $user->first()->clubs()->attach($club->id);
-        }
-        else {
+        } else {
             //Create
             $user = User::create([
                 'google_id'  => $auth->id,
@@ -188,8 +197,22 @@ class ClubController extends Controller
             }
         }
 
+        Session::put('joined-club', $club);
+
         //Login to session
         return redirect()->route('switch-club', ['club' => $club->id]);
+    }
 
+    public function leave(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:clubs'
+        ]);
+
+        $club = Club::find($request->id);
+
+        //Remove Hours
+        $hours = Auth::user()->hours;
+        dd($hours);
     }
 }

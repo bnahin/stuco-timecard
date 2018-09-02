@@ -127,7 +127,7 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <h3>{{ number_format($numEvents) }}</h3>
-                                            <h5>Events</h5>
+                                            <h5>Event{{ (!$numEvents || $numEvents > 1) ? "s":"" }}</h5>
                                             <hr>
                                             <!-- Pie chart, event name -->
                                             <canvas id="pie-chart" width="400" height="400"></canvas>
@@ -137,7 +137,7 @@
                                 <div class="col-md-4">
                                     <div class="card">
                                         <div class="card-body">
-                                            <h3>{{ number_format($totalHours) }} hours</h3>
+                                            <h3>{{ number_format($totalHours, 1) }} hours</h3>
                                             <h5>Total time</h5>
                                             <hr>
                                             <canvas id="mixed-chart" width="400" height="400"></canvas>

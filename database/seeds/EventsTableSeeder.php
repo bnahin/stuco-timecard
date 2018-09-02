@@ -14,14 +14,16 @@ class EventsTableSeeder extends Seeder
         $this->command->line('Adding Events');
         App\Event::truncate();
         //This is needed for queries for charts
-        App\Event::insert([
-                'id'         => 1,
-                'event_name' => 'Out of Classroom',
-                'club_id'    => 1,
-                'is_active'  => 1,
-                'order'      => 0
-            ]
-        );
-        factory(App\Event::class, 5)->create();
+        $clubs = App\Club::all();
+        foreach($clubs as $club) {
+            App\Event::insert([
+                    'event_name' => 'Out of Classroom',
+                    'club_id'    => $club->id,
+                    'is_active'  => 1,
+                    'order'      => 0
+                ]
+            );
+            factory(App\Event::class, 5)->create(['club_id' => $club->id]);
+        }
     }
 }

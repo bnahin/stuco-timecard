@@ -114,8 +114,8 @@ class Hour extends Model
         $end_time = $this->end_time;
 
         $diff = $end_time->diffInRealMinutes($start_time);
-        $hours = ceil($diff / 60);
-        $minutes = ceil($diff % 60);
+        $hours = floor($diff / 60);
+        $minutes = floor($diff % 60);
         $return = "";
         if ($hours) {
             $return .= "$hours hour";
