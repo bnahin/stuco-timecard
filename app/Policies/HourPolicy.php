@@ -33,7 +33,6 @@ class HourPolicy
      */
     public function create(User $user)
     {
-        // Handled by admin middleware (admin)
         return isAdmin();
     }
 

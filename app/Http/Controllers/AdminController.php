@@ -103,6 +103,7 @@ class AdminController extends Controller
         }
 
         $student = $studentInfo->with('user')->first();
+        $user = User::where('email', $student->email);
         if ($student->user) {
             //User model exists, attach club.
             $user = User::where('student_info_id', $student->id);
@@ -120,20 +121,32 @@ class AdminController extends Controller
 
                 return response()->json(['status' => 'success', 'message' => $user->first()]);
             }
-        }
-        //User does not exist, create!
-        $newUser = User::create([
-            'google_id'       => null,
-            'student_info_id' => $student->id,
-            'first_name'      => $student->first_name,
-            'last_name'       => $student->last_name,
-            'email'           => $student->email,
-            'domain'          => 'ecrchs.org'
-        ]);
-        $student->update(['user_id' => $newUser->id]);
-        $newUser->clubs()->attach(getClubId());
+        } else {
+            if (!$student->user && $user->exists()) {
+                //Associate student info
+                $student->user()->associate(User::where('email', $student->email));
 
-        log_action("Assigned student {$newUser->full_name}");
+                $student->update(['user_id' => $user->first()->id]);
+                $user->first()->update(['student_info_id', $student->id]);
+
+                $user->first()->clubs()->attach(getClubId());
+                log_action("Assigned student {$studentInfo->first()->full_name}");
+            } else {
+                //User does not exist, create!
+                $newUser = User::create([
+                    'google_id'       => null,
+                    'student_info_id' => $student->id,
+                    'first_name'      => $student->first_name,
+                    'last_name'       => $student->last_name,
+                    'email'           => $student->email,
+                    'domain'          => 'ecrchs.org'
+                ]);
+                $student->update(['user_id' => $newUser->id]);
+                $newUser->clubs()->attach(getClubId());
+
+                log_action("Assigned student {$newUser->full_name}");
+            }
+        }
 
         return response()->json(['status' => 'success', 'message' => $student ?: null]);
         //Create user model and attach

@@ -48,6 +48,10 @@ class HoursController extends Controller
                 'studentId', 'grade', 'events'));
     }
 
+    public function create(Request $request) {
+        dd($request);
+    }
+
     /**
      * Store new hour submission
      * "Add New Activity"

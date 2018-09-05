@@ -22,19 +22,20 @@
 * * * * * * * * * * * * * * * * */
 
 /** General **/
+html {
+  height: 100%;
+}
 body {
   background-color: #f0f0f0;
+  padding-bottom: 110px;
+  position: relative;
+  min-height:100%;
 }
 
 .ecr-logo {
   display: block;
   margin: auto;
   width: 100px;
-}
-
-#app {
-  padding-bottom: 110px;
-  position: relative;
 }
 
 .btn-hide, .btn-hide:hover, .btn-hide:active, .btn-hide:focus {
@@ -182,12 +183,12 @@ alert.alert-success {
 /**
 Edit Timepunch
  */
-#edit-hour-form {
+#edit-hour-form, #create-hour-form {
   margin: auto;
   width: 40rem;
 }
 
-#start-end-time-col {
+#start-end-time-col-* {
   padding-left: 29px;
   .clockpicker {
     display: inline-block;

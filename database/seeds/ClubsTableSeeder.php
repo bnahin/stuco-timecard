@@ -28,16 +28,30 @@ class ClubsTableSeeder extends Seeder
         ]));
 
 
+        $this->command->line('Adding Teacher Development Club');
+
+        //For Teacher PDs
+        App\Club::create([
+                'id'        => 2,
+                'join_code' => 'TCHRPD',
+                'club_name' => 'Professional Development',
+                'public'    => 0
+            ]
+        )->settings()->save(new \App\Setting([
+            'club_id'   => 2,
+            'club_desc' => "Track teacher attendance at PD days."
+        ]));
+
         $this->command->line('Adding La Familia Club');
         //For User Test
         App\Club::create([
-                'id'        => 2,
+                'id'        => 3,
                 'join_code' => 'AMSAMS',
                 'club_name' => 'La Familia',
                 'public'    => 1
             ]
         )->settings()->save(new \App\Setting([
-            'club_id'   => 2,
+            'club_id'   => 3,
             'club_desc' => "Connecting the school's student body with Latino culture. Somos una familia."
         ]));
 

@@ -8,7 +8,7 @@ require('./bootstrap')
 
 /** Functions */
 let Config = {
-  baseURL: 'http://stuco-timecard.test/',
+  baseURL: 'http://clubs.ecrchs.test/',
   isDev  : true
 }
 let Helpers = {
@@ -128,7 +128,7 @@ $('#new-activity-submit').on('click', function (e, submit = false) {
         text   : 'The time punch was successful.',
         icon   : 'success',
         timer  : (submit) ? 1000 : 4000,
-        buttons: false
+        buttons: (submit) ? false : true
       }).then(() => {
         if (!submit) {
           location.reload()
@@ -174,7 +174,7 @@ $('#clock-out-submit').on('click', function (e, short = false) {
       text   : 'The student has been clocked out.',
       icon   : 'success',
       timer  : (short) ? 1000 : 4000,
-      buttons: false
+      buttons: (short) ? false : true
     }).then(() => {
       box.hide()
       $('#student-id').val('')
@@ -384,8 +384,7 @@ $('#clock-remove').click(function (e) {
         title  : 'Success!',
         text   : 'The time punch has been removed.',
         icon   : 'success',
-        timer  : 4000,
-        buttons: false
+        timer  : 4000
         //TODO make this self-destruct and redirect
       }).then(() => {
         location.reload()
@@ -641,6 +640,30 @@ if ($('#hours-table').length && !$('#no-hours').length) {
   })
 
   /** Admin **/
+  $('#create-hour').click(function() {
+    let btn = $(this),
+        form = $('#create-hour-form'),
+        data = form.serialize();
+    Helpers.buttons.activityBtnDisable(btn);
+    Request.send('/hours/create', 'POST', data, result => {
+      Helpers.buttons.activityBtnEnable(btn, 'check', 'Create Timepunch');
+      if(result.success) {
+        swal('Success!', 'The timepunch has been created.', 'success');
+        form.reset();
+      }
+      else {
+        swal('Error!', 'Unable to create timepunch.', 'error');
+      }
+    }, xhr => {
+      Helpers.buttons.activityBtnEnable(btn, 'check', 'Create Timepunch');
+      let errs = xhr.responseJSON.errors
+      for (let i in errs) {
+        if (errs.hasOwnProperty(i)) {
+          $('[name="' + i + '"]').addClass('is-invalid')
+        }
+      }
+    })
+  })
   $('.hour-edit').click(function () {
     let btn = $(this),
         id  = btn.data('id')

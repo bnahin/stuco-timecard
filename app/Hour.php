@@ -48,6 +48,7 @@ class Hour extends Model
 
         static::addGlobalScope(function (Builder $query) {
             $query->where('club_id', getClubId());
+            $query->whereHas('event');
         });
     }
 

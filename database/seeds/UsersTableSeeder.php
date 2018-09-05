@@ -18,7 +18,7 @@ class UsersTableSeeder extends Seeder
         \DB::table('club_user')->truncate();
 
         //Create as user for testing
-        App\User::create([
+        $user = App\User::create([
             'id'              => 1,
             'google_id'       => '102261834875964430786',
             'student_info_id' => App\StudentInfo::where('student_id', 115602)->first()->id,
@@ -27,7 +27,9 @@ class UsersTableSeeder extends Seeder
             'email'           => '115602@ecrchs.org',
             'domain'          => 'ecrchs.org',
             'remember_token'  => str_random(10)
-        ])->clubs()->attach(2);
+        ]);
+        $user->clubs()->attach(1); //Student Council
+        $user->clubs()->attach(2); //Teacher PD
 
         factory(App\User::class, 9)->create()->each(function ($user) {
             //Attach to club

@@ -38,16 +38,15 @@ class GoogleAuthController extends Controller
      */
     public function handle()
     {
-        /*$loginAs = "admin";
-        Auth::logout();
-        Session::invalidate();
+        /*
+        $loginAs = "admin";
+        \App\Helpers\AuthHelper::logout();
         Auth::guard($loginAs)->login(
             ($loginAs == "user") ?
                 User::inRandomOrder()->first() : Admin::find(1));
-
-        return redirect('/');
+        Session::put('club-id', Auth::guard($loginAs)->user()->clubs()->first()->id);
+        return redirect()->to('/');
 */
-
         $apiUser = $this->api->getUser();
         Session::put('temp-auth', $apiUser);
 

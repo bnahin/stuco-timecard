@@ -48,6 +48,10 @@ Route::group(['middleware' => ['auth:user,admin', 'club']], function () {
         ->middleware('can:delete,hour')
         ->name('delete-hour');
 
+    //Create Timepunch
+    Route::post('/hours/create', 'HoursController@create')
+        ->middleware('can:create,App\Hour');
+
     //View Hours
     Route::get('/hours/{user?}', 'HoursController@index')->name('my-hours');
     Route::get('/hours/charts/{user}', 'HoursController@charts');

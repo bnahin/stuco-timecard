@@ -70,7 +70,9 @@
                             <h3>{{ number_format($data['totalHours']) }} hours</h3>
                             <h5>Total time</h5>
                             <hr>
-                            <canvas id="mixed-chart" width="400" height="400"></canvas>
+                            <div class="chart-container" style="position:relative; height:40vh;">
+                                <canvas id="mixed-chart"></canvas>
+                            </div>
                             <!-- Pie chart: time per event -->
                             <!-- Line chart: time per month -->
                             <!--Combine? Area chart, time per event (stacked line) per month -->

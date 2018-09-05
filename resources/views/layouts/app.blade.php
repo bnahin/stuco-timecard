@@ -34,7 +34,9 @@
                         <a class="nav-link" href="/">Home</a>
                     </li>
                     <li class="nav-item {{ (Route::currentRouteName() == "news") ? "active":"" }}">
-                        <a class="nav-link" href="#" onclick="swal('Coming Soon!', 'Club announcements are currently in development.', 'info')"><i class="fas fa-comment"></i> Announcements <span
+                        <a class="nav-link" href="#"
+                           onclick="swal('Coming Soon!', 'Club announcements are currently in development.', 'info')"><i
+                                class="fas fa-comment"></i> Announcements <span
                                 class="badge badge-info">3</span></a>
                     </li>
                     @auth('user')
@@ -56,12 +58,14 @@
                                 class="fas fa-life-ring"></i> Help</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle {{ (Route::currentRouteName() == "my-clubs") ? "active":"" }}" href="#" id="navbarDropdown" role="button"
+                        <a class="nav-link dropdown-toggle {{ (Route::currentRouteName() == "my-clubs") ? "active":"" }}"
+                           href="#" id="navbarDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-user"></i> {{ Auth::user()->full_name }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item {{ (Route::currentRouteName() == "my-clubs") ? "active":"" }}" href="{{ route('my-clubs') }}">
+                            <a class="dropdown-item {{ (Route::currentRouteName() == "my-clubs") ? "active":"" }}"
+                               href="{{ route('my-clubs') }}">
                                 <i class="fas fa-graduation-cap"></i> My Clubs - @admin Admin @else Student @endadmin
                             </a>
                             <div class="dropdown-divider"></div>
@@ -78,9 +82,9 @@
     <main class="py-4">
         @yield('content')
     </main>
-
-    @include('partials.footer.footer')
 </div>
+
+@include('partials.footer.footer')
 </body>
 @include('partials.footer.scripts')
 </html>

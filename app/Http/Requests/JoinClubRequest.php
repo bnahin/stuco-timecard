@@ -46,9 +46,13 @@ class JoinClubRequest extends FormRequest
             $user = User::where('email', $auth->email);
             $admin = Admin::where('email', $auth->email);
 
+            if (!$club->public) {
+                return $validator->errors()->add('code', 'This club is currently not accepting new students.');
+            }
+
             if ($club && (($admin->exists() && $admin->first()->clubs()->where('clubs.id', $club->id)->exists())
-                ||
-                ($user->exists() && $user->first()->clubs()->where('clubs.id', $club->id)->exists()))) {
+                    ||
+                    ($user->exists() && $user->first()->clubs()->where('clubs.id', $club->id)->exists()))) {
                 $validator->errors()->add('code', 'You are already a member of the club.');
             }
         });
