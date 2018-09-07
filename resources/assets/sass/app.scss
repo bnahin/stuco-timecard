@@ -188,8 +188,8 @@ Edit Timepunch
   width: 40rem;
 }
 
-#start-end-time-col-* {
-  padding-left: 29px;
+#start-end-time-col, #start-end-time-col-new {
+  // padding-left: 29px;
   .clockpicker {
     display: inline-block;
     .form-control {
