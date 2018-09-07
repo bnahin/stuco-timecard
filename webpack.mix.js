@@ -18,3 +18,6 @@ mix.js('resources/assets/js/app.js', 'public/js')
   proxy: 'stuco-timecard.test',
   open : false
 })*/
+if(mix.inProduction()) {
+  mix.version()
+}

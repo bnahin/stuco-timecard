@@ -41,14 +41,21 @@ class EcrchsServices
 
             $user = json_decode($response, true);
             $this->user = $user;
-
+            $domain = $user['hd'];
         } else {
             $user = Socialite::driver('google')->user();
             $this->user = $user;
+            $domain = explode("@", $user->email)[1];
         }
-        if (!in_array($user['hd'], ["ecrchs.org", "ecrchs.net"])) {
-            return abort(403, "Not a member of the ECRCHS organization"); //Not member of ECRCHS organization
+
+        if (!in_array($domain, ["ecrchs.org", "ecrchs.net"])) {
+            return abort(403, "Not a member of the ECRCHS organization");
         }
+
+        $this->user->hd = $domain;
+        $name = explode(" ", $user->name);
+        $this->user->given_name = $user['given_name'] ?? $name[0];
+        $this->user->family_name = $user['family_name'] ?? explode(" ", $user->name)[count($name) - 1];
 
         return (object)$this->user;
     }
