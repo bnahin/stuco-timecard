@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ActivityLog;
+use App\Admin;
 use App\BlockedUser;
 use App\Event;
 use App\Hour;
@@ -98,8 +99,15 @@ class AdminController extends Controller
             ->orWhere(\DB::raw("CONCAT_WS(' ',first_name,last_name)"), $id);
 
         if (!$studentInfo->exists()) {
-            //Does not exists in student database
+            //Does not exist in student database
             return response()->json(['status' => 'error', 'message' => 'Could not find student with that name or ID.']);
+        }
+
+        if (Admin::where('email', $studentInfo->first()->email)->whereHas('clubs', function ($query) {
+            $query->where('clubs.id', getClubId());
+        })->exists()) {
+            //Admins cannot also be students
+            return response()->json(['status' => 'error', 'message' => 'That student is already an admin.']);
         }
 
         $student = $studentInfo->with('user')->first();

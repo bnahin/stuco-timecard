@@ -12,6 +12,7 @@
                     <div class="card-body">
                         <h3 class="card-title">My Clubs - @admin Admin @else Student @endadmin</h3>
                         <hr>
+                        <div class="alert alert-info"><span class="fas fa-info-circle"></span> Action buttons are currently in development.</div>
                         <table class="table">
                             <thead class="thead-dark">
                             <tr>
@@ -43,6 +44,7 @@
                                                 class="fas fa-sign-out-alt"></i> Leave
                                         </button>
                                         <button class="btn btn-success archive-mine" rel="tooltip" title="Archive Hours"
+                                                onclick="swal('In Development', 'This feature is currently in development.', 'info');"
                                                 data-id="{{ $club->id }}"><i class="fas fa-archive"></i> Archive
                                         </button>
                                     </td>

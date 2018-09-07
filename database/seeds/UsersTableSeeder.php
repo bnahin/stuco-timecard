@@ -28,12 +28,12 @@ class UsersTableSeeder extends Seeder
             'domain'          => 'ecrchs.org',
             'remember_token'  => str_random(10)
         ]);
-        $user->clubs()->attach(1); //Student Council
+        //$user->clubs()->attach(1); //Student Council
         $user->clubs()->attach(2); //Teacher PD
 
         factory(App\User::class, 9)->create()->each(function ($user) {
             //Attach to club
-            $user->clubs()->attach(floor(random_int(1, 2)));
+            $user->clubs()->attach(floor(random_int(1, 4)));
 
             //Hours
             $stuid = $user->student->student_id;

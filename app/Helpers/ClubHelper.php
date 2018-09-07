@@ -16,4 +16,7 @@ class ClubHelper
             ['join_code', '=', 'TCHRPD']
         ])->exists();
     }
+    public static function settings($clubid = null) {
+        return \App\Setting::where('club_id', $clubid ?: getClubId())->firstOrFail();
+    }
 }

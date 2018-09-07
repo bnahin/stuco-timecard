@@ -94,7 +94,8 @@
                             class="fas fa-times"></i> Remove
                         Timepunch
                     </button>
-                    <button type="button" class="btn btn-success action-btn" data-id="0" id="save-timepunch"><i class="fas fa-check"></i> Save
+                    <button type="button" class="btn btn-success action-btn" data-id="0" id="save-timepunch"><i
+                            class="fas fa-check"></i> Save
                         changes
                     </button>
                 </div>
@@ -218,7 +219,8 @@
                         @admin
                         <div class="row justify-content-center" style="margin-bottom:8px;">
                             <div class="col-md-2">
-                                <button class="btn btn-success btn-block">
+                                <button class="btn btn-success btn-block"
+                                        onclick="swal('In Development', 'This feature is currently in development and will be completed soon!', 'info')">
                                     <i class="fas fa-plus"></i> Add Timepunch
                                 </button>
                             </div>
@@ -263,17 +265,20 @@
                                                     </button>
                                                 </div>
                                             @else
-                                                @if(!$hour->needs_review)
-                                                    <button class="btn btn-outline-info mark-hour"
-                                                            data-id="{{ $hour->id }}"
-                                                            @if($inProgress) disabled @endif><i
-                                                            class="fas fa-flag"></i> Mark for Review
-                                                    </button>
-                                                @else
-                                                    <button class="btn btn-warning undo-mark" data-id="{{ $hour->id }}">
-                                                        <i class="fas fa-undo"></i> Undo
-                                                        Mark for Review
-                                                    </button>
+                                                @if($settings->allow_mark)
+                                                    @if(!$hour->needs_review)
+                                                        <button class="btn btn-outline-info mark-hour"
+                                                                data-id="{{ $hour->id }}"
+                                                                @if($inProgress) disabled @endif><i
+                                                                class="fas fa-flag"></i> Mark for Review
+                                                        </button>
+                                                    @else
+                                                        <button class="btn btn-warning undo-mark"
+                                                                data-id="{{ $hour->id }}">
+                                                            <i class="fas fa-undo"></i> Undo
+                                                            Mark for Review
+                                                        </button>
+                                                    @endif
                                                 @endif
                                             @endif
                                         </td>

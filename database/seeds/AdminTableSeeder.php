@@ -24,5 +24,16 @@ class AdminTableSeeder extends Seeder
             'remember_token' => str_random(10)
         ]);
         App\Admin::find(1)->clubs()->attach(1);
+
+        $this->command->line('Adding Admin account (HK)');
+        DB::table('admins')->insert([
+            'id'             => 2,
+            'google_id'      => '',
+            'first_name'     => 'Holly',
+            'last_name'      => 'Kiamanesh',
+            'email'          => 'h.kiamanesh@ecrchs.net',
+            'remember_token' => str_random(10)
+        ]);
+        App\Admin::find(2)->clubs()->attach(1);
     }
 }

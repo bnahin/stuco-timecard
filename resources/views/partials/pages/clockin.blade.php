@@ -36,21 +36,39 @@
             @endforeach
         </select>
     </div>
-    <div class="form-group">
-        <label for="comments">Comments</label>
-        <textarea id="comments" class="form-control" rows="2"></textarea>
-    </div>
+    @if($settings->allow_comments)
+        <div class="form-group">
+            <label for="comments">Comments</label>
+            <textarea id="comments" class="form-control" rows="2"></textarea>
+        </div>
+    @endif
     <div class="form-group">
         <p id="current-time-p"><strong>Current Time: </strong> <span id="current-time"></span></p>
         @if(isAdmin())<p id="elapsed-time-p" style="display:none;"><strong>Elasped Time: </strong> <span
                 id="hours"></span> hours <span
                 id="minutes"></span> minutes <span id="seconds"></span> seconds</p> @endif
     </div>
-    <button type="submit" class="btn btn-primary" id="new-activity-submit"><i
+    @if(!$settings->master)
+        <div class="form-group">
+            <div class="alert alert-danger col-md-9"><strong><i class="fas fa-exclamation-triangle"></i></strong>
+                Timepunches are currently disabled. Contact your club leaders.
+            </div>
+        </div>
+    @elseif(!count($events))
+        <div class="form-group">
+            <div class="alert alert-danger col-md-5"><strong><i class="fas fa-exclamation-triangle"></i></strong>
+                There
+                are no
+                events published.
+            </div>
+        </div>
+    @endif
+    <button type="submit" class="btn btn-primary" id="new-activity-submit" @if(!count($events)) disabled @endif><i
             class="fas fa-sign-in-alt"></i> Clock In
     </button>
     @if(isAdmin())
-        <button type="submit" data-id="0" class="btn btn-success" style="display:none" id="clock-out-submit"><i
+        <button type="submit" data-id="0" class="btn btn-success" style="display:none" id="clock-out-submit"
+                @if(!count($events)) disabled @endif><i
                 class="fas fa-sign-out-alt"></i> Clock Out
         </button>
     @endif

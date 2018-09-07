@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Helpers\ClubHelper;
 use App\User;
 use App\Hour;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -40,7 +41,7 @@ class HourPolicy
      * Determine whether the user can update the hour.
      *
      * @param  \App\User|\App\Admin $user
-     * @param  \App\Hour $hour
+     * @param  \App\Hour            $hour
      *
      * @return mixed
      */
@@ -55,12 +56,16 @@ class HourPolicy
      * Determine whether the user can delete the hour.
      *
      * @param  \App\User|\App\Admin $user
-     * @param  \App\Hour $hour
+     * @param  \App\Hour            $hour
      *
      * @return mixed
      */
     public function delete($user, Hour $hour)
     {
+        if (!ClubHelper::settings($hour->club->id)->allow_delete && !isAdmin()) {
+            return false;
+        }
+
         return (!$hour->end_time)
             ? $hour->user_id === $user->id : isAdmin() === true;
     }

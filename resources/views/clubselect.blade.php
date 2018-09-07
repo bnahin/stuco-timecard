@@ -48,8 +48,11 @@
                                     <p class="pull-right">
                                         <i class="fas fa-arrow-right"></i>
                                         <br>
-                                        <span class="badge badge-info" style="position:absolute;" rel="tooltip"
-                                              title="Announcements">5</span>
+                                        {{-- TODO --}}
+                                        @if(App::isLocal())
+                                            <span class="badge badge-info" style="position:absolute;" rel="tooltip"
+                                                  title="Announcements">5</span>
+                                        @endif
                                     </p>
                                 </div>
                                 <p class="mb-1">{{ $club->settings->club_desc }}</p>
@@ -70,8 +73,11 @@
                                     <p class="pull-right">
                                         <i class="fas fa-arrow-right"></i>
                                         <br>
-                                        <span class="badge badge-success" style="position:absolute;" rel="tooltip"
-                                              title="Notifications">3</span>
+                                        {{-- TODO --}}
+                                        @if(App::isLocal())
+                                            <span class="badge badge-success" style="position:absolute;" rel="tooltip"
+                                                  title="Notifications">3</span>
+                                        @endif
                                     </p>
                                 </div>
                                 <p class="mb-1">{{ $club->settings->club_desc }}</p>

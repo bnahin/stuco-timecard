@@ -36,8 +36,11 @@
                     <li class="nav-item {{ (Route::currentRouteName() == "news") ? "active":"" }}">
                         <a class="nav-link" href="#"
                            onclick="swal('Coming Soon!', 'Club announcements are currently in development.', 'info')"><i
-                                class="fas fa-comment"></i> Announcements <span
-                                class="badge badge-info">3</span></a>
+                                class="fas fa-comment"></i> Announcements
+                            {{-- TODO --}}
+                            @if(App::isLocal())
+                                <span class="badge badge-info">3</span></a>
+                            @endif
                     </li>
                     @auth('user')
                         <li class="nav-item {{ (Route::currentRouteName() == "my-hours") ? "active":"" }}">
@@ -54,7 +57,8 @@
                         </li>
                     @endauth
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-auth="{{ (isAdmin()) ? "admin" : "user" }}"><i
+                        <a class="nav-link" href="#" data-auth="{{ (isAdmin()) ? "admin" : "user" }}"
+                           onclick="swal('App Support', 'For technical inquiries, contact Blake Nahin, bnahin@live.com. For all others, contact your club leaders.','info');"><i
                                 class="fas fa-life-ring"></i> Help</a>
                     </li>
                     <li class="nav-item dropdown">

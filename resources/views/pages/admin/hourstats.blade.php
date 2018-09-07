@@ -70,7 +70,7 @@
                             <h3>{{ number_format($data['totalHours']) }} hours</h3>
                             <h5>Total time</h5>
                             <hr>
-                            <div class="chart-container" style="position:relative; height:40vh;">
+                            <div class="chart-container" style="position:relative; height:380px;">
                                 <canvas id="mixed-chart"></canvas>
                             </div>
                             <!-- Pie chart: time per event -->

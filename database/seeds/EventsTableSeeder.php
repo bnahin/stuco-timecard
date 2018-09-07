@@ -15,7 +15,7 @@ class EventsTableSeeder extends Seeder
         App\Event::truncate();
         //This is needed for queries for charts
         $clubs = App\Club::all();
-        foreach($clubs as $club) {
+        foreach ($clubs as $club) {
             App\Event::insert([
                     'event_name' => 'Out of Classroom',
                     'club_id'    => $club->id,

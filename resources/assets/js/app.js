@@ -124,11 +124,10 @@ $('#new-activity-submit').on('click', function (e, submit = false) {
     .done(function () {
       activityBtnEnable(btn, 'check', 'Success', false)
       return swal({
-        title  : 'Success!',
-        text   : 'The time punch was successful.',
-        icon   : 'success',
-        timer  : (submit) ? 1000 : 4000,
-        buttons: (submit) ? false : true
+        title: 'Success!',
+        text : 'The time punch was successful.',
+        icon : 'success',
+        timer: (submit) ? 1000 : 4000
       }).then(() => {
         if (!submit) {
           location.reload()
@@ -170,11 +169,10 @@ $('#clock-out-submit').on('click', function (e, short = false) {
   Request.send('hours/clockout/' + id, 'POST', {}, (success) => {
     Helpers.buttons.activityBtnEnable(btn, 'sign-out-alt', 'Clock Out')
     return swal({
-      title  : 'Success!',
-      text   : 'The student has been clocked out.',
-      icon   : 'success',
-      timer  : (short) ? 1000 : 4000,
-      buttons: (short) ? false : true
+      title: 'Success!',
+      text : 'The student has been clocked out.',
+      icon : 'success',
+      timer: (short) ? 1000 : 4000
     }).then(() => {
       box.hide()
       $('#student-id').val('')
@@ -304,19 +302,19 @@ if ($('#clock-out-table').length) {
         m     = parseInt(Math.floor((((diff % 31536000) % 86400) % 3600) / 60), 10),
         s     = parseInt((((diff % 31536000) % 86400) % 3600) % 60, 10)
 
-    if(h) {
-      $('#hours').show();
-      $('#ehours').text(h);
+    if (h) {
+      $('#hours').show()
+      $('#ehours').text(h)
     }
     else {
       $('#hours').hide()
     }
-    if(m) {
-      $('#minutes').show();
+    if (m) {
+      $('#minutes').show()
       $('#eminutes').text(m)
     }
     else {
-      $('#minutes').hide();
+      $('#minutes').hide()
     }
     $('#esecs').text(s)
 
@@ -346,11 +344,10 @@ $('.clock-out').click(function (e) {
       mainBtn.html('<i class="fas fa-check"></i> Success')
 
       return swal({
-        title  : 'Success!',
-        text   : 'You have clocked out.',
-        icon   : 'success',
-        timer  : 4000
-        //TODO make this self-destruct and redirect
+        title: 'Success!',
+        text : 'You have clocked out.',
+        icon : 'success',
+        timer: 4000
       }).then(() => {
         window.location = returnTo
       })
@@ -381,11 +378,10 @@ $('#clock-remove').click(function (e) {
       activityBtnEnable(btn, 'check', 'Success', false)
       //Success
       return swal({
-        title  : 'Success!',
-        text   : 'The time punch has been removed.',
-        icon   : 'success',
-        timer  : 4000
-        //TODO make this self-destruct and redirect
+        title: 'Success!',
+        text : 'The time punch has been removed.',
+        icon : 'success',
+        timer: 4000
       }).then(() => {
         location.reload()
       })
@@ -640,22 +636,22 @@ if ($('#hours-table').length && !$('#no-hours').length) {
   })
 
   /** Admin **/
-  $('#create-hour').click(function() {
-    let btn = $(this),
+  $('#create-hour').click(function () {
+    let btn  = $(this),
         form = $('#create-hour-form'),
-        data = form.serialize();
-    Helpers.buttons.activityBtnDisable(btn);
+        data = form.serialize()
+    Helpers.buttons.activityBtnDisable(btn)
     Request.send('/hours/create', 'POST', data, result => {
-      Helpers.buttons.activityBtnEnable(btn, 'check', 'Create Timepunch');
-      if(result.success) {
-        swal('Success!', 'The timepunch has been created.', 'success');
-        form.reset();
+      Helpers.buttons.activityBtnEnable(btn, 'check', 'Create Timepunch')
+      if (result.success) {
+        swal('Success!', 'The timepunch has been created.', 'success')
+        form.reset()
       }
       else {
-        swal('Error!', 'Unable to create timepunch.', 'error');
+        swal('Error!', 'Unable to create timepunch.', 'error')
       }
     }, xhr => {
-      Helpers.buttons.activityBtnEnable(btn, 'check', 'Create Timepunch');
+      Helpers.buttons.activityBtnEnable(btn, 'check', 'Create Timepunch')
       let errs = xhr.responseJSON.errors
       for (let i in errs) {
         if (errs.hasOwnProperty(i)) {
@@ -832,7 +828,8 @@ if ($('#admin-card').length) {
           student.first_name,
           student.grade,
           student.email,
-          '[Actions] like block, etc.'
+          //TODO: Add dynamic action buttons
+          '<em>Refresh for Actions</em>'
         ]).draw('full-hold')
 
         return swal('Success!', 'The student has been added.', 'success')
@@ -876,9 +873,7 @@ if ($('#admin-card').length) {
                 title  : 'Success!',
                 text   : 'The student has been dropped.',
                 icon   : 'success',
-                timer  : 4000,
-                buttons: false
-                //TODO make this self-destruct and redirect
+                timer  : 4000
               }).then(() => {
                 location.reload()
               })
@@ -887,9 +882,7 @@ if ($('#admin-card').length) {
               return swal({
                 title  : 'Already Dropped',
                 text   : 'The student has already been dropped.',
-                icon   : 'info',
-                timer  : 4000,
-                buttons: false
+                icon   : 'info'
               }).then(() => {
                 location.reload()
               })
@@ -930,8 +923,7 @@ if ($('#admin-card').length) {
                 title  : 'Success!',
                 text   : 'The students have been purged.',
                 icon   : 'success',
-                timer  : 4000,
-                buttons: false
+                timer  : 4000
               }).then(() => {
                 location.reload()
               })
@@ -994,7 +986,6 @@ if ($('#admin-card').length) {
             icon   : 'success',
             timer  : 4000,
             buttons: false
-            //TODO make this self-destruct and redirect
           }).then(() => {
             location.reload()
           })
@@ -1004,10 +995,7 @@ if ($('#admin-card').length) {
           return swal({
             title  : 'Already Unblocked',
             text   : 'The student has already been unblocked.',
-            icon   : 'info',
-            timer  : 4000,
-            buttons: false
-            //TODO make this self-destruct and redirect
+            icon   : 'info'
           }).then(() => {
             location.reload()
           })
@@ -1370,7 +1358,6 @@ if ($('#admin-card').length) {
                 text : 'The event has been deleted.',
                 icon : 'success',
                 timer: 4000
-                //TODO make this self-destruct and redirect
               }).then(() => {
                 $('tr[data-id="' + id + '"]').remove()
                 $('button').attr('disabled', false).removeClass('btn-hide')
@@ -1384,9 +1371,7 @@ if ($('#admin-card').length) {
               return swal({
                 title  : 'Already Deleted',
                 text   : 'The event has already been deleted.',
-                icon   : 'info',
-                timer  : 4000,
-                buttons: false
+                icon   : 'info'
               }).then(() => {
                 location.reload()
               })

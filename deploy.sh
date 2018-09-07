@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
+#git stash #Save local changes
+sudo git reset --hard #Overwrite local changes
+
 git pull origin master #Pull changes
+#git stash apply --index #Apply local changes
 
 npm run prod #Compile assets
 

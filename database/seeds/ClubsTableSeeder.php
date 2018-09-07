@@ -19,7 +19,7 @@ class ClubsTableSeeder extends Seeder
         //For Admin Test
         App\Club::create([
             'id'        => 1,
-            'join_code' => 'BANBAN',
+            'join_code' => 'STCNCL',
             'club_name' => 'Student Council',
             'public'    => 1
         ])->settings()->save(new \App\Setting([
@@ -46,7 +46,7 @@ class ClubsTableSeeder extends Seeder
         //For User Test
         App\Club::create([
                 'id'        => 3,
-                'join_code' => 'AMSAMS',
+                'join_code' => 'AGREGA',
                 'club_name' => 'La Familia',
                 'public'    => 1
             ]
@@ -58,12 +58,12 @@ class ClubsTableSeeder extends Seeder
         $this->command->line('Adding Key Club');
         //For Join Test
         App\Club::create([
-            'id'        => 3,
+            'id'        => 4,
             'join_code' => 'JOINUS',
             'club_name' => 'Key Club',
             'public'    => 1
         ])->settings()->save(new \App\Setting([
-            'club_id'   => 3,
+            'club_id'   => 4,
             'club_desc' => "Uniting the world's students through community service."
         ]));
     }
