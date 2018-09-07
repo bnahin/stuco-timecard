@@ -1,4 +1,5 @@
 require('./bootstrap')
+
 /* * * * * * * * * * * * * * * *
 *                              *
 *     StuCo App JS             *
@@ -1297,6 +1298,7 @@ if ($('#admin-card').length) {
       type   : 'POST',
       data   : {id: id},
       success: (result) => {
+        $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
         activityBtnEnable(btn, 'eye')
         if (result.status == 'success') {
           if (btn.hasClass('btn-outline-info')) {
@@ -1313,6 +1315,7 @@ if ($('#admin-card').length) {
         }
       },
       error  : (xhr) => {
+        $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
         activityBtnEnable(btn, 'eye')
         swal('Error!', 'Could not update visibility. ' + xhr.responseJSON.message, 'error')
       }
