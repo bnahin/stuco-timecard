@@ -9,7 +9,7 @@ require('./bootstrap')
 
 /** Functions */
 let Config = {
-  baseURL: 'http://clubs.ecrchs.test/',
+  baseURL: ($('#is-dev').length) ? 'http://clubs.ecrchs.test/' : 'https://clubs.ecrchs.net/',
   isDev  : true
 }
 let Helpers = {
@@ -66,6 +66,10 @@ let Helpers = {
       }
     })
   },
+  hideAllTooltips () {
+    Helpers.hideAllTooltips()
+    $('[rel="tooltip"], .tooltip').tooltip('hide')
+  }
 }
 let Request = {
   send (url, type, data, success, error) {
@@ -127,8 +131,7 @@ $('#new-activity-submit').on('click', function (e, submit = false) {
       return swal({
         title: 'Success!',
         text : 'The time punch was successful.',
-        icon : 'success',
-        timer: (submit) ? 1000 : 4000
+        icon : 'success'
       }).then(() => {
         if (!submit) {
           location.reload()
@@ -637,6 +640,14 @@ if ($('#hours-table').length && !$('#no-hours').length) {
   })
 
   /** Admin **/
+  $('#date-new').datetimepicker({
+    timepicker: false,
+    mask      : true,
+    format    : 'm/d/Y',
+  })
+  $('.clockpicker-new').clockpicker({
+    twelvehour: true,
+  })
   $('#create-hour').click(function () {
     let btn  = $(this),
         form = $('#create-hour-form'),
@@ -644,9 +655,10 @@ if ($('#hours-table').length && !$('#no-hours').length) {
     Helpers.buttons.activityBtnDisable(btn)
     Request.send('/hours/create', 'POST', data, result => {
       Helpers.buttons.activityBtnEnable(btn, 'check', 'Create Timepunch')
-      if (result.success) {
+      if (result.status == 'success') {
         swal('Success!', 'The timepunch has been created.', 'success')
-        form.reset()
+        form[0].reset()
+        window.hourCreated = true
       }
       else {
         swal('Error!', 'Unable to create timepunch.', 'error')
@@ -660,6 +672,9 @@ if ($('#hours-table').length && !$('#no-hours').length) {
         }
       }
     })
+  })
+  $('#create-hour-modal').on('hide.bs.modal', function () {
+    if (window.hourCreated !== undefined) location.reload()
   })
   $('.hour-edit').click(function () {
     let btn = $(this),
@@ -748,7 +763,7 @@ if ($('#hours-table').length && !$('#no-hours').length) {
         })
       })
   })
-  $(document).on('blur', '#edit-hour-form .is-invalid', function () {
+  $(document).on('blur', '.is-invalid', function () {
     $(this).removeClass('is-invalid')
   })
   $('#save-timepunch').click(function (e) {
@@ -871,19 +886,19 @@ if ($('#admin-card').length) {
           success: (result) => {
             if (result.status == 'success') {
               return swal({
-                title  : 'Success!',
-                text   : 'The student has been dropped.',
-                icon   : 'success',
-                timer  : 4000
+                title: 'Success!',
+                text : 'The student has been dropped.',
+                icon : 'success',
+                timer: 4000
               }).then(() => {
                 location.reload()
               })
             } else {
               //Dropped already
               return swal({
-                title  : 'Already Dropped',
-                text   : 'The student has already been dropped.',
-                icon   : 'info'
+                title: 'Already Dropped',
+                text : 'The student has already been dropped.',
+                icon : 'info'
               }).then(() => {
                 location.reload()
               })
@@ -921,10 +936,10 @@ if ($('#admin-card').length) {
           success: (result) => {
             if (result.status == 'success') {
               return swal({
-                title  : 'Success!',
-                text   : 'The students have been purged.',
-                icon   : 'success',
-                timer  : 4000
+                title: 'Success!',
+                text : 'The students have been purged.',
+                icon : 'success',
+                timer: 4000
               }).then(() => {
                 location.reload()
               })
@@ -982,11 +997,10 @@ if ($('#admin-card').length) {
         if (result.status == 'success') {
           activityBtnEnable(btn, 'check', 'Success', false)
           return swal({
-            title  : 'Success!',
-            text   : 'The student has been unblocked.',
-            icon   : 'success',
-            timer  : 4000,
-            buttons: false
+            title: 'Success!',
+            text : 'The student has been unblocked.',
+            icon : 'success',
+            timer: 4000
           }).then(() => {
             location.reload()
           })
@@ -994,9 +1008,9 @@ if ($('#admin-card').length) {
         else {
           //Unblocked already?
           return swal({
-            title  : 'Already Unblocked',
-            text   : 'The student has already been unblocked.',
-            icon   : 'info'
+            title: 'Already Unblocked',
+            text : 'The student has already been unblocked.',
+            icon : 'info'
           }).then(() => {
             location.reload()
           })
@@ -1157,7 +1171,7 @@ if ($('#admin-card').length) {
         })
       })
   })
-  $(document).on('blur', '#edit-hour-form .is-invalid', function () {
+  $(document).on('blur', '.is-invalid', function () {
     $(this).removeClass('is-invalid')
   })
   $('#save-timepunch').click(function (e) {
@@ -1298,7 +1312,7 @@ if ($('#admin-card').length) {
       type   : 'POST',
       data   : {id: id},
       success: (result) => {
-        $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
+        Helpers.hideAllTooltips()
         activityBtnEnable(btn, 'eye')
         if (result.status == 'success') {
           if (btn.hasClass('btn-outline-info')) {
@@ -1315,7 +1329,7 @@ if ($('#admin-card').length) {
         }
       },
       error  : (xhr) => {
-        $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
+        Helpers.hideAllTooltips()
         activityBtnEnable(btn, 'eye')
         swal('Error!', 'Could not update visibility. ' + xhr.responseJSON.message, 'error')
       }
@@ -1372,9 +1386,9 @@ if ($('#admin-card').length) {
             } else {
               //Dropped already
               return swal({
-                title  : 'Already Deleted',
-                text   : 'The event has already been deleted.',
-                icon   : 'info'
+                title: 'Already Deleted',
+                text : 'The event has already been deleted.',
+                icon : 'info'
               }).then(() => {
                 location.reload()
               })
@@ -1384,6 +1398,26 @@ if ($('#admin-card').length) {
             return swal('Error!', 'Could not delete event. ' + xhr.responseJSON.message)
           }
         })
+      })
+  })
+  $('.restore-event').click(function () {
+    let btn = $(this),
+        id  = btn.data('id')
+
+    Helpers.buttons.activityBtnDisable(btn)
+    Request.send('events/restore', 'POST', {id: id},
+      result => {
+        Helpers.buttons.activityBtnEnable(btn, 'undo', 'Restore')
+        if (result.status == 'success') {
+          swal('Success!', 'The event has been restored.', 'success')
+            .then(() => { $('tr[data-id="' + id + '"]').remove() })
+        }
+        else {
+          swal('Error!', 'Unable to restore event.', 'error')
+        }
+      }, xhr => {
+        Helpers.buttons.activityBtnEnable(btn, 'undo', 'Restore')
+        swal('Error!', 'Unable to restore event. ' + xhr.errors.message, 'error')
       })
   })
   $(document).on('click', '.purge-event', function () {

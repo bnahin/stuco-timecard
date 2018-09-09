@@ -28,11 +28,9 @@ class HourPolicy
     /**
      * Determine whether the user can create hours.
      *
-     * @param  \App\User $user
-     *
      * @return mixed
      */
-    public function create(User $user)
+    public function create()
     {
         return isAdmin();
     }

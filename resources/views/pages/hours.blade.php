@@ -113,6 +113,8 @@
                 </div>
                 <div class="modal-body">
                     <form id="create-hour-form">
+                        @csrf
+                        <input name="uid" type="hidden" value="{{ $uid }}">
                         <div class="form-group row">
                             <label for="event" class="col-sm-2 col-form-label">Event</label>
                             <div class="col-sm-6">
@@ -135,12 +137,12 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Start & End Time</label>
                                 <div class="col-sm-10" id="start-end-time-col-new">
-                                    <div class="input-group clockpicker" data-placement="right" data-align="top"
+                                    <div class="input-group clockpicker-new" data-placement="right" data-align="top"
                                          data-autoclose="true">
                                         <input type="text" class="form-control" id="start-time-new" name="start_time">
                                     </div>
                                     <span class="fas fa-minus"></span>
-                                    <div class="input-group clockpicker" data-placement="right" data-align="top"
+                                    <div class="input-group clockpicker-new" data-placement="right" data-align="top"
                                          data-autoclose="true">
                                         <input type="text" class="form-control" id="end-time-new" name="end_time">
                                     </div>
@@ -219,8 +221,7 @@
                         @admin
                         <div class="row justify-content-center" style="margin-bottom:8px;">
                             <div class="col-md-2">
-                                <button class="btn btn-success btn-block"
-                                        onclick="swal('In Development', 'This feature is currently in development and will be completed soon!', 'info')">
+                                <button class="btn btn-success btn-block" id="new-hour" data-toggle="modal" data-target="#create-hour-modal">
                                     <i class="fas fa-plus"></i> Add Timepunch
                                 </button>
                             </div>

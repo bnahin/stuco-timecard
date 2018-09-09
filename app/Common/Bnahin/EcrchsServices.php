@@ -117,8 +117,10 @@ class EcrchsServices
 
     public function exportHours(\App\User $user, \App\Club $club)
     {
-        //If user is passed, export for user.
+        //If user is passed, export for user (all in club)
         //If club is passed, export for club.
+
+
 
         //Use $this->excel save functions
     }

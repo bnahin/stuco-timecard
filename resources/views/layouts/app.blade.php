@@ -31,7 +31,7 @@
                 <ul class="navbar-nav ml-auto">
                     <!-- Nav Links -->
                     <li class="nav-item {{ (Route::currentRouteName() == "home") ? "active":"" }}">
-                        <a class="nav-link" href="/">Home</a>
+                        <a class="nav-link" href="/"><i class="fas fa-home"></i> Home</a>
                     </li>
                     <li class="nav-item {{ (Route::currentRouteName() == "news") ? "active":"" }}">
                         <a class="nav-link" href="#"

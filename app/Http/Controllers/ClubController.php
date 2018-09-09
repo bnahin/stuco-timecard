@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Admin;
 use App\Club;
+use App\Common\Bnahin\EcrchsServices;
 use App\Helpers\AuthHelper;
 use App\Http\Requests\JoinClubRequest;
 use App\Setting;
@@ -32,7 +33,7 @@ class ClubController extends Controller
             //return redirect()->route('logout');
         }
         $auth = Session::get('temp-auth');
-        $clubs = [];
+        $clubs = ['admin' => [], 'student' => []];
 
         $user = User::where('email', $auth->email);
         if ($user->exists() && $user->first()->clubs) {
@@ -212,7 +213,23 @@ class ClubController extends Controller
         $club = Club::find($request->id);
 
         //Remove Hours
-        $hours = Auth::user()->hours;
-        dd($hours);
+        $hours = Auth::user()->hours()->delete();
+
+        //Detach Club
+        Auth::user()->clubs()->detach(getClubId());
+
+        //Log Action
+        log_action(Auth::user()->full_name . ' left club');
+
+        //Logout
+        AuthHelper::logout();
+
+        //Redirect
+        return response()->json(['status' => 'success']);
+    }
+
+    public function exportHours(EcrchsServices $ecrchs, Club $club)
+    {
+        $ecrchs->exportHours(Auth::user(), $club);
     }
 }

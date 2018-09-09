@@ -3,7 +3,12 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4 text-center">
-                <strong id="app-version">Club Management System v0.1a</strong>
+                <strong id="app-version">Club Management System v0.1a @if(App::isLocal()) <span id="is-dev">- Development</span> @endif
+                </strong>
+                <br>
+                <em>Alpha version. Make all bug reports to Blake Nahin, <a
+                        href="mailto:bnahin@live.com">bnahin@live.com</a>
+                </em>
             </div>
             <div class="col-md-4">
                 <img id="footer-logo" src="{{ asset('img/ecr-logo.png') }}" alt="ECRCHS">

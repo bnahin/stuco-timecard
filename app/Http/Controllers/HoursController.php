@@ -48,8 +48,44 @@ class HoursController extends Controller
                 'studentId', 'grade', 'events'));
     }
 
-    public function create(Request $request) {
-        dd($request);
+    public function create(Request $request)
+    {
+        $request->validate([
+            'uid'        => 'required|exists:users,id',
+            'event'      => 'required|exists:events,id',
+            'date'       => 'required|date|date_format:m/d/Y',
+            'start_time' => 'required|before:end_time',
+            'end_time'   => 'required|after:start_time'
+        ]);
+
+        $uid = $request->uid;
+        $user = User::find($uid);
+        if (!$user->clubs()->where('clubs.id', getClubId())->exists()) {
+            return response()->json(['status' => 'error', 'message' => "The student does not belong to the club."]);
+        }
+
+        $hour = new Hour;
+        $event = $request->event;
+
+        $startDate = new Carbon($request->date);
+        $startTime = $startDate->setTimeFromTimeString($request->start_time);
+
+        $endDate = new Carbon($request->date);
+        $endTime = $endDate->setTimeFromTimeString($request->end_time);
+
+        $hour->needs_review = false;
+        $hour->event_id = $event;
+        $hour->start_time = $startTime;
+        $hour->end_time = $endTime;
+        $hour->student_id = $user->student->student_id;
+        $hour->club_id = getClubId();
+        try {
+            $user->hours()->save($hour);
+        } catch (\Throwable $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+
+        return response()->json(['status' => 'success']);
     }
 
     /**

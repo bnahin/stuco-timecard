@@ -15,6 +15,10 @@ class CreateAnnouncementsTable extends Migration
     {
         Schema::create('announcements', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('club_id');
+            $table->string('post_title');
+            $table->text('post_body');
+            $table->boolean('email_sent')->default(0);
             $table->timestamps();
         });
     }

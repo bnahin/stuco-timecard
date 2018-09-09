@@ -19,6 +19,7 @@ class ClubPolicy
     public function create(User $user)
     {
         //
+        return true;
     }
 
     /**
@@ -31,6 +32,7 @@ class ClubPolicy
     public function update(User $user, Club $club)
     {
         //
+        return true;
     }
 
     /**
@@ -43,6 +45,7 @@ class ClubPolicy
     public function delete(User $user, Club $club)
     {
         //
+        return true;
     }
 
     /**
@@ -55,6 +58,7 @@ class ClubPolicy
     public function restore(User $user, Club $club)
     {
         //
+        return true;
     }
 
     /**
@@ -67,5 +71,6 @@ class ClubPolicy
     public function forceDelete(User $user, Club $club)
     {
         //
+        return true;
     }
 }

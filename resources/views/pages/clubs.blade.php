@@ -12,13 +12,17 @@
                     <div class="card-body">
                         <h3 class="card-title">My Clubs - @admin Admin @else Student @endadmin</h3>
                         <hr>
-                        <div class="alert alert-info"><span class="fas fa-info-circle"></span> Action buttons are currently in development.</div>
+                        <div class="alert alert-info"><span class="fas fa-info-circle"></span> Action buttons are
+                            currently in development.
+                        </div>
                         <table class="table">
                             <thead class="thead-dark">
                             <tr>
                                 <th width="45%">Club Name</th>
                                 <th>Joined Date</th>
-                                <th>Leave</th>
+                                @unless(isAdmin())
+                                    <th>Actions</th>
+                                @endunless
                             </tr>
                             </thead>
                             <tbody>
@@ -38,16 +42,19 @@
                                         @endif
                                         <br>
                                         {{ $club->pivot->created_at->format('m/d/Y') }}</td>
-                                    <td>
-                                        <button class="btn btn-danger leave-club" rel="tooltip"
-                                                title="Leave Club and Delete Hours" data-id="{{ $club->id }}"><i
-                                                class="fas fa-sign-out-alt"></i> Leave
-                                        </button>
-                                        <button class="btn btn-success archive-mine" rel="tooltip" title="Archive Hours"
-                                                onclick="swal('In Development', 'This feature is currently in development.', 'info');"
-                                                data-id="{{ $club->id }}"><i class="fas fa-archive"></i> Archive
-                                        </button>
-                                    </td>
+                                    @unless(isAdmin())
+                                        <td>
+                                            <button class="btn btn-danger leave-club" rel="tooltip"
+                                                    title="Leave Club and Delete Hours" data-id="{{ $club->id }}"><i
+                                                    class="fas fa-sign-out-alt"></i> Leave
+                                            </button>
+                                            <button class="btn btn-success archive-mine" rel="tooltip"
+                                                    title="Archive Hours"
+                                                    onclick="swal('In Development', 'This feature is currently in development.', 'info');"
+                                                    data-id="{{ $club->id }}"><i class="fas fa-archive"></i> Archive
+                                            </button>
+                                        </td>
+                                    @endunless
                                 </tr>
                             @endforeach
                             </tbody>

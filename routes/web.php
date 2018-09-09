@@ -42,6 +42,9 @@ Route::group(['middleware' => ['auth:user,admin', 'club']], function () {
     Route::post('/hours/clockout/{hour}/{mark?}', 'HoursController@clockout')
         ->middleware('can:update,hour')
         ->name('clock-out');
+    Route::post('/hours/create', 'HoursController@create')
+        ->middleware('admin')
+        ->name('create-timepunch');
 
     //Delete Timepunch
     Route::delete('/hours/delete/{hour}', 'HoursController@delete')
@@ -65,7 +68,8 @@ Route::group(['middleware' => ['auth:user,admin', 'club']], function () {
      * Clubs
      */
     Route::get('/clubs/mine', 'ClubController@myClubs')->name('my-clubs');
-    Route::post('/clubs/leave/', 'ClubController@leave')->name('leave-club');
+    Route::post('/clubs/leave', 'ClubController@leave')->name('leave-club');
+    Route::post('/events/restore', 'EventController@restore');
     /**
      * Admin
      */

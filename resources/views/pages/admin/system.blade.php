@@ -12,7 +12,8 @@
     @if(count($data))
         @foreach($data as $log)
             @php
-                $auth = ($log->user) ? 'user':'admin';
+                $hasUser = $log->user || $log->admin;
+                $auth = ($log->user) ? 'user' : 'admin';
 
                 $bg = '';
             @endphp
@@ -28,7 +29,7 @@
             @endif
             <tr class="@if(strlen($bg)) bg-{{ $bg }} @endif">
                 <td>{{ $log->created_at->format('m/d/Y h:i a') }}</td>
-                <td>{{ $log->$auth->full_name }}</td>
+                <td>@if($hasUser) {{ $log->$auth->full_name }} @else <em>Removed</em></td>
                 <td>{{ $log->message }}</td>
             </tr>
         @endforeach

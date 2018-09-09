@@ -25,11 +25,12 @@
 html {
   height: 100%;
 }
+
 body {
   background-color: #f0f0f0;
   padding-bottom: 110px;
   position: relative;
-  min-height:100%;
+  min-height: 100%;
 }
 
 .ecr-logo {
@@ -189,8 +190,8 @@ Edit Timepunch
 }
 
 #start-end-time-col, #start-end-time-col-new {
-  // padding-left: 29px;
-  .clockpicker {
+  padding-left: 29px;
+  .clockpicker, .clockpicker-new {
     display: inline-block;
     .form-control {
       width: 100% !important;

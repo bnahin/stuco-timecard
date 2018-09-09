@@ -34,7 +34,7 @@
             @else
                 <th>Deleted Date</th>
                 <th>Event Name</th>
-                <th>Destroy</th>
+                <th>Actions</th>
             @endif
         </tr>
         </thead>
@@ -85,6 +85,12 @@
                                     rel="tooltip"
                                     title="Permanently delete event"><i
                                     class="fas fa-times"></i> Destroy
+                            </button>
+                            <button class="btn btn-success restore-event" data-id="{{ $event->id }}"
+                                    data-isperm="true"
+                                    rel="tooltip"
+                                    title="Restore event"><i
+                                    class="fas fa-undo"></i> Restore
                             </button>
                         </td>
                     @endif
