@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Announcement;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
@@ -30,16 +31,13 @@ class AppServiceProvider extends ServiceProvider
 
         /** View Composers */
         View::composer('*', function (\Illuminate\View\View $view) {
-            if (isAdmin()) {
-                $adminBadge = \App\Hour::marked()->count();
-            } else {
-                $adminBadge = 0;
-            }
+            $adminBadge = (isAdmin()) ? \App\Hour::marked()->count() : 0;
+            $announcementsBadge = Announcement::all()->count();
 
             if (getClubId()) {
                 $settings = \App\Setting::findOrFail(getClubId())->first();
             }
-            $view->with(compact('adminBadge', 'settings'));
+            $view->with(compact('adminBadge', 'settings', 'announcementsBadge'));
         });
     }
 

@@ -72,4 +72,8 @@ class Club extends Model
     {
         return $this->hasOne(Setting::class);
     }
+
+    public function announcements() {
+        return $this->hasMany(Announcement::class);
+    }
 }

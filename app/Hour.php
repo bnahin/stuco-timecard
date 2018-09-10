@@ -47,7 +47,9 @@ class Hour extends Model
         parent::boot();
 
         static::addGlobalScope(function (Builder $query) {
-            $query->where('club_id', getClubId());
+            if(getClubId()) {
+                $query->where('club_id', getClubId());
+            }
             $query->whereHas('event');
         });
     }

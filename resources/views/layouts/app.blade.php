@@ -37,10 +37,10 @@
                         <a class="nav-link" href="#"
                            onclick="swal('Coming Soon!', 'Club announcements are currently in development.', 'info')"><i
                                 class="fas fa-comment"></i> Announcements
-                            {{-- TODO --}}
-                            @if(App::isLocal())
-                                <span class="badge badge-info">3</span></a>
+                            @if($announcementsBadge)
+                                <span class="badge badge-info">{{ $announcementsBadge }}</span>
                             @endif
+                        </a>
                     </li>
                     @auth('user')
                         <li class="nav-item {{ (Route::currentRouteName() == "my-hours") ? "active":"" }}">

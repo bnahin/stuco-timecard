@@ -48,10 +48,9 @@
                                     <p class="pull-right">
                                         <i class="fas fa-arrow-right"></i>
                                         <br>
-                                        {{-- TODO --}}
-                                        @if(App::isLocal())
+                                        @if(count($club->announcements))
                                             <span class="badge badge-info" style="position:absolute;" rel="tooltip"
-                                                  title="Announcements">5</span>
+                                                  title="Announcements">{{ count($club->announcements) }}</span>
                                         @endif
                                     </p>
                                 </div>
@@ -73,10 +72,9 @@
                                     <p class="pull-right">
                                         <i class="fas fa-arrow-right"></i>
                                         <br>
-                                        {{-- TODO --}}
-                                        @if(App::isLocal())
+                                        @if($count = count($club->hours()->marked()->count()))
                                             <span class="badge badge-success" style="position:absolute;" rel="tooltip"
-                                                  title="Notifications">3</span>
+                                                  title="Notifications">{{ $count }}</span>
                                         @endif
                                     </p>
                                 </div>
