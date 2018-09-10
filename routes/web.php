@@ -69,7 +69,10 @@ Route::group(['middleware' => ['auth:user,admin', 'club']], function () {
      */
     Route::get('/clubs/mine', 'ClubController@myClubs')->name('my-clubs');
     Route::post('/clubs/leave', 'ClubController@leave')->name('leave-club');
-    Route::post('/events/restore', 'EventController@restore');
+    Route::post('/clubs/archive', 'ClubController@exportHours')->name('my-export');
+
+    Route::get('/clubs/archive', 'ClubController@downloadArchive')->name('download-archive');
+
     /**
      * Admin
      */
@@ -98,6 +101,7 @@ Route::group(['middleware' => ['auth:user,admin', 'club']], function () {
         Route::delete('/events/delete', 'AdminController@deleteEvent');
         Route::post('/events/purge', 'AdminController@purgeEvent');
         Route::post('/events/create', 'AdminController@createEvent');
+        Route::post('/events/restore', 'EventController@restore');
 
         Route::put('/club/update', 'ClubController@update')->name('update-club');
     });

@@ -5,6 +5,7 @@
 <div id="hourstats">
     <h5>Hour Statistics</h5>
     <hr>
+
     <div class="row">
         <div class="col-md-4">
             <div class="card text-white bg-primary mb-4">
@@ -37,6 +38,21 @@
         </div>
     </div>
     <hr>
+    <div class="m-auto col-md-6">
+        <div class="card border-success mb-3">
+            <div class="card-header">Hour Export</div>
+            <div class="card-body">
+                <h5 class="card-title">Export student hours</h5>
+                <p class="card-text">This will export all of your club's students' hours to Excel sheets compressed in a
+                    zip file.
+                </p>
+                <button class="btn btn-outline-success btn-block archive-club"
+                        data-id="{{ getClubId() }}"
+                        data-prev-text="Export Club Hours"><i class="fas fa-archive"></i> Export Club Hours
+                </button>
+            </div>
+        </div>
+    </div>
     @if (count(\App\Hour::all()))
         <div id="stats" class="text-center">
             <div class="row">

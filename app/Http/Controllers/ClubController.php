@@ -6,6 +6,7 @@ use App\Admin;
 use App\Club;
 use App\Common\Bnahin\EcrchsServices;
 use App\Helpers\AuthHelper;
+use App\Http\Requests\ArchiveMyHoursRequest;
 use App\Http\Requests\JoinClubRequest;
 use App\Setting;
 use App\StudentInfo;
@@ -13,6 +14,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 class ClubController extends Controller
 {
@@ -213,7 +215,7 @@ class ClubController extends Controller
         $club = Club::find($request->id);
 
         //Remove Hours
-        $hours = Auth::user()->hours()->delete();
+        Auth::user()->hours()->delete();
 
         //Detach Club
         Auth::user()->clubs()->detach(getClubId());
@@ -228,8 +230,31 @@ class ClubController extends Controller
         return response()->json(['status' => 'success']);
     }
 
-    public function exportHours(EcrchsServices $ecrchs, Club $club)
+    public function exportHours(EcrchsServices $ecrchs, ArchiveMyHoursRequest $request)
     {
-        $ecrchs->exportHours(Auth::user(), $club);
+        $club = Club::find($request->club);
+
+        try {
+            $ecrchs->exportHours($club);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+
+        return response()->json(['status' => 'success', 'message' => route('download-archive')]);
+    }
+
+    /**
+     * Download archive of exported hours
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function downloadArchive()
+    {
+        abort_if(!Session::has('archive-download'), 404);
+
+        $path = Session::get('archive-download');
+        Session::remove('archive-download');
+
+        return response()->download($path)
+            ->deleteFileAfterSend(true);
     }
 }

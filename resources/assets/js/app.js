@@ -1405,7 +1405,7 @@ if ($('#admin-card').length) {
         id  = btn.data('id')
 
     Helpers.buttons.activityBtnDisable(btn)
-    Request.send('events/restore', 'POST', {id: id},
+    Request.send('admin/events/restore', 'POST', {id: id},
       result => {
         Helpers.buttons.activityBtnEnable(btn, 'undo', 'Restore')
         if (result.status == 'success') {
@@ -1768,5 +1768,23 @@ $('.leave-club').click(function () {
     }, xhr => {
       swal('Error!', 'Unable to leave club. ' + xhr.responseJSON.errors.id[0], 'error')
     })
+  })
+})
+$('.archive-club').click(function () {
+  let btn      = $(this),
+      club     = btn.data('id'),
+      prevText = (btn.attr('data-prev-text')) ? btn.data('prev-text') : 'Archive'
+  Helpers.buttons.activityBtnDisable(btn)
+  Request.send('clubs/archive', 'POST', {club: club}, result => {
+    Helpers.buttons.activityBtnEnable(btn, 'archive', prevText)
+    if (result.status == 'success') {
+      window.location = result.message //Download
+    }
+    else {
+      swal('Error!', 'Unable to retrieve archive.', 'error')
+    }
+  }, xhr => {
+    Helpers.buttons.activityBtnEnable(btn, 'archive', 'Archive')
+    swal('Error!', 'Unable to retrieve archive. ' + xhr.error.message, 'error')
   })
 })

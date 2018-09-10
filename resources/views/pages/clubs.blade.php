@@ -20,9 +20,7 @@
                             <tr>
                                 <th width="45%">Club Name</th>
                                 <th>Joined Date</th>
-                                @unless(isAdmin())
-                                    <th>Actions</th>
-                                @endunless
+                                <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -42,19 +40,20 @@
                                         @endif
                                         <br>
                                         {{ $club->pivot->created_at->format('m/d/Y') }}</td>
-                                    @unless(isAdmin())
-                                        <td>
+                                    <td>
+                                        @if(!isAdmin())
                                             <button class="btn btn-danger leave-club" rel="tooltip"
                                                     title="Leave Club and Delete Hours" data-id="{{ $club->id }}"><i
-                                                    class="fas fa-sign-out-alt"></i> Leave
+                                                    class="fas fa-sign-out-alt"></i> Purge and Leave
                                             </button>
-                                            <button class="btn btn-success archive-mine" rel="tooltip"
+                                        @else
+                                        <!--TODO move this to club management -->
+                                            <button class="btn btn-success archive-club" rel="tooltip"
                                                     title="Archive Hours"
-                                                    onclick="swal('In Development', 'This feature is currently in development.', 'info');"
                                                     data-id="{{ $club->id }}"><i class="fas fa-archive"></i> Archive
                                             </button>
-                                        </td>
-                                    @endunless
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>
