@@ -16,10 +16,10 @@ class CreateSettingsTable extends Migration
         Schema::create('settings', function (Blueprint $table) {
             $table->integer('club_id');
             $table->text('club_desc')->nullable();
+            $table->boolean('master')->default(1); //Allow Timepunches (Admin can always punch)
             $table->boolean('allow_mark')->default(1); //Allow Mark for Review
             $table->boolean('allow_delete')->default(0); //Allow Delete Timepunch from My Hours Page
             $table->boolean('allow_comments')->default(1);
-            $table->boolean('master')->default(1); //Allow Timepunches (Admin can always punch)
 
             $table->primary('club_id');
         });

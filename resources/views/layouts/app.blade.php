@@ -33,7 +33,7 @@
                     <li class="nav-item {{ (Route::currentRouteName() == "home") ? "active":"" }}">
                         <a class="nav-link" href="/"><i class="fas fa-home"></i> Home</a>
                     </li>
-                    <li class="nav-item {{ (Route::currentRouteName() == "news") ? "active":"" }}">
+                    <li class="nav-item {{ (Route::currentRouteName() == "view-announcements") ? "active":"" }}">
                         <a class="nav-link" href="#"
                            onclick="swal('Coming Soon!', 'Club announcements are currently in development.', 'info')"><i
                                 class="fas fa-comment"></i> Announcements

@@ -76,4 +76,43 @@ class Club extends Model
     public function announcements() {
         return $this->hasMany(Announcement::class);
     }
+
+    /**
+     * Completely destroy club
+     * @throws \Exception
+     * @return boolean
+     */
+    public function fullDestroy() {
+        //Purge Hours
+        $this->hours()->delete();
+
+        //Detach Users
+        $this->users()->detach();
+
+        //Delete Blocked Users
+        $this->blocks()->delete();
+
+        //Detach Admins
+        $this->admins()->detach();
+
+        //Delete Events
+        $this->events()->forceDelete();
+
+        //Delete Announcements
+        $this->announcements()->delete();
+
+        //Delete Teachers
+        //WIP
+
+        //Delete Activity Logs
+        $this->logs()->delete();
+
+        //Delete Settings
+        $this->settings()->delete();
+
+        //Delete Club itself!
+        $this->delete();
+
+        return true;
+    }
 }

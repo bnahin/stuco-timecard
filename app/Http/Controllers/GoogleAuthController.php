@@ -46,7 +46,7 @@ class GoogleAuthController extends Controller
                 User::inRandomOrder()->first() : Admin::find(1));
         Session::put('club-id', Auth::guard($loginAs)->user()->clubs()->first()->id);
         return redirect()->to('/');
-*/
+        */
         $apiUser = $this->api->getUser();
         Session::put('temp-auth', $apiUser);
 

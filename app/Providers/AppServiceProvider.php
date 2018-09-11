@@ -32,11 +32,12 @@ class AppServiceProvider extends ServiceProvider
         /** View Composers */
         View::composer('*', function (\Illuminate\View\View $view) {
             $adminBadge = (isAdmin()) ? \App\Hour::marked()->count() : 0;
-            $announcementsBadge = Announcement::all()->count();
+            $announcementsBadge = Announcement::recent()->count();
 
             if (getClubId()) {
                 $settings = \App\Setting::findOrFail(getClubId())->first();
             }
+
             $view->with(compact('adminBadge', 'settings', 'announcementsBadge'));
         });
     }

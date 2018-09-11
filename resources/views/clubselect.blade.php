@@ -48,9 +48,9 @@
                                     <p class="pull-right">
                                         <i class="fas fa-arrow-right"></i>
                                         <br>
-                                        @if(count($club->announcements))
+                                        @if($club->announcements()->recent()->count())
                                             <span class="badge badge-info" style="position:absolute;" rel="tooltip"
-                                                  title="Announcements">{{ count($club->announcements) }}</span>
+                                                  title="Announcements">{{ $club->announcements()->recent()->count() }}</span>
                                         @endif
                                     </p>
                                 </div>

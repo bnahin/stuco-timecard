@@ -73,4 +73,8 @@ class Admin extends Authenticatable
     {
         $this->attributes['last_name'] = ucwords($val);
     }
+
+    public function posts() {
+        return $this->hasMany(Announcement::class);
+    }
 }

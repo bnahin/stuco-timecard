@@ -74,6 +74,10 @@ Route::group(['middleware' => ['auth:user,admin', 'club']], function () {
     Route::get('/clubs/archive', 'ClubController@downloadArchive')->name('download-archive');
 
     /**
+     * Announcements
+     */
+    Route::get('/announcements','AnnouncementController@index')->name('view-announcements');
+    /**
      * Admin
      */
     Route::group(['middleware' => 'admin', 'prefix' => '/admin'], function () {

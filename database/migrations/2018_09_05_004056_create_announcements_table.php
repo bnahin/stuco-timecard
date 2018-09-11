@@ -18,7 +18,9 @@ class CreateAnnouncementsTable extends Migration
             $table->integer('club_id');
             $table->string('post_title');
             $table->text('post_body');
+            $table->text('admin_id'); //Author
             $table->boolean('email_sent')->default(0);
+            $table->boolean('is_global')->default(0);
             $table->timestamps();
         });
     }

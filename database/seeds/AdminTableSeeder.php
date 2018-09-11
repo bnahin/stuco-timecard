@@ -28,7 +28,7 @@ class AdminTableSeeder extends Seeder
         $this->command->line('Adding Admin account (HK)');
         DB::table('admins')->insert([
             'id'             => 2,
-            'google_id'      => '',
+            'google_id'      => null,
             'first_name'     => 'Holly',
             'last_name'      => 'Kiamanesh',
             'email'          => 'h.kiamanesh@ecrchs.net',
