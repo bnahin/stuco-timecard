@@ -360,7 +360,10 @@ class AdminController extends Controller
 
         $event = new Event;
         $event->event_name = $request->name;
-        $event->order = Event::getLast()->id + 1;
+
+        $last = Event::getLast();
+        $event->order = ($last) ? Event::getLast()->id + 1 : 0;
+
         $event->is_active = true;
         $event->club_id = getClubId();
         try {

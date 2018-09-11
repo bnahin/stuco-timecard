@@ -234,6 +234,10 @@ class ClubController extends Controller
     {
         $club = Club::find($request->club);
 
+        if (!$club->users) {
+            return response()->json(['status' => 'error', 'message' => 'There are no students in the club']);
+        }
+
         try {
             $ecrchs->exportHours($club);
         } catch (\Exception $e) {

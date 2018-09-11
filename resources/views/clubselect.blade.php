@@ -72,7 +72,7 @@
                                     <p class="pull-right">
                                         <i class="fas fa-arrow-right"></i>
                                         <br>
-                                        @if($count = count($club->hours()->marked()->count()))
+                                        @if($count = $club->hours()->marked()->count())
                                             <span class="badge badge-success" style="position:absolute;" rel="tooltip"
                                                   title="Notifications">{{ $count }}</span>
                                         @endif

@@ -12,4 +12,6 @@ php artisan key:generate #Log users out
 php artisan migrate #Migrate new tables
 
 php artisan cache:clear #Clear cache
+
+composer install
 composer dump-autoload

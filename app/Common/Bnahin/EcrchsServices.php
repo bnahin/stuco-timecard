@@ -157,7 +157,7 @@ class EcrchsServices
         foreach ($users as $user) {
             $this->excel->create($user->full_name,
                 function (LaravelExcelWriter $excel) use ($club, $user) {
-                    $excel->setTitle("Hours for {$user->full_name} in {$club->club_name}");
+                    $excel->setTitle(substr("Hours for {$user->full_name} in {$club->club_name}", 0, 30));
 
                     $excel->sheet("{$user->first_name} {$user->last_name} {$club->club_name}",
                         function (LaravelExcelWorksheet $sheet) use ($club, $user) {
