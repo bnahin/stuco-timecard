@@ -20,6 +20,7 @@ use Maatwebsite\Excel\Files\ExcelFile;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 use ZanySoft\Zip\Zip;
+use ZipArchive;
 
 class EcrchsServices
 {
@@ -157,9 +158,9 @@ class EcrchsServices
         foreach ($users as $user) {
             $this->excel->create($user->full_name,
                 function (LaravelExcelWriter $excel) use ($club, $user) {
-                    $excel->setTitle(substr("Hours for {$user->full_name} in {$club->club_name}", 0, 30));
+                    $excel->setTitle("Hours for {$user->full_name} in {$club->club_name}");
 
-                    $excel->sheet("{$user->first_name} {$user->last_name} {$club->club_name}",
+                    $excel->sheet(substr("{$user->first_name} {$user->last_name} {$club->club_name}", 0, 30),
                         function (LaravelExcelWorksheet $sheet) use ($club, $user) {
                             //Get user's hours for current club
                             $hours = $user->hours()->where('hours.club_id', $club->id)
@@ -177,9 +178,12 @@ class EcrchsServices
         $storagePath = "public/archives/{$club->club_name} $date.zip"; //Zip file name
         $zipFileName = Storage::path($storagePath); //Real path
 
-        $zip = Zip::create($zipFileName, true); //Create zip w/ overwrite
+        /*$zip = Zip::create($zipFileName, true); //Create zip w/ overwrite
         $zip->add(Storage::path("temp-archives/$folderName"), true); //Add temp folder to zip
         $zip->close(); //Close and save zip
+        */
+        $this->zip($zipFileName, Storage::path("temp-archives/$folderName"));
+
 
         $this->deleteTempArchivesFolder($folderName);
 
@@ -197,5 +201,44 @@ class EcrchsServices
             //Temp folder empty, delete to clean up
             Storage::deleteDirectory("temp-archives/");
         }
+    }
+
+    /**
+     * Export ZIP file
+     *
+     * @param string $filename The new zip file's path
+     * @param string $path     The path of the folder to zip
+     *
+     * @throws \Exception
+     */
+    private function zip($filename, $path)
+    {
+        // Get real path for our folder
+        $rootPath = realpath($path);
+
+        // Initialize archive object
+        $zip = new ZipArchive();
+        $zip->open($filename, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+
+        // Create recursive directory iterator
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($rootPath),
+            \RecursiveIteratorIterator::LEAVES_ONLY
+        );
+
+        foreach ($files as $name => $file) {
+            // Skip directories (they would be added automatically)
+            if (!$file->isDir()) {
+                // Get real and relative path for current file
+                $filePath = $file->getRealPath();
+                $relativePath = substr($filePath, strlen($rootPath) + 1);
+
+                // Add current file to archive
+                $zip->addFile($filePath, $relativePath);
+            }
+        }
+
+        // Zip archive will be created only after closing object
+        $zip->close();
     }
 }
