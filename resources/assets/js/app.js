@@ -67,7 +67,6 @@ let Helpers = {
     })
   },
   hideAllTooltips () {
-    Helpers.hideAllTooltips()
     $('[rel="tooltip"], .tooltip').tooltip('hide')
   }
 }

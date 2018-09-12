@@ -6,6 +6,7 @@ sudo git reset --hard #Overwrite local changes
 git pull origin master #Pull changes
 #git stash apply --index #Apply local changes
 
+sudo chown -R ec2-user:apache public/
 npm run prod #Compile assets
 
 php artisan key:generate #Log users out

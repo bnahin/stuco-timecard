@@ -25,7 +25,6 @@
         </div>
     </div>
     -->
-    <hr>
     <table class="table" id="student-db" data-action="{{ route('get-enrolled') }}">
         <thead class="thead-dark">
         <tr>
