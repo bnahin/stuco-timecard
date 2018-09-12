@@ -172,7 +172,8 @@ class ClubController extends Controller
                 'domain'     => $auth->hd,
                 'email'      => $auth->email,
                 'first_name' => $auth->given_name,
-                'last_name'  => $auth->family_name
+                'last_name'  => $auth->family_name,
+                'student_info_id' => 0
             ]);
 
             //Attach Club
