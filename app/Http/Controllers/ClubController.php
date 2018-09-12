@@ -184,12 +184,13 @@ class ClubController extends Controller
             if ($student->exists()) {
                 $student->first()->user()->associate($user);
             }
+            else {
+                abort(403, 'User is not in the Aeries database.');
+            }
 
             //Associate hours
             $newUser = User::where('google_id', $auth->id)->first();
-            if (!$newUser->student) {
-                abort(403, 'User is not in the Aeries database.');
-            }
+            
             $hours = \App\Hour::where('student_id', $newUser->student->student_id)
                 ->whereNull('user_id');
             if ($hours->count()) {
