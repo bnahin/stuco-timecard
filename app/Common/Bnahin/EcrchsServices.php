@@ -178,11 +178,12 @@ class EcrchsServices
         $storagePath = "public/archives/{$club->club_name} $date.zip"; //Zip file name
         $zipFileName = Storage::path($storagePath); //Real path
 
-        /*$zip = Zip::create($zipFileName, true); //Create zip w/ overwrite
+        if (!Storage::exists("public/archives")) {
+            Storage::makeDirectory("public/archives");
+        }
+        $zip = Zip::create($zipFileName, true); //Create zip w/ overwrite
         $zip->add(Storage::path("temp-archives/$folderName"), true); //Add temp folder to zip
         $zip->close(); //Close and save zip
-        */
-        $this->zip($zipFileName, Storage::path("temp-archives/$folderName"));
 
 
         $this->deleteTempArchivesFolder($folderName);
@@ -201,44 +202,5 @@ class EcrchsServices
             //Temp folder empty, delete to clean up
             Storage::deleteDirectory("temp-archives/");
         }
-    }
-
-    /**
-     * Export ZIP file
-     *
-     * @param string $filename The new zip file's path
-     * @param string $path     The path of the folder to zip
-     *
-     * @throws \Exception
-     */
-    private function zip($filename, $path)
-    {
-        // Get real path for our folder
-        $rootPath = realpath($path);
-
-        // Initialize archive object
-        $zip = new ZipArchive();
-        $zip->open($filename, ZipArchive::CREATE | ZipArchive::OVERWRITE);
-
-        // Create recursive directory iterator
-        $files = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($rootPath),
-            \RecursiveIteratorIterator::LEAVES_ONLY
-        );
-
-        foreach ($files as $name => $file) {
-            // Skip directories (they would be added automatically)
-            if (!$file->isDir()) {
-                // Get real and relative path for current file
-                $filePath = $file->getRealPath();
-                $relativePath = substr($filePath, strlen($rootPath) + 1);
-
-                // Add current file to archive
-                $zip->addFile($filePath, $relativePath);
-            }
-        }
-
-        // Zip archive will be created only after closing object
-        $zip->close();
     }
 }
