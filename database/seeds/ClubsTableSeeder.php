@@ -19,7 +19,7 @@ class ClubsTableSeeder extends Seeder
         //For Admin Test
         App\Club::create([
             'id'        => 1,
-            'join_code' => 'STCNCL',
+            'join_code' => 'ECRASB',
             'club_name' => 'Student Council',
             'public'    => 1
         ])->settings()->save(new \App\Setting([
