@@ -166,6 +166,10 @@ class ClubController extends Controller
             //Attach
             $user->first()->clubs()->attach($club->id);
         } else {
+            $student = StudentInfo::where('email', $auth->email);
+            if (!$student->exists()) {
+                abort(403, 'User is not in the Aeries database.');
+            }
             //Create
             $user = User::create([
                 'google_id'  => $auth->id,
@@ -173,22 +177,13 @@ class ClubController extends Controller
                 'email'      => $auth->email,
                 'first_name' => $auth->given_name,
                 'last_name'  => $auth->family_name,
-                'student_info_id' => 0
+                'student_info_id' => $student->first()->id
             ]);
 
             //Attach Club
             $user->clubs()->attach($club->id);
 
-            //Associate StudentInfo
-            $student = StudentInfo::where('email', $auth->email);
-            if ($student->exists()) {
-                $student->first()->user()->associate($user);
-            }
-            else {
-                abort(403, 'User is not in the Aeries database.');
-            }
-
-            //Associate hours
+            /*//Associate hours
             $newUser = User::where('google_id', $auth->id)->first();
             
             $hours = \App\Hour::where('student_id', $newUser->student->student_id)
@@ -199,7 +194,7 @@ class ClubController extends Controller
                     $hour->user_id = $user->id;
                     $hour->save();
                 }
-            }
+            }*/
         }
 
         Session::put('joined-club', $club);
