@@ -44,6 +44,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Admin extends Authenticatable
 {
     use Notifiable;
+    
+    public $guarded = [];
 
     public function clubs()
     {
