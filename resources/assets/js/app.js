@@ -1736,9 +1736,13 @@ if ($('#admin-card').length) {
 }
 
 /** Club Select **/
-$('#join-btn').click(function () {
-  if ($('#join-form')[0].checkValidity())
-    Helpers.buttons.activityBtnDisable($(this))
+$('#join-btn').click(function (e) {
+  e.preventDefault();
+  let form = $('#join-form')[0],
+      btn = $(this);
+  if (form.checkValidity())
+    Helpers.buttons.activityBtnDisable(btn)
+    form.submit();
 })
 
 /** My Clubs **/

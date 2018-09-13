@@ -12,9 +12,6 @@
                     <div class="card-body">
                         <h3 class="card-title">My Clubs - @admin Admin @else Student @endadmin</h3>
                         <hr>
-                        <div class="alert alert-info"><span class="fas fa-info-circle"></span> Action buttons are
-                            currently in development.
-                        </div>
                         <table class="table">
                             <thead class="thead-dark">
                             <tr>

@@ -42,10 +42,15 @@ class JoinClubRequest extends FormRequest
 
             //Not a part of the club or is admin
             $auth = Session::get('temp-auth');
-            $club = Club::where('join_code', $this->code)->first();
+            $club = Club::where('join_code', $this->code);
             $user = User::where('email', $auth->email);
             $admin = Admin::where('email', $auth->email);
-
+            
+            if(!$club->exists()) {
+                return $validator->errors()->add('code', 'A club with that code does not exist.');
+            }
+            
+            $club = $club->first();
             if (!$club->public) {
                 return $validator->errors()->add('code', 'This club is currently not accepting new students.');
             }
