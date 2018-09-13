@@ -100,7 +100,7 @@ class EcrchsServices
             $info->student_id = $student->student_id;
             $info->first_name = $student->first_name;
             $info->last_name = $student->last_name;
-            if (!$student->stuemail) {
+            if (!$student->stuemail || !filter_var($student->stuemail, FILTER_VALIDATE_EMAIL)) {
                 // Fallback in case email does not exist somehow
                 $info->email = $student->student_id . "@ecrchs.org";
             } else {
