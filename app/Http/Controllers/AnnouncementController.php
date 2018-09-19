@@ -16,7 +16,7 @@ class AnnouncementController extends Controller
     {
         $announcements = Announcement::paginate(5);
 
-        return view('announcements', compact('announcements'));
+        return view('pages.announcements', compact('announcements'));
     }
 
     /**
@@ -38,7 +38,11 @@ class AnnouncementController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'message' => 'required'
+        ]);
+        dd($request);
     }
 
     /**

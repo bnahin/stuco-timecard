@@ -6,6 +6,32 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
+/**
+ * App\Announcement
+ *
+ * @property int $id
+ * @property int $club_id
+ * @property string $post_title
+ * @property string $post_body
+ * @property string $admin_id
+ * @property int $email_sent
+ * @property int $is_global
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Admin $admin
+ * @property-read \App\Club $club
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Announcement recent()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Announcement whereAdminId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Announcement whereClubId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Announcement whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Announcement whereEmailSent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Announcement whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Announcement whereIsGlobal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Announcement wherePostBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Announcement wherePostTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Announcement whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Announcement extends Model
 {
     protected static function boot()

@@ -233,12 +233,21 @@ footer {
     margin: auto;
   }
 }
+
 /**
 Announcements
  */
 .post-actions {
   float: right;
 }
+
 .bg-dev {
   background-color: #18FFB51A !important;
+}
+
+/** Announcements **/
+#new-post-collapse-header {
+  button:hover, button:active, button:focus {
+    text-decoration: none;
+  }
 }

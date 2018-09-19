@@ -63,7 +63,7 @@
             </div>
         </div>
     @endif
-    <button type="submit" class="btn btn-primary" id="new-activity-submit" @if(!count($events)) disabled @endif><i
+    <button type="submit" class="btn btn-primary" id="new-activity-submit" @if(!count($events) || !$settings->master) disabled @endif><i
             class="fas fa-sign-in-alt"></i> Clock In
     </button>
     @if(isAdmin())

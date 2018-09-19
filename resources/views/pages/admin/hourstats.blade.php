@@ -20,9 +20,10 @@
         <div class="col-md-4">
             <div class="card text-white bg-success mb-4">
                 <div class="card-body">
+                    <!--Todo: toggle modal with table-->
                     <h5 class="card-title"><strong><strong>{{ $data['numClocked'] }}</strong> On Assignment</strong>
                     </h5>
-                    <p class="card-text">Students that are currently clocked out.</p>
+                    <p class="card-text">Students that are currently clocked in.</p>
                 </div>
             </div>
         </div>

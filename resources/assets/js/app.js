@@ -45,9 +45,9 @@ let Helpers = {
     }
   },
   buttons : {
-    activityBtnDisable (btn) {
+    activityBtnDisable (btn, text = null) {
       btn.attr('disabled', true)
-      btn.html('<i class="fas fa-spinner fa-pulse"></i>')
+      btn.html('<i class="fas fa-spinner fa-pulse"></i>' + ((text) ? ' ' + text : ''))
     },
     activityBtnEnable (btn, glyph, text = '', reset = true) {
       if (reset) btn.attr('disabled', false)
@@ -1737,12 +1737,13 @@ if ($('#admin-card').length) {
 
 /** Club Select **/
 $('#join-btn').click(function (e) {
-  e.preventDefault();
+  e.preventDefault()
   let form = $('#join-form')[0],
-      btn = $(this);
-  if (form.checkValidity())
+      btn  = $(this)
+  if (form.checkValidity()) {
     Helpers.buttons.activityBtnDisable(btn)
-    form.submit();
+    form.submit()
+  }
 })
 
 /** My Clubs **/
@@ -1791,3 +1792,37 @@ $('.archive-club').click(function () {
     swal('Error!', 'Unable to retrieve archive. ' + xhr.error.message, 'error')
   })
 })
+
+/** Announcements **/
+if ($('#new-announcement-form').length) {
+  tinymce.init({
+    selector   : '#announcement-content',
+    height     : 200,
+    menubar    : false,
+    plugins    : [
+      'advlist autolink lists link image charmap print preview anchor textcolor',
+      'searchreplace visualblocks code fullscreen',
+      'insertdatetime media table contextmenu paste code help wordcount'
+    ],
+    toolbar    : 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+    content_css: [
+      '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+      '//www.tinymce.com/css/codepen.min.css']
+  })
+  $('#create-announcement').click(function (e) {
+    e.preventDefault()
+
+    let btn   = $(this),
+        form  = $('#new-announcement-form')[0],
+        title = $('#title')
+
+    if (!title.val().length) {
+      title.addClass('is-invalid')
+      return false
+    }
+
+    Helpers.buttons.activityBtnDisable(btn, 'Creating...')
+    form.submit()
+  })
+  $('#title').blur(function () {$(this).removeClass('is-invalid')})
+}
