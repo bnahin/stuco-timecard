@@ -1825,4 +1825,35 @@ if ($('#new-announcement-form').length) {
     form.submit()
   })
   $('#title').blur(function () {$(this).removeClass('is-invalid')})
+
+  $('.edit-post').click(function () {
+    let btn           = $(this),
+        id            = btn.data('id'),
+        card          = $('#post-' + id),
+        titleStatic   = card.find('.title-static'),
+        messageStatic = card.find('.message-static')
+    titleStatic.hide().next('input').show()
+    messageStatic.hide()
+
+    card.find('textarea').show()
+    tinymce.init({
+      selector   : '#post-message-' + id,
+      height     : 200,
+      menubar    : false,
+      plugins    : [
+        'advlist autolink lists link image charmap print preview anchor textcolor',
+        'searchreplace visualblocks code fullscreen',
+        'insertdatetime media table contextmenu paste code help wordcount'
+      ],
+      toolbar    : 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+      content_css: [
+        '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+        '//www.tinymce.com/css/codepen.min.css']
+    })
+
+    btn.hide()
+    btn.next('button.save-edits').show()
+
+    card.find('.card-body').addClass('is-edit')
+  })
 }

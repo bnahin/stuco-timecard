@@ -14,7 +14,13 @@
         <div class="row justify-content-center">
             <div class="col-md-9">
                 <h3 class="card-title">Club Announcements</h3>
-            @admin
+
+                @if(Session::has('newPost') && Session::get('newPost'))
+                    <div class="alert alert-success"><strong><i class="fas fa-check"></i> Success!</strong>
+                        The announcement has been posted.
+                    </div>
+                @endif
+                @admin
             <!--TinyMCE table here-->
                 <div class="accordion mb-2" id="accordion">
                     <div class="card">
@@ -72,24 +78,41 @@
                 <div id="announcement-content">
                     @if(count($announcements))
                         @foreach($announcements as $post)
-                            <div class="card mb-3 @if($post->is_global) bg-dev @endif">
+                            <div class="card mb-3 @if($post->is_global) bg-dev @endif" id="post-{{ $post->id }}">
                                 <div class="card-body">
                                     <div class="post-actions">
-                                        <button class="btn btn-warning edit-post"><i class="fas fa-pencil-alt"></i>
+                                        <button class="btn btn-warning edit-post" data-id="{{ $post->id }}"
+                                                rel="tooltip" title="Edit Post"><i
+                                                class="fas fa-pencil-alt"></i>
                                         </button>
-                                        <button class="btn btn-danger delete-post"><i class="fas fa-times"></i>
+                                        <button class="btn btn-success save-edits" style="display:none;"
+                                                data-id="{{ $post->id }}" rel="tooltip" title="Save Changes"><i
+                                                class="fas fa-check"></i></button>
+                                        <button class="btn btn-danger delete-post" data-id="{{ $post->id }}"
+                                                rel="tooltip" title="Delete Post"><i
+                                                class="fas fa-times"></i>
                                         </button>
                                     </div>
-                                    <h4 class="card-title">{{ $post->post_title }}</h4>
+                                    <h4 class="card-title"><span class="title-static">{{ $post->post_title }}</span>
+                                        @admin<input
+                                            id="form-title-{{ $post->id }}" type="text" value="{{ $post->post_title }}"
+                                            style="display:none; width:80%;" class="form-control">
+                                        @endadmin</h4>
                                     <h5 class="card-subtitle mb-2 text-muted">{{ $post->admin->full_name }} @if($post->is_global)
                                             <em>(Developer)</em> @endif</h5>
                                     <h6 class="card-subtitle mb-2 text-muted">{{ $post->created_at->format('m/d/Y g:i A') }}</h6>
                                     <hr>
-                                    <p class="card-text">{!! $post->post_body !!}
-                                    @if($post->created_at !== $post->updated_at)
-                                        <hr><h6
-                                            class="text-muted">
-                                            Updated {{ $post->updated_at->format('m/d/Y g:i A') }}</h6>@endif</p>
+                                    <p class="card-text">
+                                        <div class="message-static">{!! $post->post_body !!}</div>
+                                        @admin
+                                        <textarea id="post-message-{{ $post->id }}" class="edit-message"
+                                                  style="display:none;">{!! $post->post_body !!}</textarea>
+                                    @endadmin
+                                    @if($post->created_at != $post->updated_at)
+                                        <hr><h6 class="text-muted">
+                                            <em>Updated {{ $post->updated_at->format('m/d/Y g:i A') }}</em></h6>
+                                        @endif
+                                        </p>
                                 </div>
                             </div>
                         @endforeach
