@@ -35,7 +35,7 @@ class AppServiceProvider extends ServiceProvider
             $announcementsBadge = Announcement::recent()->count();
 
             if (getClubId()) {
-                $settings = \App\Setting::findOrFail(getClubId())->first();
+                $settings = \App\Setting::findOrFail(getClubId());
             }
 
             $view->with(compact('adminBadge', 'settings', 'announcementsBadge'));
