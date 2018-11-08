@@ -13,7 +13,7 @@
         <div class="form-group row">
             <label for="staticName" class="col-sm-2 col-form-label">Club Name</label>
             <div class="col-sm-10">
-                <input type="text" readonly class="form-control-plaintext" id="staticName" value="Student Council">
+                <input type="text" readonly class="form-control-plaintext" id="staticName" value="{{ $clubName }}">
                 <p class="text-muted">See the Director of Clubs to request a name change.</p>
             </div>
         </div>
