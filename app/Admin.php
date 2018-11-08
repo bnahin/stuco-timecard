@@ -40,6 +40,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @mixin \Eloquent
  * @property-read mixed $full_name
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\ActivityLog[] $logs
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Announcement[] $posts
  */
 class Admin extends Authenticatable
 {

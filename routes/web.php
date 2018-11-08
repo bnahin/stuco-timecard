@@ -76,7 +76,9 @@ Route::group(['middleware' => ['auth:user,admin', 'club']], function () {
     /**
      * Announcements
      */
-    Route::get('/announcements','AnnouncementController@index')->name('view-announcements');
+    Route::get('/announcements', 'AnnouncementController@index')->name('view-announcements');
+    Route::post('/announcements/create', 'AnnouncementController@store')->name('create-announcement')
+        ->middleware('admin');
     /**
      * Admin
      */

@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Admin[]       $admins
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\BlockedUser[] $blocks
  * @property-read \App\Setting $settings
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Announcement[] $announcements
  */
 class Club extends Model
 {

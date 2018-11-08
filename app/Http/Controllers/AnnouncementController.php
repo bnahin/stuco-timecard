@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Announcement;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AnnouncementController extends Controller
 {
@@ -16,7 +17,7 @@ class AnnouncementController extends Controller
     {
         $announcements = Announcement::paginate(5);
 
-        return view('announcements', compact('announcements'));
+        return view('pages.announcements', compact('announcements'));
     }
 
     /**
@@ -34,11 +35,31 @@ class AnnouncementController extends Controller
      *
      * @param  \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\Http\Response
+     * @return \Response
+     * @throws \Throwable
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title'   => 'required',
+            'message' => 'required'
+        ]);
+
+        $title = $request->title;
+        $message = $request->message;
+
+        $post = new Announcement;
+        $post->post_title = $title;
+        $post->post_body = $message;
+        $post->admin_id = Auth::user()->id;
+        $post->club_id = getClubId();
+        $post->is_global = false;
+        $post->email_sent = false;
+        $post->saveOrFail();
+
+        //TODO: Send Emails
+
+        return back()->with('newPost', true);
     }
 
     /**
