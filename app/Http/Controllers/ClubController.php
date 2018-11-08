@@ -130,7 +130,7 @@ class ClubController extends Controller
         $allowComments = $request->allowComments;
         $master = $request->master;
 
-        $settings = Setting::find(getClubId())->first();
+        $settings = Setting::findOrFail(getClubId());
         $settings->club_desc = $desc;
         $settings->allow_mark = $allowMark;
         $settings->allow_delete = $allowDeletion;
