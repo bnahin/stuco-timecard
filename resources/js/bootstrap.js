@@ -68,4 +68,4 @@ $(function () {
   });
 })
 import swal from 'sweetalert'
-import Chart from 'chart.js'
+import Chart from '../../node_modules/chart.js/src/chart'

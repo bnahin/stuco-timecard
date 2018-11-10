@@ -12,8 +12,8 @@ let mix = require('laravel-mix')
  */
 
 //Custom App
-mix.js('resources/assets/js/app.js', 'public/js')
-  .sass('resources/assets/sass/app.scss', 'public/css')
+mix.js('resources/js/app.js', 'public/js')
+  .sass('resources/sass/app.scss', 'public/css')
 
 if(mix.inProduction()) {
   mix.version()
