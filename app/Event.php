@@ -53,12 +53,12 @@ class Event extends Model
 
     public function hours()
     {
-        $this->hasMany(Hour::class);
+        return $this->hasMany(Hour::class);
     }
 
     public function club()
     {
-        $this->belongsTo(Club::class);
+        return $this->belongsTo(Club::class);
     }
 
     public function scopeActive($query)

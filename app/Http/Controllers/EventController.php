@@ -8,6 +8,14 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
+    public function index(Event $event)
+    {
+        //View event timepunches/attendance
+        $events = Event::active()->get();
+
+        return view('pages.eventview', compact('event', 'events'));
+    }
+
     public function restore(RestoreEventRequest $request)
     {
         $event = Event::withTrashed()->find($request->id);

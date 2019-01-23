@@ -75,6 +75,10 @@
                                     rel="tooltip"
                                     title="Purge event hours"><i
                                     class="fas fa-backward"></i></button>
+                            <a href="{{ route('view-event', $event) }}" target="_blank"><button class="btn btn-success"
+                                    rel="tooltip"
+                                    title="View event attendance"><i
+                                    class="fas fa-users"></i></button>
                         </td>
                     @else
                         <td>{{ $event->deleted_at->format('m/d/Y h:i a') }}</td>
