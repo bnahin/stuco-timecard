@@ -64,6 +64,10 @@ Route::group(['middleware' => ['auth:user,admin', 'club']], function () {
     Route::post('/hours/getData', 'HoursController@getData')
         ->middleware('admin');
 
+    Route::get('/event/{event}', 'EventController@index')
+        ->name('view-event')
+        ->middleware('admin');
+
     /*
      * Clubs
      */
