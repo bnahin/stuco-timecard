@@ -59,7 +59,7 @@ class AddAdminCommand extends Command
             $this->error('Could not find club with identifer "' . $ident . '".');
             die(128);
         }
-        if (!str_contains($email, ['ecrchs.net', 'ecrchs.org'])) {
+        if (!str_contains($email, ['ecrchs.net', 'ecrchs.org']) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->error('Invalid email "' . $email . '"');
             die(128);
         }
